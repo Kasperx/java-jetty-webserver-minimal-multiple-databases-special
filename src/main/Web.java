@@ -22,6 +22,8 @@ import org.json.JSONObject;
 
 import com.google.gson.GsonBuilder;
 
+import database.DatabaseConnect;
+
 public class Web
 {
     private Server server;
@@ -126,6 +128,8 @@ public class Web
         private String request_stringToGetWebsite = "/";
         private String request_api_weather = "weather";
         private String request_api_example = "example";
+        private String request_api_call_data_from_db = "data";
+        private String request_api_insert_data_to_db = "insert";
         private String requestByClient = "";
         public Web_() {}
         
@@ -147,6 +151,14 @@ public class Web
             else if (request_api_example.equals(parameter))
             {
                 clientRequest_TableNames(request, response);
+            }
+            else if (request_api_call_data_from_db.equals(parameter))
+            {
+                clientRequest_CallDataFromDb(request, response);
+            }
+            else if (request_api_insert_data_to_db.equals(parameter))
+            {
+                clientRequest_InsertDataToDb(request, response);
             }
         }
         private void clientRequest_Website (HttpServletRequest request, HttpServletResponse response)
@@ -187,6 +199,57 @@ public class Web
             }
             catch (Exception e) {
                 System.err.println(e.toString());
+            }
+        }
+        private void clientRequest_CallDataFromDb (HttpServletRequest request, HttpServletResponse response)
+        {
+            JSONObject json_mapForJSON = null;
+            try
+            {
+                System.out.println("Found request: "+request.getParameter("get"));
+                DatabaseConnect database = new DatabaseConnect();
+                database.createDatabaseIfNotExists();
+//                database.insertData();
+                JSONArray array = new JSONArray();
+                ArrayList <String> data = database.getData();
+                array = new JSONArray(data);
+                json_mapForJSON = new JSONObject();
+                json_mapForJSON.put("Tablenames", array);
+                String result = new GsonBuilder().create().toJson(json_mapForJSON);
+                response.setCharacterEncoding("utf-8");
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = response.getWriter();
+                out.print(result);
+                out.close();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        private void clientRequest_InsertDataToDb (HttpServletRequest request, HttpServletResponse response)
+        {
+            try
+            {
+                System.out.println("Found request: "+request.getParameter("get"));
+                DatabaseConnect database = new DatabaseConnect();
+                database.createDatabaseIfNotExists();
+                database.insertData();
+                JSONArray array = new JSONArray();
+                array.put("Done");
+                JSONObject json_mapForJSON = null;
+                json_mapForJSON = new JSONObject();
+                json_mapForJSON.put("Tablenames", array);
+                String result = new GsonBuilder().create().toJson(json_mapForJSON);
+                response.setCharacterEncoding("utf-8");
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter out = response.getWriter();
+                out.print(result);
+                out.close();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
             }
         }
         private void clientRequest_TableNames (HttpServletRequest request, HttpServletResponse response)
