@@ -85,7 +85,6 @@ public class DatabaseConnect
     }
     public int getPersonId(String name)
     {
-        ArrayList <String> data = new ArrayList<String>();
         ResultSet resultSet = executeGet("SELECT id FROM person where name = '"+name+"'");
         try
         {

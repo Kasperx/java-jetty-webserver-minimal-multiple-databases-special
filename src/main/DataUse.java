@@ -1,6 +1,7 @@
 package main;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -112,11 +113,12 @@ public class DataUse
             websitedata += ""
                     + "<ul>"
                     + "<div> some codes </div>"
-                    + "<li><a href=\"localtion/?get=example\" target=\"_blank\">read from db</a></li>"
+//                    + "<li><a href=\"localtion/?get=example\" target=\"_blank\">read from db</a></li>"
 //                    + "<li><a href=\"localtion/?get=insert\" target=\"_blank\">insert data</a></li>"
 //                    + "<li><a href=\"localtion/?get=data\" target=\"_blank\">get data</a></li>"
-                    + "<li><a href=\"localtion/?get=insert\">insert data</a></li>"
-                    + "<li><a href=\"localtion/?get=data\">get data</a></li>"
+                    + "<li><a href=\"?get=insert\">insert data</a></li>"
+                    + "<li><a href=\"?get=data\">get data</a></li>"
+                    + "<li><a href=\"?get=admin\">get all data</a></li>"
                     + "</ul>"
                     ;
             websitedata += "</thead>";
@@ -183,11 +185,43 @@ public class DataUse
             e.printStackTrace();
         }
     }
+    public static void clientRequest_askUserData(HttpServletRequest request, HttpServletResponse response)
+    {
+        try
+        {
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("text/html");
+            response.setStatus(HttpServletResponse.SC_OK);
+            String websitedata = htmlhead;
+            websitedata += "<form>";
+            websitedata += ""
+                    + "<label for=\"name\">name:</label><br>"
+                    + "<input type=\"text\" id=\"name\"><br>"
+                    + "<label for=\"pwd\">password:</label><br>"
+                    + "<input type=\"password\" id=\"password\""
+//                    + "pattern=\"(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}\" title=\"<Must contain at least one number and one uppercase and lowercase letter and at least 8 or more characters\" required"
+                    + "><br>"
+                    + "<input type=\"submit\" value=\"Submit\">"
+                    ;
+            websitedata += "</form>";
+            websitedata += "<script>";
+            websitedata += ""
+                    + "const form = document.getElementById('name');\n"
+                    + "const log = document.getElementById('password');\n"
+                    + "form.addEventListener('submit', logSubmit);";
+            websitedata += "</script>";
+            websitedata += htmlend;
+            response.getWriter().println(websitedata);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
     public static void clientRequest_GetAllData(HttpServletRequest request, HttpServletResponse response)
     {
         try
         {
-            JSONObject json_mapForJSON = null;
             System.out.println("Found request: "+request.getParameter("get"));
             System.out.println("Found request: "+request.getParameter("name"));
             String name = request.getParameter("user");
