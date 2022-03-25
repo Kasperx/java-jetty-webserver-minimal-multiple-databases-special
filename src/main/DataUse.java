@@ -65,34 +65,70 @@ public class DataUse
     {
         this.httpbase = httpbase;
     }
-    public void clientRequest_Website (HttpServletRequest request, HttpServletResponse response)
+//    public void clientRequest_Website (HttpServletRequest request, HttpServletResponse response)
+//    {
+//        try {
+//            // value of filenames by client come with a slash, but java doesn't find files with slash, so cut first char...
+//            String wantedFileFromClient = httpbase+File.separator+request.getServletPath().substring(1);
+//            String fileContent;
+//            if (new File(wantedFileFromClient+"index.html").exists()) {
+//                wantedFileFromClient += "index.html";
+//            }
+//            fileContent = readFile(wantedFileFromClient);
+//            PrintWriter out = response.getWriter();
+//            if (wantedFileFromClient.endsWith(".html")) {
+//                response.setContentType("text/html;charset=UTF-8");
+//            }
+//            else if (wantedFileFromClient.endsWith(".css")) {
+//                response.setContentType("text/css;charset=UTF-8");
+//            }
+//            else if (wantedFileFromClient.endsWith(".js")){
+//                response.setContentType("application/json;charset=UTF-8");
+//            }
+//            response.addHeader("Access-Control-Allow-Origin", "*");
+//            response.setStatus(HttpServletResponse.SC_OK);
+//            response.reset();
+//            out.print(fileContent);
+//            //out.close();
+//        }
+//        catch (Exception e) {
+//            System.err.println(e.toString());
+//        }
+//    }
+    public void clientRequest_Website(HttpServletRequest request, HttpServletResponse response)
     {
-        try {
-            // value of filenames by client come with a slash, but java doesn't find files with slash, so cut first char...
-            String wantedFileFromClient = httpbase+File.separator+request.getServletPath().substring(1);
-            String fileContent;
-            if (new File(wantedFileFromClient+"index.html").exists()) {
-                wantedFileFromClient += "index.html";
-            }
-            fileContent = readFile(wantedFileFromClient);
-            PrintWriter out = response.getWriter();
-            if (wantedFileFromClient.endsWith(".html")) {
-                response.setContentType("text/html;charset=UTF-8");
-            }
-            else if (wantedFileFromClient.endsWith(".css")) {
-                response.setContentType("text/css;charset=UTF-8");
-            }
-            else if (wantedFileFromClient.endsWith(".js")){
-                response.setContentType("application/json;charset=UTF-8");
-            }
-            response.addHeader("Access-Control-Allow-Origin", "*");
+        try
+        {
+            System.out.println("Found request: "+request.getParameter("get"));
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("text/html");
             response.setStatus(HttpServletResponse.SC_OK);
-            response.reset();
-            out.print(fileContent);
-            //out.close();
+            String websitedata = htmlhead;
+            websitedata += "<table class=\"table\">";
+//            websitedata += "<tr>"
+//                    + "<th>name</th>"
+//                    + "</tr>"
+//                    + "</thead>";
+            websitedata += ""
+                    + "<ul>"
+                    + "<div> some codes </div>"
+                    + "<li><a href=\"localtion/?get=example\" target=\"_blank\">read from db</a></li>"
+//                    + "<li><a href=\"localtion/?get=insert\" target=\"_blank\">insert data</a></li>"
+//                    + "<li><a href=\"localtion/?get=data\" target=\"_blank\">get data</a></li>"
+                    + "<li><a href=\"localtion/?get=insert\">insert data</a></li>"
+                    + "<li><a href=\"localtion/?get=data\">get data</a></li>"
+                    + "</ul>"
+                    ;
+            websitedata += "</thead>";
+            websitedata += "</table>";
+            websitedata += htmlend;
+            response.getWriter().println(websitedata);
+//            PrintWriter out = response.getWriter();
+//            out.print(result);
+//            out.close();
         }
         catch (Exception e) {
-            System.err.println(e.toString());
+            e.printStackTrace();
         }
     }
     public static void clientRequest_Weather(HttpServletRequest request, HttpServletResponse response)
@@ -137,7 +173,8 @@ public class DataUse
             websitedata += "</thead>";
             websitedata += "</table>";
             websitedata += htmlend;
-            response.getWriter().println(websitedata);
+//            response.getWriter().println(websitedata);
+            response.getWriter().append(websitedata);
 //            PrintWriter out = response.getWriter();
 //            out.print(result);
 //            out.close();
@@ -254,30 +291,30 @@ public class DataUse
             e.printStackTrace();
         }
     }
-    public static void clientRequest_TableNames(HttpServletRequest request, HttpServletResponse response)
-    {
-        JSONObject json_mapForJSON = null;
-        try
-        {
-            System.out.println("Found request: "+request.getParameter("get"));
-            JSONArray array = new JSONArray();
-            array.put("hallo1");
-            array.put("hallo2");
-            array.put("hallo3");
-            json_mapForJSON = new JSONObject();
-            json_mapForJSON.put("Tablenames", array);
-            String result = new GsonBuilder().create().toJson(json_mapForJSON);
-            response.setCharacterEncoding("utf-8");
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter out = response.getWriter();
-            out.print(result);
-            out.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void clientRequest_TableNames(HttpServletRequest request, HttpServletResponse response)
+//    {
+//        JSONObject json_mapForJSON = null;
+//        try
+//        {
+//            System.out.println("Found request: "+request.getParameter("get"));
+//            JSONArray array = new JSONArray();
+//            array.put("hallo1");
+//            array.put("hallo2");
+//            array.put("hallo3");
+//            json_mapForJSON = new JSONObject();
+//            json_mapForJSON.put("Tablenames", array);
+//            String result = new GsonBuilder().create().toJson(json_mapForJSON);
+//            response.setCharacterEncoding("utf-8");
+//            response.setContentType("application/json");
+//            response.setStatus(HttpServletResponse.SC_OK);
+//            PrintWriter out = response.getWriter();
+//            out.print(result);
+//            out.close();
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
     private List <List<String>> vectorToArrayList2D (Vector dataRows)
     {
         List <List<String>> array = new ArrayList<List<String>>();

@@ -151,10 +151,10 @@ public class Web
             {
                 website.clientRequest_Weather(request, response);
             }
-            else if (request_api_example.equals(parameter))
-            {
-                website.clientRequest_TableNames(request, response);
-            }
+//            else if (request_api_example.equals(parameter))
+//            {
+//                website.clientRequest_TableNames(request, response);
+//            }
             else if (request_api_call_data_from_db.equals(parameter))
             {
                 website.clientRequest_CallDataFromDb(request, response);
