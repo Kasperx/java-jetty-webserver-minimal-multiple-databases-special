@@ -130,198 +130,43 @@ public class Web
         private String request_api_example = "example";
         private String request_api_call_data_from_db = "data";
         private String request_api_insert_data_to_db = "insert";
+        private String request_api_get_data_for_admin = "admin";
         private String requestByClient = "";
         public Web_() {}
         
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
+            DataUse website = new DataUse();
+            website.sethttpbase(httpbase);
             String parameter = request.getParameter("get");
             requestByClient = request.getRequestURI().toLowerCase();
             if (requestByClient.contains(request_stringToGetWebsite)
                     && parameter == null
                     )
             {
-                clientRequest_Website(request, response);
+                website.clientRequest_Website(request, response);
             }
             else if (request_api_weather.equals(parameter))
             {
-                clientRequest_Weather(request, response);
+                website.clientRequest_Weather(request, response);
             }
             else if (request_api_example.equals(parameter))
             {
-                clientRequest_TableNames(request, response);
+                website.clientRequest_TableNames(request, response);
             }
             else if (request_api_call_data_from_db.equals(parameter))
             {
-                clientRequest_CallDataFromDb(request, response);
+                website.clientRequest_CallDataFromDb(request, response);
             }
             else if (request_api_insert_data_to_db.equals(parameter))
             {
-                clientRequest_InsertDataToDb(request, response);
+                website.clientRequest_InsertDataToDb(request, response);
             }
-        }
-        private void clientRequest_Website (HttpServletRequest request, HttpServletResponse response)
-        {
-            try {
-                // value of filenames by client come with a slash, but java doesn't find files with slash, so cut first char...
-                String wantedFileFromClient = httpbase+File.separator+request.getServletPath().substring(1);
-                String fileContent;
-                if (new File(wantedFileFromClient+"index.html").exists()) {
-                	wantedFileFromClient += "index.html";
-                }
-                fileContent = readFile(wantedFileFromClient);
-                PrintWriter out = response.getWriter();
-                if (wantedFileFromClient.endsWith(".html")) {
-                    response.setContentType("text/html;charset=UTF-8");
-                }
-                else if (wantedFileFromClient.endsWith(".css")) {
-                    response.setContentType("text/css;charset=UTF-8");
-                }
-                else if (wantedFileFromClient.endsWith(".js")){
-                    response.setContentType("application/json;charset=UTF-8");
-                }
-                response.addHeader("Access-Control-Allow-Origin", "*");
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.reset();
-                out.print(fileContent);
-                //out.close();
-            }
-            catch (Exception e) {
-                System.err.println(e.toString());
-            }
-        }
-        private void clientRequest_Weather (HttpServletRequest request, HttpServletResponse response)
-        {
-            try {
-                System.out.println("Found request: "+request.getParameter("get"));
-                // do something
-            }
-            catch (Exception e) {
-                System.err.println(e.toString());
-            }
-        }
-        private void clientRequest_CallDataFromDb (HttpServletRequest request, HttpServletResponse response)
-        {
-            JSONObject json_mapForJSON = null;
-            try
+            else if (request_api_get_data_for_admin.equals(parameter))
             {
-                System.out.println("Found request: "+request.getParameter("get"));
-                DatabaseConnect database = new DatabaseConnect();
-                database.createDatabaseIfNotExists();
-//                database.insertData();
-                JSONArray array = new JSONArray();
-                ArrayList <String> data = database.getData();
-                array = new JSONArray(data);
-                json_mapForJSON = new JSONObject();
-                json_mapForJSON.put("Tablenames", array);
-                String result = new GsonBuilder().create().toJson(json_mapForJSON);
-                response.setCharacterEncoding("utf-8");
-                response.setContentType("application/json");
-                response.setStatus(HttpServletResponse.SC_OK);
-                PrintWriter out = response.getWriter();
-                out.print(result);
-                out.close();
+                website.clientRequest_GetAllData(request, response);
             }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        private void clientRequest_InsertDataToDb (HttpServletRequest request, HttpServletResponse response)
-        {
-            try
-            {
-                System.out.println("Found request: "+request.getParameter("get"));
-                DatabaseConnect database = new DatabaseConnect();
-                database.createDatabaseIfNotExists();
-                database.insertData();
-                JSONArray array = new JSONArray();
-                array.put("Done");
-                JSONObject json_mapForJSON = null;
-                json_mapForJSON = new JSONObject();
-                json_mapForJSON.put("Tablenames", array);
-                String result = new GsonBuilder().create().toJson(json_mapForJSON);
-                response.setCharacterEncoding("utf-8");
-                response.setContentType("application/json");
-                response.setStatus(HttpServletResponse.SC_OK);
-                PrintWriter out = response.getWriter();
-                out.print(result);
-                out.close();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        private void clientRequest_TableNames (HttpServletRequest request, HttpServletResponse response)
-        {
-            JSONObject json_mapForJSON = null;
-            try
-            {
-                System.out.println("Found request: "+request.getParameter("get"));
-                JSONArray array = new JSONArray();
-                array.put("hallo1");
-                array.put("hallo2");
-                array.put("hallo3");
-                json_mapForJSON = new JSONObject();
-                json_mapForJSON.put("Tablenames", array);
-                String result = new GsonBuilder().create().toJson(json_mapForJSON);
-                response.setCharacterEncoding("utf-8");
-                response.setContentType("application/json");
-                response.setStatus(HttpServletResponse.SC_OK);
-                PrintWriter out = response.getWriter();
-                out.print(result);
-                out.close();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        private List <List<String>> vectorToArrayList2D (Vector dataRows)
-        {
-            List <List<String>> array = new ArrayList<List<String>>();
-            for (int i=0; i<dataRows.size(); i++)
-            {
-                 Vector data_cols = (Vector)dataRows.elementAt(i);
-                 ArrayList <String> temp = new ArrayList<String>();
-                 for(int col=0; col<data_cols.size(); col++) {
-                     temp.add(data_cols.elementAt(col).toString());
-                 }
-                 array.add(temp);
-            }
-            return array;
-        }
-        private String readFile (String fileName)
-        {        
-            List<String> filecontent = loadFile(fileName);
-            if(filecontent == null) {
-            	return null;
-            }
-            String ckasl= "";
-            for (String temp: filecontent) {
-                ckasl += temp + "\n";
-            }
-            filecontent.clear(); 
-            System.out.println("Reading file: "+fileName);
-            return ckasl;
-        }
-        public List <String> loadFile(String fpath)
-        {
-            try
-            {
-                return new ArrayList(
-                        Files.readAllLines(
-                                Paths.get(fpath),
-                                StandardCharsets.UTF_8)
-                        );
-                
-            } catch (Exception e) {
-            	e.printStackTrace();
-                return null;
-            }
-        }
-        private ArrayList <String> makeListEntriesUnique (ArrayList <String> array)
-        {
-            return (ArrayList) array.stream().distinct().collect(Collectors.toList());
         }
     }
 }

@@ -4,12 +4,18 @@ package database;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;  
-import java.sql.DriverManager;  
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 public class DatabaseConnect
 {  
@@ -44,15 +50,28 @@ public class DatabaseConnect
             e.printStackTrace();
         }
     }
+    public void close()
+    {
+        try
+        {
+            Class.forName("org.sqlite.JDBC");
+            if(connection.isClosed() || connection != null)
+            {
+                connection.close();
+                connection = null;
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     public ArrayList <String> getData()
     {
         ArrayList <String> data = new ArrayList<String>();
+        ResultSet resultSet = executeGet("SELECT name FROM person");
         try
         {
-            ResultSet resultSet = null;
-            Statement statement = null;
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT name FROM person");
             while(resultSet.next())
             {
                 data.add(resultSet.getString("name"));
@@ -64,30 +83,155 @@ public class DatabaseConnect
         }
         return data;
     }
+    public int getPersonId(String name)
+    {
+        ArrayList <String> data = new ArrayList<String>();
+        ResultSet resultSet = executeGet("SELECT id FROM person where name = '"+name+"'");
+        try
+        {
+            if(resultSet.next())
+            {
+                return resultSet.getInt("id");
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    public ArrayList <ArrayList<String>> getDataForAdmin()
+    {
+        ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+        ResultSet resultSet = executeGet("SELECT "
+                + "person.id, "
+                + "person.name, "
+                + "login.p_password, "
+                + "login.p_admin "
+                + "FROM person "
+                + "join login on person.id = login.p_id");
+        try
+        {
+            ArrayList <String> temp;
+            while(resultSet.next())
+            {
+                temp = new ArrayList<String>();
+                temp.add(resultSet.getString("id"));
+                temp.add(resultSet.getString("name"));
+                temp.add(resultSet.getString("p_password"));
+                temp.add(resultSet.getString("p_admin"));
+                data.add(temp);
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return data;
+    }
     public boolean createDatabaseIfNotExists()
+    {
+        executeSet("drop table if exists person");
+        executeSet("drop table if exists login");
+        //////////////////////////////
+        executeSet("create table if not exists person ("
+                + "id integer primary key autoincrement,"
+                + "name text unique"
+                + ")");
+        executeSet("create table if not exists login ("
+                + "id integer primary key autoincrement,"
+                + "p_id integer,"
+                + "p_name text,"
+                + "p_password text unique,"
+                + "p_admin default 'false',"
+                + "foreign key (p_id) references person(id)"
+                + ")");
+        return true;
+    }
+    public void insertData()
+    {
+        ///////////////////////////////////////////////////////////
+        // get names, but only once (-> set)
+        String [] names = {
+                "detlef",
+                "arnold",
+                "ulrike",
+                "emil",
+                "lena",
+                "laura",
+                "achim",
+                "mia",
+                "anna",
+                "jonas"
+        };
+        Map <String, Integer> result = new HashMap<String, Integer>();
+        Set unique = new HashSet();
+        int temp = 0;
+        while(temp<5)
+        {
+            String found = names[new Random().nextInt(10)];
+            if(unique.add(found))
+            {
+                result.put(found, new Random().nextInt(10000000) + 1000000);
+                temp++;
+            }
+        }
+        ///////////////////////////////////////////////////////////
+        executeSet("insert into person (name) values ('admin')");
+        executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
+        for(Entry <String, Integer> entry: result.entrySet())
+        {
+            executeSet("insert into person (name) values ('"+entry.getKey()+"')");
+            executeSet("insert into login (p_id, p_password) values ("+getPersonId(entry.getKey())+", '"+entry.getValue()+"')");
+        }
+    }
+    public boolean isPermitted(String name, String password)
     {
         try
         {
-            Statement statement = null;
-            statement = connection.createStatement();
-//            statement.executeUpdate("create database test if not exists");
-            statement.executeUpdate("create table if not exists person (id serial, name text)");
+//            ResultSet resultSet = executeGet("SELECT p.name, login.p_password, login.p_admin FROM person p inner join login on p.id = login.p_id where login.p_admin = 'true'");
+            ResultSet resultSet = executeGet("SELECT p.id, p.name, login.p_password, login.p_admin FROM person p inner join login on p.id = login.p_id where login.p_admin = 'true'");
+            if(resultSet.next())
+            {
+                String tempname = resultSet.getString("name");
+                String temppw = resultSet.getString("p_password");
+                if(name != null && password != null & name.equals(tempname) && password.equals(temppw))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
         }
         catch(SQLException e)
         {
             e.printStackTrace();
             return false;
         }
-        return true;
     }
-    public void insertData()
+    ResultSet executeGet(String sql)
     {
         try
         {
-            Statement statement = null;
-            statement = connection.createStatement();
-            int random = new Random().nextInt();
-            statement.executeUpdate("insert into person (name) values ('hallo"+random+"')");
+            System.out.println(sql);
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            return stmt.executeQuery();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    void executeSet(String sql)
+    {
+        try
+        {
+            System.out.println(sql);
+            connection.prepareStatement(sql).executeUpdate();
         }
         catch(SQLException e)
         {
