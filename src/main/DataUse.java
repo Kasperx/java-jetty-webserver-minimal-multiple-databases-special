@@ -66,37 +66,37 @@ public class DataUse
     {
         this.httpbase = httpbase;
     }
-//    public void clientRequest_Website (HttpServletRequest request, HttpServletResponse response)
-//    {
-//        try {
-//            // value of filenames by client come with a slash, but java doesn't find files with slash, so cut first char...
-//            String wantedFileFromClient = httpbase+File.separator+request.getServletPath().substring(1);
-//            String fileContent;
-//            if (new File(wantedFileFromClient+"index.html").exists()) {
-//                wantedFileFromClient += "index.html";
-//            }
-//            fileContent = readFile(wantedFileFromClient);
-//            PrintWriter out = response.getWriter();
-//            if (wantedFileFromClient.endsWith(".html")) {
-//                response.setContentType("text/html;charset=UTF-8");
-//            }
-//            else if (wantedFileFromClient.endsWith(".css")) {
-//                response.setContentType("text/css;charset=UTF-8");
-//            }
-//            else if (wantedFileFromClient.endsWith(".js")){
-//                response.setContentType("application/json;charset=UTF-8");
-//            }
-//            response.addHeader("Access-Control-Allow-Origin", "*");
-//            response.setStatus(HttpServletResponse.SC_OK);
-//            response.reset();
-//            out.print(fileContent);
-//            //out.close();
-//        }
-//        catch (Exception e) {
-//            System.err.println(e.toString());
-//        }
-//    }
-    public void clientRequest_Website(HttpServletRequest request, HttpServletResponse response)
+    public void clientRequest_Website (HttpServletRequest request, HttpServletResponse response)
+    {
+        try {
+            // value of filenames by client come with a slash, but java doesn't find files with slash, so cut first char...
+            String wantedFileFromClient = httpbase+File.separator+request.getServletPath().substring(1);
+            String fileContent;
+            if (new File(wantedFileFromClient+"index.html").exists()) {
+                wantedFileFromClient += "index.html";
+            }
+            fileContent = readFile(wantedFileFromClient);
+            PrintWriter out = response.getWriter();
+            if (wantedFileFromClient.endsWith(".html")) {
+                response.setContentType("text/html;charset=UTF-8");
+            }
+            else if (wantedFileFromClient.endsWith(".css")) {
+                response.setContentType("text/css;charset=UTF-8");
+            }
+            else if (wantedFileFromClient.endsWith(".js")){
+                response.setContentType("application/json;charset=UTF-8");
+            }
+            response.addHeader("Access-Control-Allow-Origin", "*");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.reset();
+            out.print(fileContent);
+            //out.close();
+        }
+        catch (Exception e) {
+            System.err.println(e.toString());
+        }
+    }
+    public void clientRequest_WebsiteFromBackend(HttpServletRequest request, HttpServletResponse response)
     {
         try
         {
