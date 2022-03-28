@@ -17,12 +17,12 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
-public class DatabaseConnect
+public class DatabaseSQLite extends Database
 {  
     String path = System.getProperty("user.dir")+"/test.db";
     Connection connection = null;
     
-    public DatabaseConnect()
+    public DatabaseSQLite()
     {
         File dbFile = new File(path);
         try
@@ -66,15 +66,18 @@ public class DatabaseConnect
             e.printStackTrace();
         }
     }
-    public ArrayList <String> getData()
+    public ArrayList<ArrayList<String>> getData()
     {
-        ArrayList <String> data = new ArrayList<String>();
+        ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
         ResultSet resultSet = executeGet("SELECT name FROM person");
         try
         {
+            ArrayList <String> temp;
             while(resultSet.next())
             {
-                data.add(resultSet.getString("name"));
+                temp = new ArrayList<String>();
+                temp.add(resultSet.getString("name"));
+                data.add(temp);
             }
         }
         catch(SQLException e)
@@ -83,7 +86,7 @@ public class DatabaseConnect
         }
         return data;
     }
-    public int getPersonId(String name)
+    public int getId(String name)
     {
         ResultSet resultSet = executeGet("SELECT id FROM person where name = '"+name+"'");
         try
@@ -99,7 +102,7 @@ public class DatabaseConnect
         }
         return -1;
     }
-    public ArrayList <ArrayList<String>> getDataForAdmin()
+    public ArrayList <ArrayList<String>> getAllData()
     {
         ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
         ResultSet resultSet = executeGet("SELECT "
@@ -181,7 +184,7 @@ public class DatabaseConnect
         for(Entry <String, Integer> entry: result.entrySet())
         {
             executeSet("insert into person (name) values ('"+entry.getKey()+"')");
-            executeSet("insert into login (p_id, p_password) values ("+getPersonId(entry.getKey())+", '"+entry.getValue()+"')");
+            executeSet("insert into login (p_id, p_password) values ("+getId(entry.getKey())+", '"+entry.getValue()+"')");
         }
     }
     public boolean isPermitted(String name, String password)

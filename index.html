@@ -5,6 +5,33 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<title>data</title>
+<style type="text/css">
+	#popupbox{
+	margin: 0; 
+	margin-left: 40%; 
+	margin-right: 40%;
+	margin-top: 50px;
+	padding-top: 10px; 
+	width: 20%;
+	height: 350px;
+	position: absolute; 
+	background: #FBFBF0; 
+	border: solid #000000 2px; 
+	z-index: 9; 
+	font-family: arial; 
+	visibility: hidden; 
+	}
+	</style>
+	<script language="JavaScript" type="text/javascript">
+	function login(showhide){
+	if(showhide == "show"){
+		document.getElementById('popupbox').style.visibility="visible";
+	}else if(showhide == "hide"){
+		document.getElementById('popupbox').style.visibility="hidden"; 
+	}
+	}
+	</script>
 </head>
 <body class="container" style="font-size:30px";>
 <div> some codes </div>
@@ -12,6 +39,36 @@
 <li><a href="?get=insert">insert data</a></li>
 <li><a href="?get=data">get data</a></li>
 <li><a href="?get=admin">get all data</a></li>
+<li><a href="javascript:login('show');">get all data</a></li>
+<!-- <a href="javascript:login('show');">login</a></p> -->
 </ul>
+<div id="popupbox"> 
+	<form name="login" action="" method="post">
+	<center>Username:</center>
+	<center><input name="username" size="14" /></center>
+	<center>Password:</center>
+	<center><input name="password" type="password" size="14" /></center>
+	<center><input type="submit" name="submit" value="login" /></center>
+	<br/>
+	<center><a href="javascript:login('hide');">close</a></center>
+	</form>
+</div>
 </body>
+<script>
+let IPxhr = new XMLHttpRequest();
+const user = "";
+const pw = "";
+IPxhr.open('GET', "user="+user+"&password="+pw, true);
+IPxhr.send();
+IPxhr.onreadystatechange = processRequest;
+function processRequest(e)
+{
+	if (IPxhr.readyState == 4 && IPxhr.status == 200)
+	{
+		let response = JSON.parse(IPxhr.responseText);
+		document.querySelector("#ipAddress").innerHTML = response.ip;
+		alert("yea");
+	}
+}
+</script>
 </html>

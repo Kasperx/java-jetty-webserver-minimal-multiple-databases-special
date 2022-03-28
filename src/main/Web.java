@@ -22,7 +22,7 @@ import org.json.JSONObject;
 
 import com.google.gson.GsonBuilder;
 
-import database.DatabaseConnect;
+import database.DatabaseSQLite;
 
 public class Web
 {
@@ -168,6 +168,11 @@ public class Web
                 website.clientRequest_GetAllData(request, response);
 //                website.clientRequest_askUserData(request, response);
             }
+        }
+        @Override
+        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+        {
+            super.doPost(req, resp);
         }
     }
 }

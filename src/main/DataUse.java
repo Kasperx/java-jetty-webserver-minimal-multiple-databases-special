@@ -19,10 +19,12 @@ import org.json.JSONObject;
 
 import com.google.gson.GsonBuilder;
 
-import database.DatabaseConnect;
+import database.Database;
+import database.DatabaseSQLite;
 
 public class DataUse
 {
+    static Database databasesource;
     String httpbase;
     static String htmlhead; 
     static String htmlend; 
@@ -60,6 +62,7 @@ public class DataUse
         htmlend = ""
                 + "</body>"
                 ;
+        Database databasesource = Database.getInstance();
     }
             
     public void sethttpbase(String httpbase)
@@ -148,9 +151,9 @@ public class DataUse
         try
         {
             System.out.println("Found request: "+request.getParameter("get"));
-            DatabaseConnect database = new DatabaseConnect();
-            ArrayList <String> data = database.getData();
-            database.close();
+//            DatabaseSQLite database = new DatabaseSQLite();
+            ArrayList <ArrayList<String>> data = databasesource.getData();
+            databasesource.close();
 //            response.getWriter().println("{ \"status\": \"ok\"}");
 //            array = new JSONArray(data);
 //            json_mapForJSON = new JSONObject();
@@ -166,11 +169,22 @@ public class DataUse
                     + "<th>name</th>"
                     + "</tr>"
                     + "</thead>";
-            for(String temp: data)
+//            for(String temp: data)
+//            {
+//                websitedata += "<tr><td>";
+//                websitedata += temp;
+//                websitedata += "</tr></td>";
+//            }
+            for(ArrayList <String> tempList: data)
             {
-                websitedata += "<tr><td>";
-                websitedata += temp;
-                websitedata += "</tr></td>";
+                websitedata += "<tr>";
+                for(String temp: tempList)
+                {
+                    websitedata += "<td>";
+                    websitedata += temp;
+                    websitedata += "</td>";
+                }
+                websitedata += "</tr>";
             }
             websitedata += "</thead>";
             websitedata += "</table>";
@@ -226,11 +240,11 @@ public class DataUse
             System.out.println("Found request: "+request.getParameter("name"));
             String name = request.getParameter("user");
             String pw = request.getParameter("pw");
-            DatabaseConnect database = new DatabaseConnect();
-            if(database.isPermitted(name, pw))
+//            databasesource = new DatabaseSQLite();
+            if(databasesource.isPermitted(name, pw))
             {
-                ArrayList <ArrayList<String>> data = database.getDataForAdmin();
-                database.close();
+                ArrayList <ArrayList<String>> data = databasesource.getAllData();
+                databasesource.close();
                 response.setCharacterEncoding("utf-8");
 //            response.setContentType("application/json");
                 response.setContentType("text/html");
@@ -310,10 +324,10 @@ public class DataUse
         try
         {
             System.out.println("Found request: "+request.getParameter("get"));
-            DatabaseConnect database = new DatabaseConnect();
-            database.createDatabaseIfNotExists();
-            database.insertData();
-            database.close();
+//            DatabaseSQLite database = new DatabaseSQLite();
+            databasesource.createDatabaseIfNotExists();
+            ((DatabaseSQLite)databasesource.getInstance()).insertData();
+            databasesource.close();
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);
