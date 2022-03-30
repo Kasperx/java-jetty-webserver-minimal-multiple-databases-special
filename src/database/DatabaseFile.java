@@ -9,30 +9,23 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.sql.Connection;  
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Set;
+import java.util.Map.Entry;
 
-public class DatabaseFile extends Database
+public class DatabaseFile extends Database implements Serializable
 {  
     int id;
     String name;
     String pw;
     boolean admin;
-    String path = System.getProperty("user.dir")+"/test";
     
     public DatabaseFile()
     {
+        path = System.getProperty("user.dir")+"/test";
+//        path = System.getProperty("user.dir")+"/test";
         File dbFile = new File(path);
         try
         {
@@ -50,6 +43,7 @@ public class DatabaseFile extends Database
     
     public DatabaseFile(int id, String name, String pw, boolean admin)
     {
+        path = System.getProperty("user.dir")+"/test";
         File dbFile = new File(path);
         try
         {
@@ -58,7 +52,7 @@ public class DatabaseFile extends Database
                 dbFile.createNewFile();
             }
         }
-        catch(IOException e)
+        catch(Exception e)
         {
             e.printStackTrace();
         }
@@ -83,16 +77,25 @@ public class DatabaseFile extends Database
     }
     public ArrayList<ArrayList<String>> getData()
     {
-        DatabaseFile db;
-        ArrayList<ArrayList<DatabaseFile>> data = new ArrayList<DatabaseFile>();
+        ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
         try(ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(path)))
         {
-            db = new DatabaseFile();
-            db.id = inFile.readLine();
-            db.name = inFile.readLine();
-            db.pw = inFile.readLine();
-            db.admin = inFile.readLine();
-            db = inFile.readObject();
+            DatabaseFile db;
+            Object obj;
+//            db = new DatabaseFile();
+//            db = inFile.readObject();
+            while((obj = inFile.readObject()) != null)
+            {
+//                obj = inFile.readObject();
+                db = new DatabaseFile();
+                db = (DatabaseFile)obj;
+                ArrayList<String> temp = new ArrayList<String>();
+                temp.add(String.valueOf(db.id));
+                temp.add(db.name);
+//                temp.add(db.pw);
+//                temp.add(String.valueOf(db.admin));
+                data.add(temp);
+            }
             return data;
         }
         catch(ClassNotFoundException cnfe)
@@ -125,29 +128,49 @@ public class DatabaseFile extends Database
     public void insertData()
     {
         int id=0;
-        DatabaseFile file2 = new DatabaseFile(id++, "hallo", String.valueOf(new Random().nextInt(1000000) + (100000)), false);
-        DatabaseFile file3 = new DatabaseFile(id++, "hallo", String.valueOf(new Random().nextInt(1000000) + (100000)), false);
-        DatabaseFile file4 = new DatabaseFile(id++, "hallo", String.valueOf(new Random().nextInt(1000000) + (100000)), false);
-        
+        HashMap <String, Integer> result = getNewData();
+        ///////////////////////////////////////////////////////////
         ArrayList <DatabaseFile> data = new ArrayList<DatabaseFile>();
-        for(int i=0; i<10; i++)
+        data.add(new DatabaseFile(
+                id++,
+                "admin",
+                "secret",
+                true
+                ));
+        for(Entry <String, Integer> entry: result.entrySet())
         {
-            data.add(new DatabaseFile(id++, "hallo", String.valueOf(new Random().nextInt(1000000) + (100000)), false));
+            data.add(new DatabaseFile(
+                  id++,
+                  entry.getKey(),
+                  String.valueOf(entry.getValue()),
+                  false
+                  ));
         }
+        
+//        ArrayList <DatabaseFile> data = new ArrayList<DatabaseFile>();
+//        for(int i=0; i<10; i++)
+//        {
+//            data.add(new DatabaseFile(
+//                    id++,
+//                    "hallo"+String.valueOf(new Random().nextInt(10) + (10)),
+//                    String.valueOf(new Random().nextInt(1000000) + (100000)),
+//                    false
+//                    ));
+//        }
         try(ObjectOutputStream write= new ObjectOutputStream (new FileOutputStream(path)))
         {
             for(DatabaseFile temp: data)
             {
-                write.writeObject(temp);
+                write.writeObject((Object)temp);
             }
         }
         catch(NotSerializableException nse)
         {
-            //do something
+            nse.printStackTrace();
         }
         catch(IOException eio)
         {
-            //do something
+            eio.printStackTrace();
         }
     }
     public boolean isPermitted(String name, String password)

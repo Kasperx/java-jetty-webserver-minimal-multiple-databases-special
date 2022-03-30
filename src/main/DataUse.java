@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import com.google.gson.GsonBuilder;
 
 import database.Database;
+import database.DatabaseFile;
 import database.DatabaseSQLite;
 
 public class DataUse
@@ -62,7 +63,7 @@ public class DataUse
         htmlend = ""
                 + "</body>"
                 ;
-        Database databasesource = Database.getInstance();
+        databasesource = Database.getInstance();
     }
             
     public void sethttpbase(String httpbase)
@@ -326,7 +327,7 @@ public class DataUse
             System.out.println("Found request: "+request.getParameter("get"));
 //            DatabaseSQLite database = new DatabaseSQLite();
             databasesource.createDatabaseIfNotExists();
-            ((DatabaseSQLite)databasesource.getInstance()).insertData();
+            ((DatabaseFile)databasesource.getInstance()).insertData();
             databasesource.close();
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/json");

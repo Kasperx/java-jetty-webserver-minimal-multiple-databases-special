@@ -152,32 +152,33 @@ public class DatabaseSQLite extends Database
     }
     public void insertData()
     {
-        ///////////////////////////////////////////////////////////
-        // get names, but only once (-> set)
-        String [] names = {
-                "detlef",
-                "arnold",
-                "ulrike",
-                "emil",
-                "lena",
-                "laura",
-                "achim",
-                "mia",
-                "anna",
-                "jonas"
-        };
-        Map <String, Integer> result = new HashMap<String, Integer>();
-        Set unique = new HashSet();
-        int temp = 0;
-        while(temp<5)
-        {
-            String found = names[new Random().nextInt(10)];
-            if(unique.add(found))
-            {
-                result.put(found, new Random().nextInt(10000000) + 1000000);
-                temp++;
-            }
-        }
+//        ///////////////////////////////////////////////////////////
+//        // get names, but only once (-> set)
+//        String [] names = {
+//                "detlef",
+//                "arnold",
+//                "ulrike",
+//                "emil",
+//                "lena",
+//                "laura",
+//                "achim",
+//                "mia",
+//                "anna",
+//                "jonas"
+//        };
+//        Map <String, Integer> result = new HashMap<String, Integer>();
+//        Set unique = new HashSet();
+//        int temp = 0;
+//        while(temp<5)
+//        {
+//            String found = names[new Random().nextInt(10)];
+//            if(unique.add(found))
+//            {
+//                result.put(found, new Random().nextInt(10000000) + 1000000);
+//                temp++;
+//            }
+//        }
+        HashMap <String, Integer> result = getNewData();
         ///////////////////////////////////////////////////////////
         executeSet("insert into person (name) values ('admin')");
         executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");

@@ -2,6 +2,12 @@ package database;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {
@@ -48,6 +54,26 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
                 break;
         }
         return data;
+    }
+    
+    protected HashMap <String, Integer> getNewData()
+    {
+        //////////////////////////////////////////
+        // get names, but only once (-> set)
+        String[] names = { "detlef", "arnold", "ulrike", "emil", "lena", "laura", "achim", "mia", "anna", "jonas" };
+        HashMap<String, Integer> result = new HashMap<String, Integer>();
+        Set <String> unique = new HashSet<String>();
+        int temp = 0;
+        while(temp < 5)
+        {
+            String found = names[new Random().nextInt(10)];
+            if(unique.add(found))
+            {
+                result.put(found, new Random().nextInt(10000000) + 1000000);
+                temp++;
+            }
+        }
+        return result;
     }
     
     @Override
