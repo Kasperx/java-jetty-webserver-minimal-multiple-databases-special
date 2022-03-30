@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import com.github.javafaker.Faker;
+
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {
     protected enum Enum_Database{
@@ -60,18 +62,31 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     {
         //////////////////////////////////////////
         // get names, but only once (-> set)
-        String[] names = { "detlef", "arnold", "ulrike", "emil", "lena", "laura", "achim", "mia", "anna", "jonas" };
+//        String[] names = { "detlef", "arnold", "ulrike", "emil", "lena", "laura", "achim", "mia", "anna", "jonas" };
+//        HashMap<String, Integer> result = new HashMap<String, Integer>();
+//        Set <String> unique = new HashSet<String>();
+//        int temp = 0;
+//        while(temp < 5)
+//        {
+//            String found = names[new Random().nextInt(10)];
+//            if(unique.add(found))
+//            {
+//                result.put(found, new Random().nextInt(10000000) + 1000000);
+//                temp++;
+//            }
+//        }
         HashMap<String, Integer> result = new HashMap<String, Integer>();
-        Set <String> unique = new HashSet<String>();
+        Faker faker;
         int temp = 0;
-        while(temp < 5)
+        while(temp < 10)
         {
-            String found = names[new Random().nextInt(10)];
-            if(unique.add(found))
-            {
-                result.put(found, new Random().nextInt(10000000) + 1000000);
-                temp++;
-            }
+            faker = new Faker();
+//            String name = faker.name().fullName();
+            String firstName = faker.name().firstName();
+//            String lastName = faker.name().lastName();
+//            String streetAddress = faker.address().streetAddress();
+            result.put(firstName, new Random().nextInt(10000000) + 1000000);
+            temp++;
         }
         return result;
     }

@@ -100,15 +100,15 @@ public class DatabaseFile extends Database implements Serializable
         }
         catch(ClassNotFoundException cnfe)
         {
-            //do something
+            cnfe.printStackTrace();
         }
         catch(FileNotFoundException fnfe)
         {
-            //do something
+            fnfe.printStackTrace();
         }
         catch(IOException e)
         {
-            //do something
+            e.printStackTrace();
         }
         return data;
     }
@@ -118,7 +118,36 @@ public class DatabaseFile extends Database implements Serializable
     }
     public ArrayList <ArrayList<String>> getAllData()
     {
-        ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+        try(ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(path)))
+        {
+            DatabaseFile db;
+            Object obj;
+            while((obj = inFile.readObject()) != null)
+            {
+                db = new DatabaseFile();
+                db = (DatabaseFile)obj;
+                ArrayList<String> temp = new ArrayList<String>();
+                temp.add(String.valueOf(db.id));
+                temp.add(db.name);
+                temp.add(db.pw);
+                temp.add(String.valueOf(db.admin));
+                data.add(temp);
+            }
+            return data;
+        }
+        catch(ClassNotFoundException cnfe)
+        {
+            cnfe.printStackTrace();
+        }
+        catch(FileNotFoundException fnfe)
+        {
+            fnfe.printStackTrace();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
         return data;
     }
     public boolean createDatabaseIfNotExists()
@@ -175,6 +204,35 @@ public class DatabaseFile extends Database implements Serializable
     }
     public boolean isPermitted(String name, String password)
     {
+        try(ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(path)))
+        {
+            DatabaseFile db;
+            Object obj;
+            if((obj = inFile.readObject()) != null)
+            {
+                db = new DatabaseFile();
+                db = (DatabaseFile)obj;
+                if(db.name.equals(name) && db.pw.equals(password))
+                {
+                    return true;
+                }
+            }
+        }
+        catch(ClassNotFoundException cnfe)
+        {
+            cnfe.printStackTrace();
+            return false;
+        }
+        catch(FileNotFoundException fnfe)
+        {
+            fnfe.printStackTrace();
+            return false;
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
         return false;
     }
 }  
