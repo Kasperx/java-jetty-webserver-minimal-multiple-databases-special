@@ -32,7 +32,8 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
 //    }
     public static Database getInstance()
     {
-        return getInstance(Enum_Database.file);
+//        return getInstance(Enum_Database.file);
+        return getInstance(Enum_Database.sqlite);
     }
     public static Database getInstance(Enum_Database source)
     {
@@ -83,34 +84,22 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
             faker = new Faker();
 //            String name = faker.name().fullName();
             String firstName = faker.name().firstName();
-//            String lastName = faker.name().lastName();
+            String lastName = faker.name().lastName();
 //            String streetAddress = faker.address().streetAddress();
-            result.put(firstName, new Random().nextInt(10000000) + 1000000);
+//            result.put(firstName, new Random().nextInt(10000000) + 1000000);
+            result.put(firstName+":"+lastName, new Random().nextInt(10000000) + 1000000);
             temp++;
         }
         return result;
     }
-    
-    @Override
-    abstract public void connect();
-
-    @Override
-    abstract public boolean createDatabaseIfNotExists();
-
-    @Override
-    abstract public ArrayList<ArrayList<String>> getData();
-
-    @Override
-    abstract public ArrayList<ArrayList<String>> getAllData();
-
-    @Override
-    abstract public void close();
-
-    @Override
-    abstract public boolean isPermitted(String name, String password);
-
-    @Override
-    abstract public int getId(String name);
+    public abstract void connect();
+    public abstract boolean createDatabaseIfNotExists();
+    public abstract ArrayList<ArrayList<String>> getData();
+    public abstract ArrayList<ArrayList<String>> getAllData();
+    public abstract void close();
+    public abstract boolean isPermitted(String name, String password);
+    public abstract int getId(String name);
+    public abstract void insertData();
 
 //    @Override
 //    abstract ResultSet executeGet(String sql);

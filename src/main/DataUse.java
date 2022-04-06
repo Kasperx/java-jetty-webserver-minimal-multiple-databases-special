@@ -256,6 +256,7 @@ public class DataUse
                 websitedata += "<tr>"
                         + "<th>id</th>"
                         + "<th>name</th>"
+                        + "<th>last name</th>"
                         + "<th>password</th>"
                         + "<th>admin-permit</th>"
                         + "</tr>"
@@ -327,7 +328,8 @@ public class DataUse
             System.out.println("Found request: "+request.getParameter("get"));
 //            DatabaseSQLite database = new DatabaseSQLite();
             databasesource.createDatabaseIfNotExists();
-            ((DatabaseFile)databasesource.getInstance()).insertData();
+//            ((DatabaseSQLite)databasesource.getInstance()).insertData();
+            databasesource.getInstance().insertData();
             databasesource.close();
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/json");
@@ -396,12 +398,19 @@ public class DataUse
     {
         try
         {
-            return new ArrayList(
-                    Files.readAllLines(
-                            Paths.get(fpath),
-                            StandardCharsets.UTF_8)
-                    );
-            
+        	if(new File(fpath).exists())
+        	{
+		        return new ArrayList(
+		                Files.readAllLines(
+		                        Paths.get(fpath),
+		                        StandardCharsets.UTF_8)
+		                );
+        	}
+        	else
+        	{
+        		new File(fpath).createNewFile();
+        		return new ArrayList<String>();
+        	}
         } catch (Exception e) {
             e.printStackTrace();
             return null;

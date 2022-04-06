@@ -19,6 +19,7 @@ public class DatabaseFile extends Database implements Serializable
 {  
     int id;
     String name;
+    String lastname;
     String pw;
     boolean admin;
     
@@ -41,7 +42,7 @@ public class DatabaseFile extends Database implements Serializable
         }
     }
     
-    public DatabaseFile(int id, String name, String pw, boolean admin)
+    public DatabaseFile(int id, String name, String lastname, String pw, boolean admin)
     {
         path = System.getProperty("user.dir")+"/test";
         File dbFile = new File(path);
@@ -58,6 +59,7 @@ public class DatabaseFile extends Database implements Serializable
         }
         this.id = id;
         this.name = name;
+        this.lastname = lastname;
         this.pw = pw;
         this.admin = admin;
     }
@@ -92,6 +94,7 @@ public class DatabaseFile extends Database implements Serializable
                 ArrayList<String> temp = new ArrayList<String>();
                 temp.add(String.valueOf(db.id));
                 temp.add(db.name);
+                temp.add(db.lastname);
 //                temp.add(db.pw);
 //                temp.add(String.valueOf(db.admin));
                 data.add(temp);
@@ -163,6 +166,7 @@ public class DatabaseFile extends Database implements Serializable
         data.add(new DatabaseFile(
                 id++,
                 "admin",
+                "admin",
                 "secret",
                 true
                 ));
@@ -170,7 +174,8 @@ public class DatabaseFile extends Database implements Serializable
         {
             data.add(new DatabaseFile(
                   id++,
-                  entry.getKey(),
+                  entry.getKey().split(":")[0],
+                  entry.getKey().split(":")[1],
                   String.valueOf(entry.getValue()),
                   false
                   ));

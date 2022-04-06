@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -69,15 +70,38 @@ public class DatabaseSQLite extends Database
     public ArrayList<ArrayList<String>> getData()
     {
         ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-        ResultSet resultSet = executeGet("SELECT name FROM person");
+        String sql = "SELECT id, name, lastname FROM person where person.name != 'admin'";
+//        sql = "SELECT "
+//                + "person.id, "
+//                + "person.name, "
+//                + "login.p_password, "
+//                + "login.p_admin "
+//                + "FROM person "
+//                + "join login on person.id = login.p_id "
+//                + "where person.name != 'admin'";
+        ResultSet resultSet = executeGet(sql);
+        ResultSetMetaData rsmd = getMetaData(sql);
         try
         {
             ArrayList <String> temp;
             while(resultSet.next())
             {
-                temp = new ArrayList<String>();
-                temp.add(resultSet.getString("name"));
-                data.add(temp);
+            	temp = new ArrayList<String>();
+//            	if(resultSet.getString("name").equals("admin"))
+//            	{
+//            		continue;
+//            	}
+            	for(int column=1; column <= rsmd.getColumnCount(); column++)
+            	{
+//	                temp.add(resultSet.getString("name"));
+            		if(!rsmd.getColumnName(column).equals("p_password")
+        				&& !rsmd.getColumnName(column).equals("p_admin")
+            			)
+            		{
+            			temp.add(resultSet.getString(column));
+            		}
+            	}
+            	data.add(temp);
             }
         }
         catch(SQLException e)
@@ -108,6 +132,7 @@ public class DatabaseSQLite extends Database
         ResultSet resultSet = executeGet("SELECT "
                 + "person.id, "
                 + "person.name, "
+                + "person.lastname, "
                 + "login.p_password, "
                 + "login.p_admin "
                 + "FROM person "
@@ -120,6 +145,7 @@ public class DatabaseSQLite extends Database
                 temp = new ArrayList<String>();
                 temp.add(resultSet.getString("id"));
                 temp.add(resultSet.getString("name"));
+                temp.add(resultSet.getString("lastname"));
                 temp.add(resultSet.getString("p_password"));
                 temp.add(resultSet.getString("p_admin"));
                 data.add(temp);
@@ -138,12 +164,14 @@ public class DatabaseSQLite extends Database
         //////////////////////////////
         executeSet("create table if not exists person ("
                 + "id integer primary key autoincrement,"
-                + "name text unique"
+                + "name text unique,"
+                + "lastname text"
                 + ")");
         executeSet("create table if not exists login ("
                 + "id integer primary key autoincrement,"
                 + "p_id integer,"
                 + "p_name text,"
+                + "p_lastname text,"
                 + "p_password text unique,"
                 + "p_admin default 'false',"
                 + "foreign key (p_id) references person(id)"
@@ -180,11 +208,21 @@ public class DatabaseSQLite extends Database
 //        }
         HashMap <String, Integer> result = getNewData();
         ///////////////////////////////////////////////////////////
-        executeSet("insert into person (name) values ('admin')");
+        executeSet("insert into person (name, lastname) values ('admin', 'admin')");
         executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
         for(Entry <String, Integer> entry: result.entrySet())
         {
-            executeSet("insert into person (name) values ('"+entry.getKey()+"')");
+            executeSet(""
+            		+ "insert into person ("
+            		+ "name, "
+            		+ "lastname"
+            		+ ") "
+            		+ "values "
+            		+ "("
+            		+ "'"+entry.getKey().split(":")[0]+"', "
+    				+ "'"+entry.getKey().split(":")[1]+"'"
+					+ ")"
+					+ "");
             executeSet("insert into login (p_id, p_password) values ("+getId(entry.getKey())+", '"+entry.getValue()+"')");
         }
     }
@@ -228,6 +266,20 @@ public class DatabaseSQLite extends Database
             e.printStackTrace();
             return null;
         }
+    }
+    ResultSetMetaData getMetaData(String sql)
+    {
+    	try
+    	{
+    		System.out.println(sql);
+    		PreparedStatement stmt = connection.prepareStatement(sql);
+    		return stmt.getMetaData();
+    	}
+    	catch(SQLException e)
+    	{
+    		e.printStackTrace();
+    		return null;
+    	}
     }
     void executeSet(String sql)
     {
