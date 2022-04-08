@@ -166,30 +166,36 @@ public class DataUse
             response.setStatus(HttpServletResponse.SC_OK);
             String websitedata = htmlhead;
             websitedata += "<table class=\"table\">";
-            websitedata += "<tr>"
-                    + "<th>name</th>"
-                    + "</tr>"
-                    + "</thead>";
-//            for(String temp: data)
-//            {
-//                websitedata += "<tr><td>";
-//                websitedata += temp;
-//                websitedata += "</tr></td>";
-//            }
-            for(ArrayList <String> tempList: data)
+            for(int row=0; row<data.size(); row++)
             {
-                websitedata += "<tr>";
-                for(String temp: tempList)
-                {
-                    websitedata += "<td>";
-                    websitedata += temp;
-                    websitedata += "</td>";
-                }
-                websitedata += "</tr>";
+        		ArrayList <String> tempList = data.get(row);
+        		if(row==0)
+        		{
+        			websitedata += "<thead>";
+        			for(String temp: tempList)
+        			{
+            			websitedata += ""
+        					+ "<th>"
+        					+ temp
+        					+ "</th>";	
+        			}
+        			websitedata += "</thead>";
+        		}
+        		else
+        		{
+        			websitedata += "<tr>";
+            		for(String temp: tempList)
+            		{
+                        websitedata += "<td>";
+                        websitedata += temp;
+                        websitedata += "</td>";
+            		}
+            		websitedata += "</tr>";
+    			}
             }
-            websitedata += "</thead>";
             websitedata += "</table>";
             websitedata += htmlend;
+            System.out.println(websitedata);
 //            response.getWriter().println(websitedata);
             response.getWriter().append(websitedata);
 //            PrintWriter out = response.getWriter();
@@ -200,6 +206,59 @@ public class DataUse
             e.printStackTrace();
         }
     }
+//    public static void clientRequest_CallDataFromDb(HttpServletRequest request, HttpServletResponse response)
+//    {
+//    	try
+//    	{
+//    		System.out.println("Found request: "+request.getParameter("get"));
+////            DatabaseSQLite database = new DatabaseSQLite();
+//    		ArrayList <ArrayList<String>> data = databasesource.getData();
+//    		databasesource.close();
+////            response.getWriter().println("{ \"status\": \"ok\"}");
+////            array = new JSONArray(data);
+////            json_mapForJSON = new JSONObject();
+////            json_mapForJSON.put("Tablenames", array);
+////            String result = new GsonBuilder().create().toJson(json_mapForJSON);
+//    		response.setCharacterEncoding("utf-8");
+////            response.setContentType("application/json");
+//    		response.setContentType("text/html");
+//    		response.setStatus(HttpServletResponse.SC_OK);
+//    		String websitedata = htmlhead;
+//    		websitedata += "<table class=\"table\">";
+//    		websitedata += "<tr>"
+//    				+ "<th>name</th>"
+//    				+ "</tr>"
+//    				+ "</thead>";
+////            for(String temp: data)
+////            {
+////                websitedata += "<tr><td>";
+////                websitedata += temp;
+////                websitedata += "</tr></td>";
+////            }
+//    		for(ArrayList <String> tempList: data)
+//    		{
+//    			websitedata += "<tr>";
+//    			for(String temp: tempList)
+//    			{
+//    				websitedata += "<td>";
+//    				websitedata += temp;
+//    				websitedata += "</td>";
+//    			}
+//    			websitedata += "</tr>";
+//    		}
+//    		websitedata += "</thead>";
+//    		websitedata += "</table>";
+//    		websitedata += htmlend;
+////            response.getWriter().println(websitedata);
+//    		response.getWriter().append(websitedata);
+////            PrintWriter out = response.getWriter();
+////            out.print(result);
+////            out.close();
+//    	}
+//    	catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    }
     public static void clientRequest_askUserData(HttpServletRequest request, HttpServletResponse response)
     {
         try
@@ -253,24 +312,32 @@ public class DataUse
                 String websitedata = htmlhead;
                 websitedata += "<table class=\"table\">";
                 websitedata += "<thead>";
-                websitedata += "<tr>"
-                        + "<th>id</th>"
-                        + "<th>name</th>"
-                        + "<th>last name</th>"
-                        + "<th>password</th>"
-                        + "<th>admin-permit</th>"
-                        + "</tr>"
-                        + "</thead>";
-                for(ArrayList <String> tempList: data)
+                for(int row=0; row<data.size(); row++)
                 {
-                    websitedata += "<tr>";
-                    for(String temp: tempList)
-                    {
-                        websitedata += "<td>";
-                        websitedata += temp;
-                        websitedata += "</td>";
-                    }
-                    websitedata += "</tr>";
+            		ArrayList <String> tempList = data.get(row);
+            		if(row==0)
+            		{
+            			websitedata += "<thead>";
+            			for(String temp: tempList)
+            			{
+                			websitedata += ""
+            					+ "<th>"
+            					+ temp
+            					+ "</th>";	
+            			}
+            			websitedata += "</thead>";
+            		}
+            		else
+            		{
+            			websitedata += "<tr>";
+                		for(String temp: tempList)
+                		{
+                            websitedata += "<td>";
+                            websitedata += temp;
+                            websitedata += "</td>";
+                		}
+                		websitedata += "</tr>";
+        			}
                 }
                 websitedata += "</table>";
                 websitedata += htmlend;

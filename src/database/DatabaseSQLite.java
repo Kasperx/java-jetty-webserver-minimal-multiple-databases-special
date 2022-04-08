@@ -70,36 +70,30 @@ public class DatabaseSQLite extends Database
     public ArrayList<ArrayList<String>> getData()
     {
         ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-        String sql = "SELECT id, name, lastname FROM person where person.name != 'admin'";
-//        sql = "SELECT "
-//                + "person.id, "
-//                + "person.name, "
-//                + "login.p_password, "
-//                + "login.p_admin "
-//                + "FROM person "
-//                + "join login on person.id = login.p_id "
-//                + "where person.name != 'admin'";
+        String sql = ""
+        		+ "SELECT "
+        		+ "id, "
+        		+ "name, "
+        		+ "lastname "
+        		+ "FROM "
+        		+ "person "
+        		+ "where name != 'admin'";
         ResultSet resultSet = executeGet(sql);
         ResultSetMetaData rsmd = getMetaData(sql);
         try
         {
-            ArrayList <String> temp;
+            ArrayList <String> temp = new ArrayList<String>();
+            for(int column=1; column <= rsmd.getColumnCount(); column++)
+            {
+        		temp.add(rsmd.getColumnName(column));
+            }
+            data.add(temp);
             while(resultSet.next())
             {
             	temp = new ArrayList<String>();
-//            	if(resultSet.getString("name").equals("admin"))
-//            	{
-//            		continue;
-//            	}
             	for(int column=1; column <= rsmd.getColumnCount(); column++)
             	{
-//	                temp.add(resultSet.getString("name"));
-            		if(!rsmd.getColumnName(column).equals("p_password")
-        				&& !rsmd.getColumnName(column).equals("p_admin")
-            			)
-            		{
             			temp.add(resultSet.getString(column));
-            		}
             	}
             	data.add(temp);
             }
@@ -129,26 +123,32 @@ public class DatabaseSQLite extends Database
     public ArrayList <ArrayList<String>> getAllData()
     {
         ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-        ResultSet resultSet = executeGet("SELECT "
+        String sql = "SELECT "
                 + "person.id, "
                 + "person.name, "
                 + "person.lastname, "
                 + "login.p_password, "
                 + "login.p_admin "
                 + "FROM person "
-                + "join login on person.id = login.p_id");
+                + "join login on person.id = login.p_id";
+        ResultSet resultSet = executeGet(sql);
         try
         {
-            ArrayList <String> temp;
+        	ResultSetMetaData rsmd = getMetaData(sql);
+        	ArrayList <String> temp = new ArrayList<String>();
+            for(int column=1; column <= rsmd.getColumnCount(); column++)
+            {
+        		temp.add(rsmd.getColumnName(column));
+            }
+            data.add(temp);
             while(resultSet.next())
             {
-                temp = new ArrayList<String>();
-                temp.add(resultSet.getString("id"));
-                temp.add(resultSet.getString("name"));
-                temp.add(resultSet.getString("lastname"));
-                temp.add(resultSet.getString("p_password"));
-                temp.add(resultSet.getString("p_admin"));
-                data.add(temp);
+            	temp = new ArrayList<String>();
+            	for(int column=1; column <= rsmd.getColumnCount(); column++)
+            	{
+        			temp.add(resultSet.getString(column));
+            	}
+            	data.add(temp);
             }
         }
         catch(SQLException e)

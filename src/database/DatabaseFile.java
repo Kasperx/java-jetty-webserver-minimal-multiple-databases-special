@@ -126,13 +126,21 @@ public class DatabaseFile extends Database implements Serializable
         {
             DatabaseFile db;
             Object obj;
+            ArrayList<String> temp = new ArrayList<String>();
+            temp.add("id");
+            temp.add("name");
+            temp.add("lastname");
+            temp.add("password");
+            temp.add("permission");
+            data.add(temp);
             while((obj = inFile.readObject()) != null)
             {
                 db = new DatabaseFile();
                 db = (DatabaseFile)obj;
-                ArrayList<String> temp = new ArrayList<String>();
+                temp = new ArrayList<String>();
                 temp.add(String.valueOf(db.id));
                 temp.add(db.name);
+                temp.add(db.lastname);
                 temp.add(db.pw);
                 temp.add(String.valueOf(db.admin));
                 data.add(temp);
