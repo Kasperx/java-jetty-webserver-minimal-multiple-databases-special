@@ -152,55 +152,14 @@ public class DataUse
         try
         {
             System.out.println("Found request: "+request.getParameter("get"));
-//            DatabaseSQLite database = new DatabaseSQLite();
-            ArrayList <ArrayList<String>> data = databasesource.getData();
-            databasesource.close();
-//            response.getWriter().println("{ \"status\": \"ok\"}");
-//            array = new JSONArray(data);
-//            json_mapForJSON = new JSONObject();
-//            json_mapForJSON.put("Tablenames", array);
-//            String result = new GsonBuilder().create().toJson(json_mapForJSON);
             response.setCharacterEncoding("utf-8");
-//            response.setContentType("application/json");
             response.setContentType("text/html");
             response.setStatus(HttpServletResponse.SC_OK);
-            String websitedata = htmlhead;
-            websitedata += "<table class=\"table\">";
-            for(int row=0; row<data.size(); row++)
-            {
-        		ArrayList <String> tempList = data.get(row);
-        		if(row==0)
-        		{
-        			websitedata += "<thead>";
-        			for(String temp: tempList)
-        			{
-            			websitedata += ""
-        					+ "<th>"
-        					+ temp
-        					+ "</th>";	
-        			}
-        			websitedata += "</thead>";
-        		}
-        		else
-        		{
-        			websitedata += "<tr>";
-            		for(String temp: tempList)
-            		{
-                        websitedata += "<td>";
-                        websitedata += temp;
-                        websitedata += "</td>";
-            		}
-            		websitedata += "</tr>";
-    			}
-            }
-            websitedata += "</table>";
-            websitedata += htmlend;
+            ArrayList <ArrayList<String>> data = databasesource.getData();
+            String websitedata = fillWebsiteWithData(data);
+            databasesource.close();
             System.out.println(websitedata);
-//            response.getWriter().println(websitedata);
             response.getWriter().append(websitedata);
-//            PrintWriter out = response.getWriter();
-//            out.print(result);
-//            out.close();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -303,44 +262,13 @@ public class DataUse
 //            databasesource = new DatabaseSQLite();
             if(databasesource.isPermitted(name, pw))
             {
-                ArrayList <ArrayList<String>> data = databasesource.getAllData();
-                databasesource.close();
                 response.setCharacterEncoding("utf-8");
 //            response.setContentType("application/json");
                 response.setContentType("text/html");
                 response.setStatus(HttpServletResponse.SC_OK);
-                String websitedata = htmlhead;
-                websitedata += "<table class=\"table\">";
-                websitedata += "<thead>";
-                for(int row=0; row<data.size(); row++)
-                {
-            		ArrayList <String> tempList = data.get(row);
-            		if(row==0)
-            		{
-            			websitedata += "<thead>";
-            			for(String temp: tempList)
-            			{
-                			websitedata += ""
-            					+ "<th>"
-            					+ temp
-            					+ "</th>";	
-            			}
-            			websitedata += "</thead>";
-            		}
-            		else
-            		{
-            			websitedata += "<tr>";
-                		for(String temp: tempList)
-                		{
-                            websitedata += "<td>";
-                            websitedata += temp;
-                            websitedata += "</td>";
-                		}
-                		websitedata += "</tr>";
-        			}
-                }
-                websitedata += "</table>";
-                websitedata += htmlend;
+                ArrayList <ArrayList<String>> data = databasesource.getAllData();
+                String websitedata = fillWebsiteWithData(data);
+                databasesource.close();
                 response.getWriter().println(websitedata);
             }
             else
@@ -350,14 +278,50 @@ public class DataUse
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().println("{ \"status\": \"wrong data\"}");
             }
-//            PrintWriter out = response.getWriter();
-//            out.print(result);
-//            out.close();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+	private static String fillWebsiteWithData(ArrayList <ArrayList<String>> data)
+	{
+		String websitedata = htmlhead;
+		websitedata += "<table class=\"table\">";
+		websitedata += "<thead>";
+		for(int row=0; row<data.size(); row++)
+		{
+			// build header
+			ArrayList <String> tempList = data.get(row);
+			if(row==0)
+			{
+				websitedata += "<thead>";
+				for(String temp: tempList)
+				{
+					websitedata += ""
+						+ "<th>"
+						+ temp
+						+ "</th>";	
+				}
+				websitedata += "</thead>";
+			}
+			// build data
+			else
+			{
+				websitedata += "<tr>";
+				for(String temp: tempList)
+				{
+		            websitedata += "<td>";
+		            websitedata += temp;
+		            websitedata += "</td>";
+				}
+				websitedata += "</tr>";
+			}
+		}
+		websitedata += "</table>";
+		websitedata += htmlend;
+		return websitedata;
+	}
 //    public static void clientRequest_GetAllData(HttpServletRequest request, HttpServletResponse response)
 //    {
 //        try

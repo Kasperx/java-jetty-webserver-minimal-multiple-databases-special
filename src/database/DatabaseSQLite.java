@@ -69,7 +69,6 @@ public class DatabaseSQLite extends Database
     }
     public ArrayList<ArrayList<String>> getData()
     {
-        ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
         String sql = ""
         		+ "SELECT "
         		+ "id, "
@@ -78,30 +77,31 @@ public class DatabaseSQLite extends Database
         		+ "FROM "
         		+ "person "
         		+ "where name != 'admin'";
-        ResultSet resultSet = executeGet(sql);
-        ResultSetMetaData rsmd = getMetaData(sql);
-        try
-        {
-            ArrayList <String> temp = new ArrayList<String>();
-            for(int column=1; column <= rsmd.getColumnCount(); column++)
-            {
-        		temp.add(rsmd.getColumnName(column));
-            }
-            data.add(temp);
-            while(resultSet.next())
-            {
-            	temp = new ArrayList<String>();
-            	for(int column=1; column <= rsmd.getColumnCount(); column++)
-            	{
-            			temp.add(resultSet.getString(column));
-            	}
-            	data.add(temp);
-            }
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
+        ArrayList<ArrayList<String>> data = getDataFromDBWithHeader(sql);
+//        ResultSet resultSet = executeGet(sql);
+//        ResultSetMetaData rsmd = getMetaData(sql);
+//        try
+//        {
+//            ArrayList <String> temp = new ArrayList<String>();
+//            for(int column=1; column <= rsmd.getColumnCount(); column++)
+//            {
+//        		temp.add(rsmd.getColumnName(column));
+//            }
+//            data.add(temp);
+//            while(resultSet.next())
+//            {
+//            	temp = new ArrayList<String>();
+//            	for(int column=1; column <= rsmd.getColumnCount(); column++)
+//            	{
+//            			temp.add(resultSet.getString(column));
+//            	}
+//            	data.add(temp);
+//            }
+//        }
+//        catch(SQLException e)
+//        {
+//            e.printStackTrace();
+//        }
         return data;
     }
     public int getId(String name)
@@ -122,7 +122,6 @@ public class DatabaseSQLite extends Database
     }
     public ArrayList <ArrayList<String>> getAllData()
     {
-        ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
         String sql = "SELECT "
                 + "person.id, "
                 + "person.name, "
@@ -131,30 +130,31 @@ public class DatabaseSQLite extends Database
                 + "login.p_admin "
                 + "FROM person "
                 + "join login on person.id = login.p_id";
-        ResultSet resultSet = executeGet(sql);
-        try
-        {
-        	ResultSetMetaData rsmd = getMetaData(sql);
-        	ArrayList <String> temp = new ArrayList<String>();
-            for(int column=1; column <= rsmd.getColumnCount(); column++)
-            {
-        		temp.add(rsmd.getColumnName(column));
-            }
-            data.add(temp);
-            while(resultSet.next())
-            {
-            	temp = new ArrayList<String>();
-            	for(int column=1; column <= rsmd.getColumnCount(); column++)
-            	{
-        			temp.add(resultSet.getString(column));
-            	}
-            	data.add(temp);
-            }
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
+        ArrayList <ArrayList<String>> data = getDataFromDBWithHeader(sql);
+//        try
+//        {
+//        	ResultSet resultSet = executeGet(sql);
+//        	ResultSetMetaData rsmd = getMetaData(sql);
+//        	ArrayList <String> temp = new ArrayList<String>();
+//            for(int column=1; column <= rsmd.getColumnCount(); column++)
+//            {
+//        		temp.add(rsmd.getColumnName(column));
+//            }
+//            data.add(temp);
+//            while(resultSet.next())
+//            {
+//            	temp = new ArrayList<String>();
+//            	for(int column=1; column <= rsmd.getColumnCount(); column++)
+//            	{
+//        			temp.add(resultSet.getString(column));
+//            	}
+//            	data.add(temp);
+//            }
+//        }
+//        catch(SQLException e)
+//        {
+//            e.printStackTrace();
+//        }
         return data;
     }
     public boolean createDatabaseIfNotExists()
@@ -212,6 +212,9 @@ public class DatabaseSQLite extends Database
         executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
         for(Entry <String, Integer> entry: result.entrySet())
         {
+        	String name = entry.getKey().split(":")[0];
+        	String lastname = entry.getKey().split(":")[1];
+        	lastname = lastname.split("=")[0];
             executeSet(""
             		+ "insert into person ("
             		+ "name, "
@@ -223,7 +226,14 @@ public class DatabaseSQLite extends Database
     				+ "'"+entry.getKey().split(":")[1]+"'"
 					+ ")"
 					+ "");
-            executeSet("insert into login (p_id, p_password) values ("+getId(entry.getKey())+", '"+entry.getValue()+"')");
+            executeSet("insert into "
+            		+ "login ("
+            		+ "p_id, "
+            		+ "p_password"
+            		+ ") values ("
+            		+ ""+getId(name)+", "
+    				+ "'"+entry.getValue()+"'"
+					+ ")");
         }
     }
     public boolean isPermitted(String name, String password)
@@ -293,5 +303,76 @@ public class DatabaseSQLite extends Database
             e.printStackTrace();
         }
     }
+    ArrayList <ArrayList<String>> getDataFromDBWithoutHeader(String sql)
+    {
+    	ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+    	try
+    	{
+        	ResultSet resultSet = executeGet(sql);
+        	ResultSetMetaData rsmd = resultSet.getMetaData();
+        	data = getDataFromDB(sql, resultSet, rsmd);
+    	}
+    	catch(SQLException e)
+    	{
+    		e.printStackTrace();
+    	}
+    	return data;
+    }    
+    ArrayList <ArrayList<String>> getDataFromDB(String sql, ResultSet resultSet, ResultSetMetaData rsmd)
+    {
+    	ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+        try
+        {
+        	ArrayList <String> temp = new ArrayList<String>();
+            while(resultSet.next())
+            {
+            	temp = new ArrayList<String>();
+            	for(int column=1; column <= rsmd.getColumnCount(); column++)
+            	{
+        			temp.add(resultSet.getString(column));
+            	}
+            	data.add(temp);
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return data;
+    }    
+    ArrayList <ArrayList<String>> getDataFromDBWithHeader(String sql)
+    {
+    	ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+    	ArrayList <ArrayList<String>> header = new ArrayList<ArrayList<String>>();
+    	ArrayList <ArrayList<String>> content = new ArrayList<ArrayList<String>>();
+    	try
+    	{
+    		ResultSet resultSet = executeGet(sql);
+    		// get header
+    		ResultSetMetaData rsmd = getMetaData(sql);
+    		ArrayList <String> temp = new ArrayList<String>();
+    		for(int column=1; column <= rsmd.getColumnCount(); column++)
+    		{
+    			temp.add(rsmd.getColumnName(column));
+    		}
+    		header.add(temp);
+    		// get content
+    		content = getDataFromDB(sql, resultSet, rsmd);
+    		// migrate
+    		for(ArrayList<String> migrate: header)
+    		{
+    			data.add(migrate);
+    		}
+    		for(ArrayList<String> migrate: content)
+    		{
+    			data.add(migrate);
+    		}
+    	}
+    	catch(SQLException e)
+    	{
+    		e.printStackTrace();
+    	}
+    	return data;
+    }    
 }  
 
