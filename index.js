@@ -6,37 +6,38 @@ function login()
     var modal_login = document.getElementById('login_btn');
     const user = document.getElementById("uname").value;
     const pw = document.getElementById("psw").value;
+    const remember = document.getElementById("remember").value;
     modal.style.display = "none";
     if(user != "" && pw != "" )
     {
-        // alert("juhu");
-        // const user = document.getElementById("uname").innerHTML;
-        // const pw = document.getElementById("psw").innerHTML;
-        const data = {'get':'admin', 'user':'user', 'pw':'pw'};
-        const result = encodeQueryData(data);
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', result, true);
-        xhr.send();
-        xhr.onreadystatechange = processRequest;
-        function processRequest(e) {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                console.log("juhu");
-            }
-        }
-
-        // IPxhr.open('GET', "?get=admin&user="+user+"&password="+pw, true);
-        // IPxhr.send();
-        // IPxhr.onreadystatechange = processRequest;
-        // function processRequest(e)
-        // {
-        // 	if (IPxhr.readyState == 4 && IPxhr.status == 200)
-        // 	{
-        // 		// let response = JSON.parse(IPxhr.responseText);
-        // 		// document.querySelector("#ipAddress").innerHTML = response.ip;
-        // 		// alert("yea");
-        //         alert("got it");
-        // 	}
-        // }
+		
+		var url = "localhost:4000/?";
+		const data = {'get':'admin', 'user':user, 'pw':pw, 'remember':remember};
+        var params = '?'+encodeQueryData(data);
+        params = encodeQueryData(data);
+		/*
+		var http = new XMLHttpRequest();
+		http.open("GET", url+params, true);
+		http.onreadystatechange = function()
+		{
+		    if(http.readyState == 4 && http.status == 200) {
+		        alert(http.responseText);
+		    }
+		}
+		http.send(null);
+		*/
+		//var params = "somevariable=somevalue&anothervariable=anothervalue";
+		const fullurl = url+params;
+		console.log(fullurl);
+		var http = new XMLHttpRequest();
+		http.open('POST', fullurl, true);
+		http.onreadystatechange = function()
+		{
+		    if(this.readyState == 4 && this.status == 200) {
+		        alert(this.responseText);
+		    }
+		}
+		http.send(params);
     }
 }
 
