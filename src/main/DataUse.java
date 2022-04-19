@@ -27,23 +27,25 @@ public class DataUse
 {
     static Database databasesource;
     String httpbase;
-    static String htmlhead; 
-    static String htmlend; 
+    static String htmlhead;
+    static String htmlend;
     
     public DataUse()
     {
         ///////////////////////////////////////////
         // get libs from online
         htmlhead = ""
-                + "<!DOCTYPE html>\n"
+                + "<!DOCTYPE html>"
                 + "<head>"
                 + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
                 + "<meta charset=\"utf-8\">"
                 + "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\">"
                 + "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js\"></script>"
-                + "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js\"></script>-"
+                + "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js\"></script>"
                 + "</head>"
                 + "<body class=\"container\" style=\"font-size:30px\";>"
+//                + "<body>"
+//                + "<div class=\"container\" style=\"font-size:30px\";>"
                 ;
         // get libs from offline
 //        htmlhead = ""
@@ -64,6 +66,7 @@ public class DataUse
                 + "</body>"
                 ;
         databasesource = Database.getInstance();
+        databasesource.setHeaderInUppercaseCharacter(true);
     }
             
     public void sethttpbase(String httpbase)
@@ -161,7 +164,8 @@ public class DataUse
             System.out.println(websitedata);
             response.getWriter().append(websitedata);
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
@@ -279,7 +283,8 @@ public class DataUse
                 response.getWriter().println("{ \"status\": \"wrong data\"}");
             }
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }

@@ -206,15 +206,15 @@ public class DatabaseSQLite extends Database
 //                temp++;
 //            }
 //        }
-        HashMap <String, Integer> result = getNewData();
+        HashMap <String[], Integer> result = getNewData();
         ///////////////////////////////////////////////////////////
         executeSet("insert into person (name, lastname) values ('admin', 'admin')");
         executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
-        for(Entry <String, Integer> entry: result.entrySet())
+        for(Entry <String[], Integer> entry: result.entrySet())
         {
-        	String name = entry.getKey().split(":")[0];
-        	String lastname = entry.getKey().split(":")[1];
-        	lastname = lastname.split("=")[0];
+        	String name = entry.getKey()[0];
+        	String lastname = entry.getKey()[1];
+        	int pw = entry.getValue();
             executeSet(""
             		+ "insert into person ("
             		+ "name, "
@@ -222,8 +222,8 @@ public class DatabaseSQLite extends Database
             		+ ") "
             		+ "values "
             		+ "("
-            		+ "'"+entry.getKey().split(":")[0]+"', "
-    				+ "'"+entry.getKey().split(":")[1]+"'"
+            		+ "'"+name+"', "
+    				+ "'"+lastname+"'"
 					+ ")"
 					+ "");
             executeSet("insert into "
@@ -232,7 +232,7 @@ public class DatabaseSQLite extends Database
             		+ "p_password"
             		+ ") values ("
             		+ ""+getId(name)+", "
-    				+ "'"+entry.getValue()+"'"
+    				+ "'"+pw+"'"
 					+ ")");
         }
     }
@@ -353,7 +353,14 @@ public class DatabaseSQLite extends Database
     		ArrayList <String> temp = new ArrayList<String>();
     		for(int column=1; column <= rsmd.getColumnCount(); column++)
     		{
-    			temp.add(rsmd.getColumnName(column));
+    			if(headerInUppercaseCharacter)
+    			{
+    				temp.add(rsmd.getColumnName(column).toUpperCase());
+    			}
+    			else
+    			{
+    				temp.add(rsmd.getColumnName(column).toLowerCase());
+    			}
     		}
     		header.add(temp);
     		// get content

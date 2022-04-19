@@ -19,6 +19,7 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     protected Connection connection;
     protected String serverIp;
     protected String path;
+    boolean headerInUppercaseCharacter = true;
 //    public Database()
 //    {
 ////        int f = Enum_Database.file.ordinal();
@@ -59,7 +60,7 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
         return data;
     }
     
-    protected HashMap <String, Integer> getNewData()
+    protected HashMap <String[], Integer> getNewData()
     {
         //////////////////////////////////////////
         // get names, but only once (-> set)
@@ -76,7 +77,7 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
 //                temp++;
 //            }
 //        }
-        HashMap<String, Integer> result = new HashMap<String, Integer>();
+        HashMap<String[], Integer> result = new HashMap<String[], Integer>();
         Faker faker;
         int temp = 0;
         while(temp < 10)
@@ -87,7 +88,7 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
             String lastName = faker.name().lastName();
 //            String streetAddress = faker.address().streetAddress();
 //            result.put(firstName, new Random().nextInt(10000000) + 1000000);
-            result.put(firstName+":"+lastName, new Random().nextInt(10000000) + 1000000);
+            result.put(new String[]{firstName, lastName}, new Random().nextInt(10000000) + 1000000);
             temp++;
         }
         return result;
@@ -106,4 +107,13 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
 
 //    @Override
 //    abstract void executeSet(String sql);
+	public boolean isHeaderInUppercaseCharacter()
+	{
+		return headerInUppercaseCharacter;
+	}
+	public void setHeaderInUppercaseCharacter(boolean headerInUppercaseCharacter)
+	{
+		this.headerInUppercaseCharacter = headerInUppercaseCharacter;
+	}
+    
 }

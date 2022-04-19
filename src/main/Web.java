@@ -140,6 +140,10 @@ public class Web
             DataUse website = new DataUse();
             website.sethttpbase(httpbase);
             String parameter = request.getParameter("get");
+            if(parameter != null)
+            {
+            	System.out.println("Found parameter: "+parameter);
+            }
             requestByClient = request.getRequestURI().toLowerCase();
             if (requestByClient.contains(request_stringToGetWebsite)
                     && parameter == null
@@ -170,9 +174,15 @@ public class Web
             }
         }
         @Override
-        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
-            super.doPost(req, resp);
+        	super.doPost(request, response);
+            String parameter = request.getParameter("get");
+            System.out.println("Found parameter: "+parameter);
+            if(parameter != null || request.getParameter("remember") != null)
+            {
+            	requestByClient = request.getRequestURI().toLowerCase();
+            }
         }
     }
 }
