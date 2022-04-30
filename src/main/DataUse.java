@@ -1,8 +1,14 @@
 package main;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,6 +20,17 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -144,9 +161,52 @@ public class DataUse
     {
         try {
             System.out.println("Found request: "+request.getParameter("get"));
-            // do something
+            String url = "https://dwd.api.bund.dev/stationOverviewExtended";
+            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+//            Credentials credentials = new UsernamePasswordCredentials("username", "password");
+            Credentials credentials = new UsernamePasswordCredentials("", "");
+            credentialsProvider.setCredentials(AuthScope.ANY, credentials);
+            HttpClient client = HttpClientBuilder.create()
+                    .setDefaultCredentialsProvider(credentialsProvider)
+                    .build();
+//            HttpPost requ = new HttpPost(url);
+            //////////////////
+            URIBuilder builder = new URIBuilder();
+//            builder.setScheme("https").setHost("dwd.api.bund.dev").setPath("/stationOverviewExtended")
+//                .setParameter("stationIds", "NW");
+            // https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+            builder
+            .setScheme("https")
+            .setHost("api.openweathermap.org")
+            .setPath("/data/2.5/weather")
+//            .setParameter("zip", "E14")
+            .setParameter("lon", "51.5135872")
+            .setParameter("lat", "7.4652981")
+            .setParameter("appid", "9fd8885509bd6a5da1c4715e062bb7ce");
+            URI uri = builder.build();
+            System.out.println(uri);
+            HttpGet httpget = new HttpGet(uri);
+            //////////////////
+//            HttpResponse resp = client.execute(requ);
+            HttpResponse resp = client.execute(httpget);
+            // Get the response
+            BufferedReader rd = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()));
+            String line = "";
+            String textView = "";
+            while ((line = rd.readLine()) != null)
+            {    
+                textView += line;
+            System.out.println(textView);
+            }
+//            System.out.println(textView);
+            rd.close();
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("text/json");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().append(textView);
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             System.err.println(e.toString());
         }
     }
