@@ -1,7 +1,10 @@
 package main;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -13,7 +16,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -84,6 +89,7 @@ public class DataUse
                 ;
         databasesource = Database.getInstance();
         databasesource.setHeaderInUppercaseCharacter(true);
+        databasesource.getProperties(System.getProperty("user.dir")+File.separator+"login.txt");
     }
             
     public void sethttpbase(String httpbase)
@@ -182,7 +188,7 @@ public class DataUse
 //            .setParameter("zip", "E14")
             .setParameter("lon", "51.5135872")
             .setParameter("lat", "7.4652981")
-            .setParameter("appid", "");
+            .setParameter("appid", databasesource.getProperty("key"));
             URI uri = builder.build();
             System.out.println(uri);
             HttpGet httpget = new HttpGet(uri);
