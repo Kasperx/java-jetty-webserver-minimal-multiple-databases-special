@@ -182,7 +182,7 @@ public class DataUse
 //            .setParameter("zip", "E14")
             .setParameter("lon", "51.5135872")
             .setParameter("lat", "7.4652981")
-            .setParameter("appid", "9fd8885509bd6a5da1c4715e062bb7ce");
+            .setParameter("appid", "");
             URI uri = builder.build();
             System.out.println(uri);
             HttpGet httpget = new HttpGet(uri);
