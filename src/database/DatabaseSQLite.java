@@ -111,7 +111,9 @@ public class DatabaseSQLite extends Database
         {
             if(resultSet.next())
             {
-                return resultSet.getInt("id");
+            	int id = resultSet.getInt("id");
+            	resultSet.close();
+                return id;
             }
         }
         catch(SQLException e)
@@ -255,6 +257,7 @@ public class DatabaseSQLite extends Database
                     return false;
                 }
             }
+            resultSet.close();
             return false;
         }
         catch(SQLException e)
@@ -333,6 +336,7 @@ public class DatabaseSQLite extends Database
             	}
             	data.add(temp);
             }
+            resultSet.close();
         }
         catch(SQLException e)
         {
