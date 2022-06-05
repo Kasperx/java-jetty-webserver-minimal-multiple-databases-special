@@ -51,22 +51,6 @@ public class DatabaseSQLite extends Database
             e.printStackTrace();
         }
     }
-    public void close()
-    {
-        try
-        {
-            Class.forName("org.sqlite.JDBC");
-            if(connection.isClosed() || connection != null)
-            {
-                connection.close();
-                connection = null;
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
     public ArrayList<ArrayList<String>> getData()
     {
         String sql = ""

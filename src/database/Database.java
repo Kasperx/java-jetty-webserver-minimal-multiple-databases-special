@@ -16,28 +16,30 @@ import com.github.javafaker.Faker;
 
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {
-    public enum DatabaseType{
-        sqlite, file, mariadb, postgres
+    public static enum DatabaseType
+    {
+        sqlite("sqlite"),
+        file("file"),
+        mariadb("mariadb"),
+        postgres("postgres");
+        String value = null;
+        DatabaseType(String value)
+        {
+        	this.value = value;
+        }
+        public static DatabaseType getValue()
+        {
+        	return file;
+        }
     };
     protected Connection connection;
     protected String serverIp;
     protected String path;
     boolean headerInUppercaseCharacter = true;
     HashMap<String, String> mapFromFile;
-//    public Database()
-//    {
-////        int f = Enum_Database.file.ordinal();
-////        if(Enum_Database.file)
-////        {
-////            
-////        }
-//        switch(Enum_Database)
-//        {
-//        }
-//    }
     public static Database getInstance()
     {
-        return getInstance(DatabaseType.sqlite);
+        return getInstance(DatabaseType.getValue());
     }
     public static Database getInstance(DatabaseType source)
     {
@@ -50,13 +52,14 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
             case sqlite:
                 data = new DatabaseSQLite();
                 break;
-            case mariadb:
-                data = new DatabaseFile();
-                break;
-            case postgres:
-                data = new DatabasePostgres();
-                break;
+//            case mariadb:
+//                data = new DatabaseFile();
+//                break;
+//            case postgres:
+//                data = new DatabasePostgres();
+//                break;
             default:
+            	System.out.println("Not supported yet: source '"+source.value+"'. Using '"+DatabaseType.sqlite+"'.");
                 data = new DatabaseSQLite();
                 break;
         }
@@ -66,20 +69,6 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     protected HashMap <String[], Integer> getNewData()
     {
         //////////////////////////////////////////
-        // get names, but only once (-> set)
-//        String[] names = { "detlef", "arnold", "ulrike", "emil", "lena", "laura", "achim", "mia", "anna", "jonas" };
-//        HashMap<String, Integer> result = new HashMap<String, Integer>();
-//        Set <String> unique = new HashSet<String>();
-//        int temp = 0;
-//        while(temp < 5)
-//        {
-//            String found = names[new Random().nextInt(10)];
-//            if(unique.add(found))
-//            {
-//                result.put(found, new Random().nextInt(10000000) + 1000000);
-//                temp++;
-//            }
-//        }
         HashMap<String[], Integer> result = new HashMap<String[], Integer>();
         Faker faker;
         int temp = 0;
@@ -100,16 +89,9 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     public abstract boolean createDatabaseIfNotExists();
     public abstract ArrayList<ArrayList<String>> getData();
     public abstract ArrayList<ArrayList<String>> getAllData();
-    public abstract void close();
     public abstract boolean isPermitted(String name, String password);
     public abstract int getId(String name);
     public abstract void insertData();
-
-//    @Override
-//    abstract ResultSet executeGet(String sql);
-
-//    @Override
-//    abstract void executeSet(String sql);
 	public boolean isHeaderInUppercaseCharacter()
 	{
 		return headerInUppercaseCharacter;

@@ -39,6 +39,7 @@ public class DataUse
     String httpbase;
     static String htmlhead;
     static String htmlend;
+    static Database.DatabaseType databaseType;
     
     public DataUse()
     {
@@ -75,8 +76,10 @@ public class DataUse
         htmlend = ""
                 + "</body>"
                 ;
-        databasesource = Database.getInstance();
+        databaseType = Database.DatabaseType.getValue();
+        databasesource = Database.getInstance(databaseType);
 //        databasesource = Database.getInstance(Database.DatabaseType.file);
+//        databasesource = Database.getInstance(Database.DatabaseType.postgres);
         databasesource.setHeaderInUppercaseCharacter(true);
         databasesource.getProperties(System.getProperty("user.dir")+File.separator+"login.txt");
     }
@@ -215,7 +218,6 @@ public class DataUse
             response.setStatus(HttpServletResponse.SC_OK);
             ArrayList <ArrayList<String>> data = databasesource.getData();
             String websitedata = fillWebsiteWithData(data);
-            databasesource.close();
             System.out.println(websitedata);
             response.getWriter().append(websitedata);
         }
@@ -326,7 +328,6 @@ public class DataUse
                 response.setStatus(HttpServletResponse.SC_OK);
                 ArrayList <ArrayList<String>> data = databasesource.getAllData();
                 String websitedata = fillWebsiteWithData(data);
-                databasesource.close();
                 response.getWriter().println(websitedata);
             }
             else
@@ -417,8 +418,17 @@ public class DataUse
         {
             System.out.println("Found request: "+request.getParameter("get"));
             databasesource.createDatabaseIfNotExists();
-            ((DatabaseSQLite)databasesource.getInstance()).insertData();
-            databasesource.close();
+            switch (databaseType)
+            {
+			case sqlite:
+				((DatabaseSQLite)databasesource.getInstance()).insertData();
+				break;
+			case file:
+				((DatabaseFile)databasesource.getInstance()).insertData();
+				break;
+			default:
+				break;
+			}
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);

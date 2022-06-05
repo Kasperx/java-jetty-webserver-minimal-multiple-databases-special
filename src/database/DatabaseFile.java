@@ -41,7 +41,6 @@ public class DatabaseFile extends Database implements Serializable
             e.printStackTrace();
         }
     }
-    
     public DatabaseFile(int id, String name, String lastname, String pw, boolean admin)
     {
         path = System.getProperty("user.dir")+"/test";
@@ -62,22 +61,21 @@ public class DatabaseFile extends Database implements Serializable
         this.lastname = lastname;
         this.pw = pw;
         this.admin = admin;
+        this.print();
     }
-
-    public void connect()
-    {
-    }
-    public void close()
-    {
-        try
-        {
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-    public ArrayList<ArrayList<String>> getData()
+	public void print()
+	{
+		System.out.println("DatabaseFile "
+				+ "["
+				+ "id=" + id
+				+ ", " + "name=" + name
+				+ ", lastname=" + lastname
+				+ ", pw=" + pw
+				+ ", admin=" + admin
+				+ "]"
+				);
+	}
+	public ArrayList<ArrayList<String>> getData()
     {
         ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
         try(ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(path)))
@@ -248,5 +246,9 @@ public class DatabaseFile extends Database implements Serializable
         }
         return false;
     }
+	@Override
+	public void connect()
+	{
+	}
 }  
 

@@ -9,7 +9,6 @@ public interface DatabaseInterface
     public boolean createDatabaseIfNotExists();
     public ArrayList <ArrayList<String>> getData();
     public ArrayList <ArrayList<String>> getAllData();
-    public void close();
     public boolean isPermitted(String name, String password);
     public int getId(String name);
 //    private ResultSet executeGet(String sql);
