@@ -43,8 +43,12 @@ public class DatabaseSQLite extends Database
     {
         try
         {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:"+path);
+        	if(connection == null || connection.isClosed())
+        	{
+        		Class.forName("org.sqlite.JDBC");
+        		connection = DriverManager.getConnection("jdbc:sqlite:"+path);
+        		System.out.println("Connected to database '"+path+"'.");
+        	}
         }
         catch(Exception e)
         {
@@ -96,7 +100,7 @@ public class DatabaseSQLite extends Database
             if(resultSet.next())
             {
             	int id = resultSet.getInt("id");
-            	resultSet.close();
+            	close(resultSet);
                 return id;
             }
         }
@@ -166,32 +170,6 @@ public class DatabaseSQLite extends Database
     }
     public void insertData()
     {
-//        ///////////////////////////////////////////////////////////
-//        // get names, but only once (-> set)
-//        String [] names = {
-//                "detlef",
-//                "arnold",
-//                "ulrike",
-//                "emil",
-//                "lena",
-//                "laura",
-//                "achim",
-//                "mia",
-//                "anna",
-//                "jonas"
-//        };
-//        Map <String, Integer> result = new HashMap<String, Integer>();
-//        Set unique = new HashSet();
-//        int temp = 0;
-//        while(temp<5)
-//        {
-//            String found = names[new Random().nextInt(10)];
-//            if(unique.add(found))
-//            {
-//                result.put(found, new Random().nextInt(10000000) + 1000000);
-//                temp++;
-//            }
-//        }
         HashMap <String[], Integer> result = getNewData();
         ///////////////////////////////////////////////////////////
         executeSet("insert into person (name, lastname) values ('admin', 'admin')");
@@ -241,7 +219,7 @@ public class DatabaseSQLite extends Database
                     return false;
                 }
             }
-            resultSet.close();
+            close(resultSet);
             return false;
         }
         catch(SQLException e)
@@ -255,6 +233,7 @@ public class DatabaseSQLite extends Database
         try
         {
             System.out.println(sql);
+            connect();
             PreparedStatement stmt = connection.prepareStatement(sql);
             return stmt.executeQuery();
         }
@@ -283,7 +262,9 @@ public class DatabaseSQLite extends Database
         try
         {
             System.out.println(sql);
+            connect();
             connection.prepareStatement(sql).executeUpdate();
+            close(null);
         }
         catch(SQLException e)
         {
@@ -320,7 +301,7 @@ public class DatabaseSQLite extends Database
             	}
             	data.add(temp);
             }
-            resultSet.close();
+            close(resultSet);
         }
         catch(SQLException e)
         {
@@ -335,6 +316,7 @@ public class DatabaseSQLite extends Database
     	ArrayList <ArrayList<String>> content = new ArrayList<ArrayList<String>>();
     	try
     	{
+//    		connect();
     		ResultSet resultSet = executeGet(sql);
     		// get header
     		ResultSetMetaData rsmd = getMetaData(sql);
@@ -353,6 +335,7 @@ public class DatabaseSQLite extends Database
     		header.add(temp);
     		// get content
     		content = getDataFromDB(sql, resultSet, rsmd);
+    		close(resultSet);
     		// migrate
     		for(ArrayList<String> migrate: header)
     		{
@@ -368,6 +351,23 @@ public class DatabaseSQLite extends Database
     		e.printStackTrace();
     	}
     	return data;
-    }    
+    }
+    private void close(ResultSet resultSet)
+    {
+    	try
+    	{
+    		if(resultSet != null && !resultSet.isClosed())
+    		{
+    			resultSet.close();
+    		}
+    		if(connection != null)
+    		{
+    			connection.close();
+    		}
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+		}
+	}
 }  
-
