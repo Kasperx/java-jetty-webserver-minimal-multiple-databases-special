@@ -29,7 +29,7 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
         }
         public static DatabaseType getValue()
         {
-        	return file;
+        	return sqlite;
         }
     };
     protected Connection connection;
