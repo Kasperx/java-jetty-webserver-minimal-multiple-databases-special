@@ -1,24 +1,16 @@
 package main;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -32,16 +24,12 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.google.gson.GsonBuilder;
 
 import database.Database;
+import database.Database.DatabaseType;
 import database.DatabaseFile;
 import database.DatabaseSQLite;
 
@@ -87,7 +75,8 @@ public class DataUse
         htmlend = ""
                 + "</body>"
                 ;
-        databasesource = Database.getInstance();
+//        databasesource = Database.getInstance();
+        databasesource = Database.getInstance(Database.DatabaseType.file);
         databasesource.setHeaderInUppercaseCharacter(true);
         databasesource.getProperties(System.getProperty("user.dir")+File.separator+"login.txt");
     }
@@ -329,7 +318,6 @@ public class DataUse
             System.out.println("Found request: "+request.getParameter("name"));
             String name = request.getParameter("user");
             String pw = request.getParameter("pw");
-//            databasesource = new DatabaseSQLite();
             if(databasesource.isPermitted(name, pw))
             {
                 response.setCharacterEncoding("utf-8");
@@ -430,8 +418,7 @@ public class DataUse
             System.out.println("Found request: "+request.getParameter("get"));
 //            DatabaseSQLite database = new DatabaseSQLite();
             databasesource.createDatabaseIfNotExists();
-//            ((DatabaseSQLite)databasesource.getInstance()).insertData();
-            databasesource.getInstance().insertData();
+            ((DatabaseFile)databasesource.getInstance(DatabaseType.file)).insertData();
             databasesource.close();
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/json");

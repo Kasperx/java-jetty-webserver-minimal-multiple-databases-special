@@ -1,5 +1,8 @@
 package database;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,13 +16,14 @@ import com.github.javafaker.Faker;
 
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {
-    protected enum Enum_Database{
+    public enum DatabaseType{
         sqlite, file, mariadb, postgres
     };
     protected Connection connection;
     protected String serverIp;
     protected String path;
     boolean headerInUppercaseCharacter = true;
+    HashMap<String, String> mapFromFile;
 //    public Database()
 //    {
 ////        int f = Enum_Database.file.ordinal();
@@ -33,10 +37,9 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
 //    }
     public static Database getInstance()
     {
-//        return getInstance(Enum_Database.file);
-        return getInstance(Enum_Database.sqlite);
+        return getInstance(DatabaseType.sqlite);
     }
-    public static Database getInstance(Enum_Database source)
+    public static Database getInstance(DatabaseType source)
     {
         Database data = null;
         switch(source)
@@ -115,5 +118,38 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
 	{
 		this.headerInUppercaseCharacter = headerInUppercaseCharacter;
 	}
-    
+    public Map <String, String> getProperties(String filename)
+    {
+        mapFromFile = new HashMap<String, String>();
+        if(!new File(filename).exists())
+        {
+            System.out.println("File '"+filename+"' does not exist");
+            return mapFromFile;
+        }
+        try (BufferedReader br = new BufferedReader( new FileReader(filename));)
+        {
+                        String line = "";
+                mapFromFile = new HashMap<String, String>();
+                        while ((line = br.readLine()) != null)
+                        {
+                String[] parts = line.split("=");
+                String name = parts[0].trim();
+                String value = parts[1].trim();
+                if(!name.equals("") && !value.equals(""))
+                {
+                    mapFromFile.put(name, value);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return mapFromFile;
+        }
+        return mapFromFile;
+    }
+    public String getProperty (String keyname)
+    {
+        return mapFromFile.get(keyname);
+    }
 }
