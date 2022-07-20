@@ -54,7 +54,7 @@ public class DatabaseSQLite extends Database
     {
         String sql = ""
         		+ "SELECT "
-        		+ "id, "
+//        		+ "id, "
         		+ "name, "
         		+ "lastname "
         		+ "FROM "

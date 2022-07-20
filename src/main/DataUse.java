@@ -37,7 +37,8 @@ public class DataUse
 {
     static Database databasesource;
     String httpbase;
-    static String htmlhead;
+    static String htmlhead_halfSize;
+    static String htmlhead_fullSize;
     static String htmlend;
     static Database.DatabaseType databaseType;
     
@@ -45,7 +46,7 @@ public class DataUse
     {
         ///////////////////////////////////////////
         // get libs from online
-        htmlhead = ""
+        htmlhead_halfSize = ""
                 + "<!DOCTYPE html>"
                 + "<head>"
                 + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
@@ -58,6 +59,19 @@ public class DataUse
 //                + "<body>"
 //                + "<div class=\"container\" style=\"font-size:30px\";>"
                 ;
+        htmlhead_fullSize = ""
+        		+ "<!DOCTYPE html>"
+        		+ "<head>"
+        		+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+        		+ "<meta charset=\"utf-8\">"
+        		+ "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\">"
+        		+ "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js\"></script>"
+        		+ "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js\"></script>"
+        		+ "</head>"
+        		+ "<body class=\"container-fluid\" style=\"font-size:30px\";>"
+//                + "<body>"
+//                + "<div class=\"container\" style=\"font-size:30px\";>"
+;
         // get libs from offline
 //        htmlhead = ""
 //                + "<!DOCTYPE html>\n"
@@ -83,11 +97,19 @@ public class DataUse
         databasesource.setHeaderInUppercaseCharacter(true);
         databasesource.getProperties(System.getProperty("user.dir")+File.separator+"login.txt");
     }
-            
+    /**
+     * 
+     * @param httpbase
+     */
     public void sethttpbase(String httpbase)
     {
         this.httpbase = httpbase;
     }
+    /**
+     * 
+     * @param request
+     * @param response
+     */
     public void clientRequest_Website (HttpServletRequest request, HttpServletResponse response)
     {
         try {
@@ -118,6 +140,11 @@ public class DataUse
             System.err.println(e.toString());
         }
     }
+    /**
+     * 
+     * @param request
+     * @param response
+     */
     public void clientRequest_WebsiteFromBackend(HttpServletRequest request, HttpServletResponse response)
     {
         try
@@ -126,7 +153,7 @@ public class DataUse
             response.setCharacterEncoding("utf-8");
             response.setContentType("text/html");
             response.setStatus(HttpServletResponse.SC_OK);
-            String websitedata = htmlhead;
+            String websitedata = htmlhead_halfSize;
             websitedata += "<table class=\"table\">";
 //            websitedata += "<tr>"
 //                    + "<th>name</th>"
@@ -155,6 +182,11 @@ public class DataUse
             e.printStackTrace();
         }
     }
+    /**
+     * 
+     * @param request
+     * @param response
+     */
     public static void clientRequest_Weather(HttpServletRequest request, HttpServletResponse response)
     {
         try {
@@ -208,6 +240,11 @@ public class DataUse
             System.err.println(e.toString());
         }
     }
+    /**
+     * 
+     * @param request
+     * @param response
+     */
     public static void clientRequest_CallDataFromDb(HttpServletRequest request, HttpServletResponse response)
     {
         try
@@ -279,6 +316,11 @@ public class DataUse
 //    		e.printStackTrace();
 //    	}
 //    }
+    /**
+     * 
+     * @param request
+     * @param response
+     */
     public static void clientRequest_askUserData(HttpServletRequest request, HttpServletResponse response)
     {
         try
@@ -286,7 +328,7 @@ public class DataUse
             response.setCharacterEncoding("utf-8");
             response.setContentType("text/html");
             response.setStatus(HttpServletResponse.SC_OK);
-            String websitedata = htmlhead;
+            String websitedata = htmlhead_halfSize;
             websitedata += "<form>";
             websitedata += ""
                     + "<label for=\"name\">name:</label><br>"
@@ -312,6 +354,11 @@ public class DataUse
             e.printStackTrace();
         }
     }
+    /**
+     * 
+     * @param request
+     * @param response
+     */
     public static void clientRequest_GetAllData(HttpServletRequest request, HttpServletResponse response)
     {
         try
@@ -327,7 +374,7 @@ public class DataUse
                 response.setContentType("text/html");
                 response.setStatus(HttpServletResponse.SC_OK);
                 ArrayList <ArrayList<String>> data = databasesource.getAllData();
-                String websitedata = fillWebsiteWithData(data);
+                String websitedata = fillWebsiteWithData(data, true);
                 response.getWriter().println(websitedata);
             }
             else
@@ -343,10 +390,30 @@ public class DataUse
             e.printStackTrace();
         }
     }
-
-	private static String fillWebsiteWithData(ArrayList <ArrayList<String>> data)
+    /**
+     * 
+     * @param data
+     * @return
+     */
+    private static String fillWebsiteWithData(ArrayList <ArrayList<String>> data)
+    {
+    	return fillWebsiteWithData(data, false);
+    }
+    /**
+     * 
+     * @param data
+     * @param admin
+     * @return
+     */
+	private static String fillWebsiteWithData(ArrayList <ArrayList<String>> data, boolean admin)
 	{
-		String websitedata = htmlhead;
+		String websitedata;
+		if(admin)
+		{
+			websitedata = htmlhead_fullSize;
+		} else {
+			websitedata = htmlhead_halfSize;
+		}
 		websitedata += "<table class=\"table\">";
 		websitedata += "<thead>";
 		for(int row=0; row<data.size(); row++)
@@ -412,6 +479,11 @@ public class DataUse
 //            e.printStackTrace();
 //        }
 //    }
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 */
     public static void clientRequest_InsertDataToDb(HttpServletRequest request, HttpServletResponse response)
     {
         try
@@ -438,6 +510,11 @@ public class DataUse
             e.printStackTrace();
         }
     }
+    /**
+     * 
+     * @param dataRows
+     * @return
+     */
     private List <List<String>> vectorToArrayList2D (Vector dataRows)
     {
         List <List<String>> array = new ArrayList<List<String>>();
@@ -452,6 +529,11 @@ public class DataUse
         }
         return array;
     }
+    /**
+     * 
+     * @param fileName
+     * @return
+     */
     private String readFile (String fileName)
     {        
         List<String> filecontent = loadFile(fileName);
@@ -466,13 +548,18 @@ public class DataUse
         System.out.println("Reading file: "+fileName);
         return ckasl;
     }
+    /**
+     * 
+     * @param fpath
+     * @return
+     */
     public List <String> loadFile(String fpath)
     {
         try
         {
         	if(new File(fpath).exists())
         	{
-		        return new ArrayList(
+		        return new ArrayList<String>(
 		                Files.readAllLines(
 		                        Paths.get(fpath),
 		                        StandardCharsets.UTF_8)
@@ -488,6 +575,11 @@ public class DataUse
             return null;
         }
     }
+    /**
+     * 
+     * @param array
+     * @return
+     */
     private ArrayList <String> makeListEntriesUnique (ArrayList <String> array)
     {
         return (ArrayList) array.stream().distinct().collect(Collectors.toList());
