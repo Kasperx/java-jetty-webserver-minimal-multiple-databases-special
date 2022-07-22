@@ -1,4 +1,4 @@
-package main;
+package main.java.com.mywebsite.main;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import org.json.JSONObject;
 
 import com.google.gson.GsonBuilder;
 
-import database.DatabaseSQLite;
+import main.java.com.mywebsite.database.DatabaseSQLite;
 
 public class Web
 {

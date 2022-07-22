@@ -1,4 +1,4 @@
-package main;
+package main.java.com.mywebsite.main;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,10 +28,10 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import database.Database;
-import database.Database.DatabaseType;
-import database.DatabaseFile;
-import database.DatabaseSQLite;
+import main.java.com.mywebsite.database.Database;
+import main.java.com.mywebsite.database.Database.DatabaseType;
+import main.java.com.mywebsite.database.DatabaseFile;
+import main.java.com.mywebsite.database.DatabaseSQLite;
 
 public class DataUse
 {
