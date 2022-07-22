@@ -12,10 +12,16 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+
 import com.github.javafaker.Faker;
+
+import main.java.com.mywebsite.common.MyLogger;
 
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {
+    static Logger logger = MyLogger.getLogger(Database.class.getName());
+    
     public static enum DatabaseType
     {
         sqlite("sqlite"),
@@ -59,7 +65,7 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
 //                data = new DatabasePostgres();
 //                break;
             default:
-            	System.out.println("Not supported yet: source '"+source.value+"'. Using '"+DatabaseType.sqlite+"'.");
+            	logger.info("Not supported yet: source '"+source.value+"'. Using '"+DatabaseType.sqlite+"'.");
                 data = new DatabaseSQLite();
                 break;
         }
@@ -105,7 +111,7 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
         mapFromFile = new HashMap<String, String>();
         if(!new File(filename).exists())
         {
-            System.out.println("File '"+filename+"' does not exist");
+            logger.info("File '"+filename+"' does not exist");
             return mapFromFile;
         }
         try (BufferedReader br = new BufferedReader( new FileReader(filename));)

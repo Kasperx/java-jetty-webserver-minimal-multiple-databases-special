@@ -15,6 +15,10 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.Logger;
+
+import main.java.com.mywebsite.common.MyLogger;
+
 public class DatabaseFile extends Database implements Serializable
 {  
     int id;
@@ -22,9 +26,11 @@ public class DatabaseFile extends Database implements Serializable
     String lastname;
     String pw;
     boolean admin;
+    private static Logger logger;
     
     public DatabaseFile()
     {
+        logger = MyLogger.getLogger(DatabaseFile.class.getName());
         path = System.getProperty("user.dir")+"/test";
 //        path = System.getProperty("user.dir")+"/test";
         File dbFile = new File(path);
@@ -65,7 +71,7 @@ public class DatabaseFile extends Database implements Serializable
     }
 	public void print()
 	{
-		System.out.println("DatabaseFile "
+		logger.info("DatabaseFile "
 				+ "["
 				+ "id=" + id
 				+ ", " + "name=" + name

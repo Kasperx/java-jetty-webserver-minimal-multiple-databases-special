@@ -12,13 +12,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.Logger;
+
+import main.java.com.mywebsite.common.MyLogger;
+
 public class DatabaseSQLite extends Database
 {  
     String path = System.getProperty("user.dir")+"/test.db";
     Connection connection = null;
+    private static Logger logger;
     
     public DatabaseSQLite()
     {
+        logger = MyLogger.getLogger(DatabaseSQLite.class.getName());
         File dbFile = new File(path);
         try
         {
@@ -41,7 +47,7 @@ public class DatabaseSQLite extends Database
         	{
         		Class.forName("org.sqlite.JDBC");
         		connection = DriverManager.getConnection("jdbc:sqlite:"+path);
-        		System.out.println("Connected to database '"+path+"'.");
+        		logger.info("Connected to database '"+path+"'.");
         	}
         }
         catch(Exception e)
@@ -226,7 +232,7 @@ public class DatabaseSQLite extends Database
     {
         try
         {
-            System.out.println(sql);
+            logger.info(sql);
             connect();
             PreparedStatement stmt = connection.prepareStatement(sql);
             return stmt.executeQuery();
@@ -241,7 +247,7 @@ public class DatabaseSQLite extends Database
     {
     	try
     	{
-    		System.out.println(sql);
+    		logger.info(sql);
     		PreparedStatement stmt = connection.prepareStatement(sql);
     		return stmt.getMetaData();
     	}
@@ -255,7 +261,7 @@ public class DatabaseSQLite extends Database
     {
         try
         {
-            System.out.println(sql);
+            logger.info(sql);
             connect();
             connection.prepareStatement(sql).executeUpdate();
             close(null);

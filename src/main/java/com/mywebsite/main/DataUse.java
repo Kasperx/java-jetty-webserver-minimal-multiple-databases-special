@@ -27,7 +27,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.logging.log4j.Logger;
 
+import main.java.com.mywebsite.common.MyLogger;
 import main.java.com.mywebsite.database.Database;
 import main.java.com.mywebsite.database.Database.DatabaseType;
 import main.java.com.mywebsite.database.DatabaseFile;
@@ -41,6 +43,7 @@ public class DataUse
     static String htmlhead_fullSize;
     static String htmlend;
     static Database.DatabaseType databaseType;
+    static Logger logger = MyLogger.getLogger(Database.class.getName());
     
     public DataUse()
     {
@@ -149,7 +152,7 @@ public class DataUse
     {
         try
         {
-            System.out.println("Found request: "+request.getParameter("get"));
+            logger.info("Found request: "+request.getParameter("get"));
             response.setCharacterEncoding("utf-8");
             response.setContentType("text/html");
             response.setStatus(HttpServletResponse.SC_OK);
@@ -190,7 +193,7 @@ public class DataUse
     public static void clientRequest_Weather(HttpServletRequest request, HttpServletResponse response)
     {
         try {
-            System.out.println("Found request: "+request.getParameter("get"));
+            logger.info("Found request: "+request.getParameter("get"));
             String url = "https://dwd.api.bund.dev/stationOverviewExtended";
             CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 //            Credentials credentials = new UsernamePasswordCredentials("username", "password");
@@ -214,7 +217,7 @@ public class DataUse
             .setParameter("lat", "7.4652981")
             .setParameter("appid", databasesource.getProperty("key"));
             URI uri = builder.build();
-            System.out.println(uri);
+            logger.info(uri);
             HttpGet httpget = new HttpGet(uri);
             //////////////////
 //            HttpResponse resp = client.execute(requ);
@@ -226,9 +229,9 @@ public class DataUse
             while ((line = rd.readLine()) != null)
             {    
                 textView += line;
-            System.out.println(textView);
+            logger.info(textView);
             }
-//            System.out.println(textView);
+//            logger.info(textView);
             rd.close();
             response.setCharacterEncoding("utf-8");
             response.setContentType("text/json");
@@ -249,13 +252,13 @@ public class DataUse
     {
         try
         {
-            System.out.println("Found request: "+request.getParameter("get"));
+            logger.info("Found request: "+request.getParameter("get"));
             response.setCharacterEncoding("utf-8");
             response.setContentType("text/html");
             response.setStatus(HttpServletResponse.SC_OK);
             ArrayList <ArrayList<String>> data = databasesource.getData();
             String websitedata = fillWebsiteWithData(data);
-            System.out.println(websitedata);
+            logger.info(websitedata);
             response.getWriter().append(websitedata);
         }
         catch (Exception e)
@@ -267,7 +270,7 @@ public class DataUse
 //    {
 //    	try
 //    	{
-//    		System.out.println("Found request: "+request.getParameter("get"));
+//    		logger.info("Found request: "+request.getParameter("get"));
 ////            DatabaseSQLite database = new DatabaseSQLite();
 //    		ArrayList <ArrayList<String>> data = databasesource.getData();
 //    		databasesource.close();
@@ -363,8 +366,8 @@ public class DataUse
     {
         try
         {
-            System.out.println("Found request: "+request.getParameter("get"));
-            System.out.println("Found request: "+request.getParameter("name"));
+            logger.info("Found request: "+request.getParameter("get"));
+            logger.info("Found request: "+request.getParameter("name"));
             String name = request.getParameter("user");
             String pw = request.getParameter("pw");
             if(databasesource.isPermitted(name, pw))
@@ -454,13 +457,13 @@ public class DataUse
 //        try
 //        {
 //            JSONObject json_mapForJSON = null;
-//            System.out.println("Found request: "+request.getParameter("get"));
-//            System.out.println("Found request: "+request.getParameter("name"));
+//            logger.info("Found request: "+request.getParameter("get"));
+//            logger.info("Found request: "+request.getParameter("name"));
 //            ////////////////////
 //            DatabaseConnect database = new DatabaseConnect();
 //            if(database.isPermitted(request.getParameter("name"), request.getParameter("pw")))
 //            {
-//                System.out.println();
+//                logger.info();
 //            }
 //            ArrayList <String> data = database.getData();
 //            JSONArray array = new JSONArray();
@@ -488,7 +491,7 @@ public class DataUse
     {
         try
         {
-            System.out.println("Found request: "+request.getParameter("get"));
+            logger.info("Found request: "+request.getParameter("get"));
             databasesource.createDatabaseIfNotExists();
             switch (databaseType)
             {
@@ -545,7 +548,7 @@ public class DataUse
             ckasl += temp + "\n";
         }
         filecontent.clear(); 
-        System.out.println("Reading file: "+fileName);
+        logger.info("Reading file: "+fileName);
         return ckasl;
     }
     /**

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -22,20 +23,23 @@ import org.json.JSONObject;
 
 import com.google.gson.GsonBuilder;
 
+import main.java.com.mywebsite.common.MyLogger;
+import main.java.com.mywebsite.database.Database;
 import main.java.com.mywebsite.database.DatabaseSQLite;
 
 public class Web
 {
-    private Server server;
-    private static String httpbase = System.getProperty("user.dir");
-    private static int httpport = 4000;
+    Server server;
+    static String httpbase = System.getProperty("user.dir");
+    static int httpport = 4000;
+    static Logger logger = MyLogger.getLogger(Database.class.getName());
     public Web () {}
     private void initHttpService(String httpbase, int port)
     {
         try
         {
-        	System.out.println("webfolder: "+Web.httpbase);
-        	System.out.println("port = "+httpport);
+        	logger.info("webfolder: "+Web.httpbase);
+        	logger.info("port = "+httpport);
         	if(httpport < 0) {
         		return;
         	}
@@ -110,15 +114,15 @@ public class Web
     }
     private static void showHelp ()
     {
-            System.out.println();
-            System.out.println("### This program is a webserver with a custom backend that connects to the custom webfolder (by parameter) ###");
-            System.out.println(" It will show you available database tables to select, shows nearly all content and can export a file (-> new iafisspy)");
-            System.out.println("Syntax: [-help | -h | -? | ?] <--httpport{1025-65536}> <--httpbase{}>");
-            System.out.println("\t Options");
-            System.out.println("\t\t -h/-help/-?/?                  show this help and exit");
-            System.out.println("\t\t --httpport                     the port on that the server opens a connection");
-            System.out.println("\t\t --httpbase                     the folder where to find the website");
-            System.out.println("\nBye");
+            logger.info("");
+            logger.info("### This program is a webserver with a custom backend that connects to the custom webfolder (by parameter) ###");
+            logger.info(" It will show you available database tables to select, shows nearly all content and can export a file (-> new iafisspy)");
+            logger.info("Syntax: [-help | -h | -? | ?] <--httpport{1025-65536}> <--httpbase{}>");
+            logger.info("\t Options");
+            logger.info("\t\t -h/-help/-?/?                  show this help and exit");
+            logger.info("\t\t --httpport                     the port on that the server opens a connection");
+            logger.info("\t\t --httpbase                     the folder where to find the website");
+            logger.info("\nBye");
             System.exit(0);
     }
 
@@ -142,7 +146,7 @@ public class Web
             String parameter = request.getParameter("get");
             if(parameter != null)
             {
-            	System.out.println("Found parameter: "+parameter);
+            	logger.info("Found parameter: "+parameter);
             }
             requestByClient = request.getRequestURI().toLowerCase();
             if (requestByClient.contains(request_stringToGetWebsite)
@@ -178,7 +182,7 @@ public class Web
         {
         	super.doPost(request, response);
             String parameter = request.getParameter("get");
-            System.out.println("Found parameter: "+parameter);
+            logger.info("Found parameter: "+parameter);
             if(parameter != null || request.getParameter("remember") != null)
             {
             	requestByClient = request.getRequestURI().toLowerCase();
