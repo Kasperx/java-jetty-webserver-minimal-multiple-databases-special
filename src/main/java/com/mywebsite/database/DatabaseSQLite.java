@@ -32,7 +32,7 @@ public class DatabaseSQLite extends Database
             {
                 dbFile.createNewFile();
             }
-            connect();
+            connect(true);
         }
         catch(IOException e)
         {
@@ -41,18 +41,25 @@ public class DatabaseSQLite extends Database
     }
     public void connect()
     {
+    	connect(false);
+    }
+    public void connect(boolean showInfo)
+    {
         try
         {
         	if(connection == null || connection.isClosed())
         	{
         		Class.forName("org.sqlite.JDBC");
         		connection = DriverManager.getConnection("jdbc:sqlite:"+path);
-        		logger.info("Connected to database '"+path+"'.");
+        		if(showInfo)
+        		{
+        			logger.info("Connected to database '"+path+"'.");
+        		}
         	}
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     public ArrayList<ArrayList<String>> getData()
@@ -224,7 +231,7 @@ public class DatabaseSQLite extends Database
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+        	logger.error(e);
             return false;
         }
     }
@@ -253,7 +260,7 @@ public class DatabaseSQLite extends Database
     	}
     	catch(SQLException e)
     	{
-    		e.printStackTrace();
+    		logger.error(e);
     		return null;
     	}
     }
@@ -268,7 +275,7 @@ public class DatabaseSQLite extends Database
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+        	logger.error(e);
         }
     }
     ArrayList <ArrayList<String>> getDataFromDBWithoutHeader(String sql)
@@ -282,7 +289,7 @@ public class DatabaseSQLite extends Database
     	}
     	catch(SQLException e)
     	{
-    		e.printStackTrace();
+    		logger.error(e);
     	}
     	return data;
     }    
@@ -305,7 +312,7 @@ public class DatabaseSQLite extends Database
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+        	logger.error(e);
         }
         return data;
     }    
@@ -348,7 +355,7 @@ public class DatabaseSQLite extends Database
     	}
     	catch(SQLException e)
     	{
-    		e.printStackTrace();
+    		logger.error(e);
     	}
     	return data;
     }
@@ -367,7 +374,7 @@ public class DatabaseSQLite extends Database
 		}
     	catch (SQLException e)
     	{
-			e.printStackTrace();
+    		logger.error(e);
 		}
 	}
 }  

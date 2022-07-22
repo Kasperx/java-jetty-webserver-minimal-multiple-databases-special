@@ -45,8 +45,6 @@ public class MyLogger {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-		// or
-		// -Dlog4j.configuration=file:src/main/java/com/mywebsite/props/log4j.properties
 	}
 
 }
