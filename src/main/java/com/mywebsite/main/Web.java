@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -22,7 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.google.gson.GsonBuilder;
-
+import main.java.com.mywebsite.common.Logger;
 import main.java.com.mywebsite.common.MyLogger;
 import main.java.com.mywebsite.database.Database;
 import main.java.com.mywebsite.database.DatabaseSQLite;
@@ -32,7 +31,7 @@ public class Web
     Server server;
     static String httpbase = System.getProperty("user.dir");
     static int httpport = 4000;
-    static Logger logger = MyLogger.getLogger(Database.class.getName());
+    static Logger logger = MyLogger.getLogger(Web.class.getName());
     public Web () {}
     private void initHttpService(String httpbase, int port)
     {

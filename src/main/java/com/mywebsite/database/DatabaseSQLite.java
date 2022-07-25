@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.apache.logging.log4j.Logger;
-
+import main.java.com.mywebsite.common.Logger;
 import main.java.com.mywebsite.common.MyLogger;
 
 public class DatabaseSQLite extends Database
@@ -231,7 +230,7 @@ public class DatabaseSQLite extends Database
         }
         catch(SQLException e)
         {
-        	logger.error(e);
+            logger.error(e);
             return false;
         }
     }
@@ -246,7 +245,7 @@ public class DatabaseSQLite extends Database
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            logger.error(e);
             return null;
         }
     }

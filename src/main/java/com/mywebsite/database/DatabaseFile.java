@@ -15,8 +15,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Map.Entry;
 
-import org.apache.logging.log4j.Logger;
-
+import main.java.com.mywebsite.common.Logger;
 import main.java.com.mywebsite.common.MyLogger;
 
 public class DatabaseFile extends Database implements Serializable

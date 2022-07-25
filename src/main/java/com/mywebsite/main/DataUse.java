@@ -27,7 +27,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.logging.log4j.Logger;
+import main.java.com.mywebsite.common.Logger;
 
 import main.java.com.mywebsite.common.MyLogger;
 import main.java.com.mywebsite.database.Database;
@@ -217,7 +217,7 @@ public class DataUse
             .setParameter("lat", "7.4652981")
             .setParameter("appid", databasesource.getProperty("key"));
             URI uri = builder.build();
-            logger.info(uri);
+            logger.info(uri.toString());
             HttpGet httpget = new HttpGet(uri);
             //////////////////
 //            HttpResponse resp = client.execute(requ);

@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.apache.logging.log4j.Logger;
+import main.java.com.mywebsite.common.Logger;
 
 import com.github.javafaker.Faker;
 
