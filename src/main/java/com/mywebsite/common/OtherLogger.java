@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.java.com.mywebsite.common;
 
 import org.apache.logging.log4j.Level;
@@ -17,7 +13,7 @@ public class OtherLogger implements Logger{
 
     org.apache.logging.log4j.Logger logger;
     public OtherLogger(String name) {
-        System.getProperty("log.configuration",null);
+        System.getProperty("log.configuration", null);
         Configurator.initialize(new DefaultConfiguration());
         Configurator.setRootLevel(Level.INFO);
         logger = LogManager.getLogger(name);

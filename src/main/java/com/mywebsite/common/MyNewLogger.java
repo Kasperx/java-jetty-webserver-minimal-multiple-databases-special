@@ -19,29 +19,29 @@ public class MyNewLogger implements Logger{
     }
     @Override
     public void info(String text) {
-        
+        System.out.println(text);
     }
+    
     @Override
     public void debug(String text) {
-        
+        System.out.println(text);
     }
     @Override
     public void error(String text) {
-        
+        System.err.println(text);
     }
-
     @Override
     public void warn(String text) {
-        
+        System.out.println(text);
     }
-
     @Override
     public void error(String text, Exception e) {
-        
+        System.err.println(text);
+//        e.printStackTrace();
+        error(e);
     }
-
     @Override
     public void error(Exception error) {
-        
+        error.printStackTrace();
     }
 }

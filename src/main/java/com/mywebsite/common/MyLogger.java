@@ -35,13 +35,11 @@ public class MyLogger{
     {
         init(name);
         return initLogger(name);
-//        return getLogger(name);
     }
     public static <t> Logger getLogger(Class <t> name)
     {
         init(name.getName());
         return initLogger(name.getName());
-//        return getLogger(name.getName());
     }
     /**
     * method to init log4j configurations

@@ -96,13 +96,13 @@ public class DatabaseSQLite extends Database
     public ArrayList <ArrayList<String>> getAllData()
     {
         String sql = "SELECT "
-                + "person.id, "
-                + "person.name, "
-                + "person.lastname, "
-                + "login.p_password, "
-                + "login.p_admin "
-                + "FROM person "
-                + "join login on person.id = login.p_id";
+                + " person.id,"
+                + " person.name,"
+                + " person.lastname,"
+                + " login.p_password as password,"
+                + " login.p_admin as admin_permission"
+                + " FROM person"
+                + " join login on person.id = login.p_id";
         ArrayList <ArrayList<String>> data = getDataFromDBWithHeader(sql);
         return data;
     }
