@@ -19,7 +19,8 @@ public class DatabaseSQLite extends Database
 {  
     String path = System.getProperty("user.dir")+"/test.db";
     Connection connection = null;
-    private static Logger logger;
+    static Logger logger;
+//    boolean permitCreateDB = true;
     
     public DatabaseSQLite()
     {
@@ -72,30 +73,6 @@ public class DatabaseSQLite extends Database
         		+ "person "
         		+ "where name != 'admin'";
         ArrayList<ArrayList<String>> data = getDataFromDBWithHeader(sql);
-//        ResultSet resultSet = executeGet(sql);
-//        ResultSetMetaData rsmd = getMetaData(sql);
-//        try
-//        {
-//            ArrayList <String> temp = new ArrayList<String>();
-//            for(int column=1; column <= rsmd.getColumnCount(); column++)
-//            {
-//        		temp.add(rsmd.getColumnName(column));
-//            }
-//            data.add(temp);
-//            while(resultSet.next())
-//            {
-//            	temp = new ArrayList<String>();
-//            	for(int column=1; column <= rsmd.getColumnCount(); column++)
-//            	{
-//            			temp.add(resultSet.getString(column));
-//            	}
-//            	data.add(temp);
-//            }
-//        }
-//        catch(SQLException e)
-//        {
-//            e.printStackTrace();
-//        }
         return data;
     }
     public int getId(String name)
@@ -112,7 +89,7 @@ public class DatabaseSQLite extends Database
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            logger.error(e);
         }
         return -1;
     }
@@ -127,52 +104,32 @@ public class DatabaseSQLite extends Database
                 + "FROM person "
                 + "join login on person.id = login.p_id";
         ArrayList <ArrayList<String>> data = getDataFromDBWithHeader(sql);
-//        try
-//        {
-//        	ResultSet resultSet = executeGet(sql);
-//        	ResultSetMetaData rsmd = getMetaData(sql);
-//        	ArrayList <String> temp = new ArrayList<String>();
-//            for(int column=1; column <= rsmd.getColumnCount(); column++)
-//            {
-//        		temp.add(rsmd.getColumnName(column));
-//            }
-//            data.add(temp);
-//            while(resultSet.next())
-//            {
-//            	temp = new ArrayList<String>();
-//            	for(int column=1; column <= rsmd.getColumnCount(); column++)
-//            	{
-//        			temp.add(resultSet.getString(column));
-//            	}
-//            	data.add(temp);
-//            }
-//        }
-//        catch(SQLException e)
-//        {
-//            e.printStackTrace();
-//        }
         return data;
     }
     public boolean createDatabaseIfNotExists()
     {
-        executeSet("drop table if exists person");
-        executeSet("drop table if exists login");
-        //////////////////////////////
-        executeSet("create table if not exists person ("
-                + "id integer primary key autoincrement,"
-                + "name text unique,"
-                + "lastname text"
-                + ")");
-        executeSet("create table if not exists login ("
-                + "id integer primary key autoincrement,"
-                + "p_id integer,"
-                + "p_name text,"
-                + "p_lastname text,"
-                + "p_password text unique,"
-                + "p_admin default 'false',"
-                + "foreign key (p_id) references person(id)"
-                + ")");
-        return true;
+        if(permitCreateDB) {
+            executeSet("drop table if exists person");
+            executeSet("drop table if exists login");
+            //////////////////////////////
+            executeSet("create table if not exists person ("
+                    + "id integer primary key autoincrement,"
+                    + "name text unique,"
+                    + "lastname text"
+                    + ")");
+            executeSet("create table if not exists login ("
+                    + "id integer primary key autoincrement,"
+                    + "p_id integer,"
+                    + "p_name text,"
+                    + "p_lastname text,"
+                    + "p_password text unique,"
+                    + "p_admin default 'false',"
+                    + "foreign key (p_id) references person(id)"
+                    + ")");
+            return true;
+        } else {
+            return false;
+        }
     }
     public void insertData()
     {
@@ -324,6 +281,7 @@ public class DatabaseSQLite extends Database
     	{
 //    		connect();
     		ResultSet resultSet = executeGet(sql);
+//    		createDatabaseIfNotExists();
     		// get header
     		ResultSetMetaData rsmd = getMetaData(sql);
     		ArrayList <String> temp = new ArrayList<String>();

@@ -1,6 +1,5 @@
 package main.java.com.mywebsite.database;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public interface DatabaseInterface

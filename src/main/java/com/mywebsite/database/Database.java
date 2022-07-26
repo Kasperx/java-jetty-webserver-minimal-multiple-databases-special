@@ -21,6 +21,7 @@ import main.java.com.mywebsite.common.MyLogger;
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {
     static Logger logger = MyLogger.getLogger(Database.class.getName());
+    protected boolean permitCreateDB = true;
     
     public static enum DatabaseType
     {

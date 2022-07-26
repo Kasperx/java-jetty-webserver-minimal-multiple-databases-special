@@ -79,7 +79,7 @@ public class Web
             
         } catch (Exception e)
         {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -90,13 +90,15 @@ public class Web
             if (args[i].equals("-h") || args[i].equals("-help") || args[i].equals("-?") || args[i].equals("?")) {
                 showHelp();
             }
-            if(args[i].toLowerCase().equals("--httpport"))
+            if(args[i].equalsIgnoreCase("--httpport"))
             {
                 try {
 					httpport = Integer.parseInt(args[i + 1]);
-				} catch (NumberFormatException e) {}
+				} catch (NumberFormatException e) {
+				    logger.error(e);
+				}
             }
-            if(args[i].toLowerCase().equals("--httpbase"))
+            if(args[i].equalsIgnoreCase("--httpbase"))
             {
                 if(new File(args[i + 1]).isDirectory()) {
                     httpbase = args[i + 1];

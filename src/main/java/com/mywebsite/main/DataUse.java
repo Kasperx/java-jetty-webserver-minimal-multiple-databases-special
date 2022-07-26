@@ -140,7 +140,7 @@ public class DataUse
             //out.close();
         }
         catch (Exception e) {
-            System.err.println(e.toString());
+            logger.error(e);
         }
     }
     /**
@@ -182,7 +182,7 @@ public class DataUse
 //            out.close();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     /**
@@ -200,8 +200,8 @@ public class DataUse
             Credentials credentials = new UsernamePasswordCredentials("", "");
             credentialsProvider.setCredentials(AuthScope.ANY, credentials);
             HttpClient client = HttpClientBuilder.create()
-                    .setDefaultCredentialsProvider(credentialsProvider)
-                    .build();
+                .setDefaultCredentialsProvider(credentialsProvider)
+                .build();
 //            HttpPost requ = new HttpPost(url);
             //////////////////
             URIBuilder builder = new URIBuilder();
@@ -229,9 +229,8 @@ public class DataUse
             while ((line = rd.readLine()) != null)
             {    
                 textView += line;
-            logger.info(textView);
+                logger.info(textView);
             }
-//            logger.info(textView);
             rd.close();
             response.setCharacterEncoding("utf-8");
             response.setContentType("text/json");
@@ -240,7 +239,7 @@ public class DataUse
         }
         catch (Exception e)
         {
-            System.err.println(e.toString());
+            logger.error(e);
         }
     }
     /**
@@ -263,7 +262,7 @@ public class DataUse
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 //    public static void clientRequest_CallDataFromDb(HttpServletRequest request, HttpServletResponse response)
