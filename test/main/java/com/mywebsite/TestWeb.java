@@ -1,4 +1,6 @@
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterAll;
@@ -11,6 +13,7 @@ import main.java.com.mywebsite.main.Web;
 
 class TestWeb
 {
+    String url = "localhost:4000";
     @BeforeAll
     static void setUpBeforeClass() throws Exception
     {
@@ -25,7 +28,6 @@ class TestWeb
     @BeforeEach
     void setUp() throws Exception
     {
-        
     }
 
     @AfterEach
@@ -36,7 +38,12 @@ class TestWeb
     @Test
     void test()
     {
-        fail("Not yet implemented");
+        given()
+        .when().get(url+"?get=insert")
+        .then().statusCode(200).statusLine("HTTP/1.1 200 OK")
+//        .body("description", equalTo(""))
+//        .body("hostURL", equalTo("172.18.65.85:8000"))
+        ;
     }
 
 }
