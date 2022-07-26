@@ -32,7 +32,18 @@ public class Web
     static String httpbase = System.getProperty("user.dir");
     static int httpport = 4000;
     static Logger logger = MyLogger.getLogger(Web.class.getName());
-    public Web () {}
+    public Web (String httpbase, int httpport) {
+        if(new File(httpbase).isDirectory()) {
+            this.httpbase = httpbase;
+        }
+        else if(new File(httpbase).isFile()) {
+            this.httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
+        }
+        initHttpService(this.httpbase, this.httpport);
+    }
+    public Web () {
+        initHttpService(httpbase, httpport);
+    }
     private void initHttpService(String httpbase, int port)
     {
         try
@@ -100,18 +111,20 @@ public class Web
             }
             if(args[i].equalsIgnoreCase("--httpbase"))
             {
-                if(new File(args[i + 1]).isDirectory()) {
-                    httpbase = args[i + 1];
-                }
-                else if(new File(args[i + 1]).isFile()) {
-                    httpbase = args[i + 1].substring(0, args[i + 1].lastIndexOf("/"));
-                }
+                httpbase = args[i + 1];
+//                if(new File(args[i + 1]).isDirectory()) {
+//                    httpbase = args[i + 1];
+//                }
+//                else if(new File(args[i + 1]).isFile()) {
+//                    httpbase = args[i + 1].substring(0, args[i + 1].lastIndexOf("/"));
+//                }
             }
         }
         if(new File(httpbase).isFile()) {
             httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
         }
-        new Web().initHttpService(httpbase, httpport);
+//        new Web().initHttpService(httpbase, httpport);
+        new Web();
     }
     private static void showHelp ()
     {
