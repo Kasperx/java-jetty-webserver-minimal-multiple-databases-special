@@ -30,7 +30,8 @@ function login()
 		const fullurl = url+params;
 		console.log(fullurl);
 		var http = new XMLHttpRequest();
-		http.open('POST', fullurl, true);
+		//http.open('POST', fullurl, true);
+		http.open('GET', fullurl, true);
 		http.onreadystatechange = function()
 		{
 		    if(this.readyState == 4 && this.status == 200) {
