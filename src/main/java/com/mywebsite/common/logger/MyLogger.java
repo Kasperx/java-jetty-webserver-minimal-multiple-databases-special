@@ -3,12 +3,27 @@ package main.java.com.mywebsite.common.logger;
 import java.io.File;
 import java.util.HashMap;
 
-public class MyLogger{
+/**
+ * MyLogger
+ * 
+ * <p>Makes easy and hidden use of a logger for console info
+ * <p>Supported: mylogger & org.apache.logging.log4j.Logger
+ * <p>This program decides following parameter from possibly available config:
+ * <p>debug lvl: true | false
+ * <p>show class names: 0 | 1 | 2
+ * <p>0: classname will not be shown
+ * <p>1: classname with package name will be shown
+ * <p>2: classname without package name will be shown
+ * 
+ * @author cgl
+ *
+ */
+public abstract class MyLogger implements Logger{
     
     static main.java.com.mywebsite.common.logger.Logger logger;
     static HashMap<String,Logger> map;
     static boolean useLog4j = false;
-    final static String dateFormat = "yyyy.MM.dd-HH:mm:ss";
+    final static String dateFormat = "yyyy.MM.dd-HH:mm:ss.S";
     
     static Logger initLogger(String className)
     {
@@ -108,4 +123,10 @@ public class MyLogger{
         }
         return lvl;
     }
+    public abstract void warn(String text);
+    public abstract void info(String text);
+    public abstract void debug(String text);
+    public abstract void error(String text);
+    public abstract void error(Exception error);
+    public abstract void error(String text, Exception error);
 }

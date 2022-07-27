@@ -48,27 +48,27 @@ public class MyOwnLogger implements Logger{
     }
     @Override
     public void info(String text) {
-        System.out.println(getDate()+" "+className+" INFO "+text);
+        System.out.println(getDate()+" INFO "+className+": "+text);
     }
     
     @Override
     public void debug(String text) {
         if(debug) {
-            System.out.println(getDate()+" "+className+" DEBUG "+text);
+            System.out.println(getDate()+" DEBUG "+className+": "+text);
         }
     }
     @Override
     public void warn(String text) {
-        System.out.println(getDate()+" "+className+" WARN "+text);
+        System.out.println(getDate()+" WARN "+className+": "+text);
     }
     @Override
     public void error(String text, Exception e) {
-        System.err.println(getDate()+" "+className+" ERROR "+text);
+        System.err.println(getDate()+" ERROR "+className+": "+text);
         error(e);
     }
     @Override
     public void error(String text) {
-        System.err.println(getDate()+" "+className+" ERROR "+text);
+        System.err.println(getDate()+" ERROR "+className+": "+text);
     }
     @Override
     public void error(Exception error) {
