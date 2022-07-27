@@ -21,8 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.google.gson.GsonBuilder;
-import main.java.com.mywebsite.common.Logger;
-import main.java.com.mywebsite.common.MyLogger;
+
+import main.java.com.mywebsite.common.logger.Logger;
+import main.java.com.mywebsite.common.logger.MyLogger;
 import main.java.com.mywebsite.database.Database;
 import main.java.com.mywebsite.database.DatabaseSQLite;
 

@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import main.java.com.mywebsite.common.Logger;
-import main.java.com.mywebsite.common.MyLogger;
+import main.java.com.mywebsite.common.logger.Logger;
+import main.java.com.mywebsite.common.logger.MyLogger;
 
 public class DatabaseSQLite extends Database
 {  

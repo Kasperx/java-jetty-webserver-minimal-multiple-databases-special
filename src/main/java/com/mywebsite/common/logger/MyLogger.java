@@ -1,13 +1,13 @@
-package main.java.com.mywebsite.common;
+package main.java.com.mywebsite.common.logger;
 
 import java.io.File;
 import java.util.HashMap;
 
 public class MyLogger{
     
-    static main.java.com.mywebsite.common.Logger logger;
+    static main.java.com.mywebsite.common.logger.Logger logger;
     static HashMap<String,Logger> map;
-    static boolean useLog4j = true;
+    static boolean useLog4j = false;
     final static String dateFormat = "yyyy.MM.dd-HH:mm:ss";
     
     static Logger initLogger(String className)
@@ -21,9 +21,10 @@ public class MyLogger{
             if(useLog4j) {
                 logger = new OtherLogger(className);
             } else {
-                logger = new MyNewLogger(
+                logger = new MyOwnLogger(
                         className,
-                        getLogLvl(System.getProperty("log.loglevel", "1")),
+                        strToBoolean(System.getProperty("log.debug", "false")),
+                        strToInt(System.getProperty("log.showClasslevel", "1")),
                         System.getProperty("log.dateformat")
                 );
             }
@@ -67,16 +68,20 @@ public class MyLogger{
                 e.printStackTrace();
             }
         }
-        if(System.getProperty("log.loglevel", null) == null)
+        if(System.getProperty("log.debug", null) == null)
         {
-            System.setProperty("log.loglevel", "1");
+            System.setProperty("log.debug", "false");
+        }
+        if(System.getProperty("log.showClasslevel", null) == null)
+        {
+            System.setProperty("log.showClasslevel", "1");
         }
         if(System.getProperty("log.dateformat", null) == null)
         {
             System.setProperty("log.dateformat", dateFormat);
         }
     }
-    static int getLogLvl(String loglvl)
+    static int strToInt(String loglvl)
     {
         try{
             return Integer.parseInt(loglvl);
@@ -84,5 +89,23 @@ public class MyLogger{
             e.printStackTrace();
             return 0;
         }
+    }
+    static boolean strToBoolean(String loglvl)
+    {
+        boolean lvl = false;
+        try{
+            switch(loglvl)
+            {
+            case "true":
+                lvl = true;
+                break;
+            default:
+                lvl = false;
+            };
+        } catch (Exception e) {
+            e.printStackTrace();
+            lvl = false;
+        }
+        return lvl;
     }
 }

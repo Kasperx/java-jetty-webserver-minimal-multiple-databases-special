@@ -12,11 +12,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import main.java.com.mywebsite.common.Logger;
-
 import com.github.javafaker.Faker;
 
-import main.java.com.mywebsite.common.MyLogger;
+import main.java.com.mywebsite.common.logger.Logger;
+import main.java.com.mywebsite.common.logger.MyLogger;
 
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {

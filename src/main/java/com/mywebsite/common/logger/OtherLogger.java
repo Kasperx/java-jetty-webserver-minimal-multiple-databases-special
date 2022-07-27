@@ -1,4 +1,4 @@
-package main.java.com.mywebsite.common;
+package main.java.com.mywebsite.common.logger;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

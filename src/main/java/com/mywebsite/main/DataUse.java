@@ -27,9 +27,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
-import main.java.com.mywebsite.common.Logger;
 
-import main.java.com.mywebsite.common.MyLogger;
+import main.java.com.mywebsite.common.logger.Logger;
+import main.java.com.mywebsite.common.logger.MyLogger;
 import main.java.com.mywebsite.database.Database;
 import main.java.com.mywebsite.database.Database.DatabaseType;
 import main.java.com.mywebsite.database.DatabaseFile;

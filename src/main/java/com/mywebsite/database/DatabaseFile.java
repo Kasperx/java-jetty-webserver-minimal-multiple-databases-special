@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Map.Entry;
 
-import main.java.com.mywebsite.common.Logger;
-import main.java.com.mywebsite.common.MyLogger;
+import main.java.com.mywebsite.common.logger.Logger;
+import main.java.com.mywebsite.common.logger.MyLogger;
 
 public class DatabaseFile extends Database implements Serializable
 {  
