@@ -29,16 +29,23 @@ function login()
 		//var params = "somevariable=somevalue&anothervariable=anothervalue";
 		const fullurl = url+params;
 		console.log(fullurl);
-		var http = new XMLHttpRequest();
+		let http = new XMLHttpRequest();
 		//http.open('POST', fullurl, true);
 		http.open('GET', fullurl, true);
+		http.send(params);
+		http.onload = function() {
+		  if (http.status != 200) { // analyze HTTP status of the response
+		    alert("Error "+http.status+ http.statusText);
+		  } else { // show the result
+		    alert("Done, got "+http.response.length+" bytes");
+		  }
+		};
 		http.onreadystatechange = function()
 		{
 		    if(this.readyState == 4 && this.status == 200) {
 		        alert(this.responseText);
 		    }
 		}
-		http.send(params);
     }
 }
 
