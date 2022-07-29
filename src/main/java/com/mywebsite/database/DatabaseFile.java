@@ -16,7 +16,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 
 import main.java.com.mywebsite.common.logger.Logger;
-import main.java.com.mywebsite.common.logger.MyLogger;
+import main.java.com.mywebsite.common.logger.LoggerConfig;
 
 public class DatabaseFile extends Database implements Serializable
 {  
@@ -29,7 +29,7 @@ public class DatabaseFile extends Database implements Serializable
     
     public DatabaseFile()
     {
-        logger = MyLogger.getLogger(DatabaseFile.class.getName());
+        logger = LoggerConfig.getLogger(DatabaseFile.class.getName());
         path = System.getProperty("user.dir")+"/test";
 //        path = System.getProperty("user.dir")+"/test";
         File dbFile = new File(path);

@@ -29,7 +29,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import main.java.com.mywebsite.common.logger.Logger;
-import main.java.com.mywebsite.common.logger.MyLogger;
+import main.java.com.mywebsite.common.logger.LoggerConfig;
 import main.java.com.mywebsite.database.Database;
 import main.java.com.mywebsite.database.Database.DatabaseType;
 import main.java.com.mywebsite.database.DatabaseFile;
@@ -43,7 +43,7 @@ public class DataUse
     static String htmlhead_fullSize;
     static String htmlend;
     static Database.DatabaseType databaseType;
-    static Logger logger = MyLogger.getLogger(Database.class.getName());
+    static Logger logger = LoggerConfig.getLogger(Database.class.getName());
     
     public DataUse()
     {

@@ -15,11 +15,11 @@ import java.util.Set;
 import com.github.javafaker.Faker;
 
 import main.java.com.mywebsite.common.logger.Logger;
-import main.java.com.mywebsite.common.logger.MyLogger;
+import main.java.com.mywebsite.common.logger.LoggerConfig;
 
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {
-    static Logger logger = MyLogger.getLogger(Database.class.getName());
+    static Logger logger = LoggerConfig.getLogger(Database.class.getName());
     protected boolean permitCreateDB = true;
     
     public static enum DatabaseType

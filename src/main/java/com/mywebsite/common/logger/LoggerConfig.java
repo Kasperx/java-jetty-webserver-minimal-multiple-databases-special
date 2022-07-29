@@ -18,7 +18,7 @@ import java.util.HashMap;
  * @author cgl
  *
  */
-public abstract class MyLogger implements Logger{
+public abstract class LoggerConfig implements Logger{
     
     static main.java.com.mywebsite.common.logger.Logger logger;
     static HashMap<String,Logger> map;
@@ -33,7 +33,7 @@ public abstract class MyLogger implements Logger{
         }
         else
         {
-            if(useLog4j) {
+            if(strToBoolean(System.getProperty("log.log4j", "true"))) {
                 logger = new OtherLogger(className);
             } else {
                 logger = new MyOwnLogger(
@@ -79,21 +79,51 @@ public abstract class MyLogger implements Logger{
                     .toURL()
                     .toString()
                     );
+                System.out.println("Set config 'log.configuration' = "+System.getProperty("log.configuration", null));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(System.getProperty("log.debug", null) == null)
+        // log.debug
+        String configName = "log.debug";
+        if(System.getProperty(configName, null) == null)
         {
-            System.setProperty("log.debug", "false");
+            System.setProperty(configName, "false");
+            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+        } else {
+            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
         }
-        if(System.getProperty("log.showClasslevel", null) == null)
+        configName = "log.showClassLevel";
+        // log.showClasslevel
+        if(System.getProperty(configName, null) == null)
         {
-            System.setProperty("log.showClasslevel", "1");
+            System.setProperty(configName, "1");
+            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+        } else {
+            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
         }
-        if(System.getProperty("log.dateformat", null) == null)
+        // log.dateformat
+        configName = "log.dateformat";
+        if(System.getProperty(configName, null) == null)
         {
-            System.setProperty("log.dateformat", dateFormat);
+            System.setProperty(configName, dateFormat);
+            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+        } else {
+            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+        }
+        // log.log4j
+        configName = "log.log4j";
+        if(System.getProperty(configName, null) == null)
+        {
+            if(useLog4j) {
+                System.setProperty(configName, "true");
+                System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+            } else {
+                System.setProperty(configName, "false");
+                System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+            }
+        } else {
+            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
         }
     }
     static int strToInt(String loglvl)
@@ -105,11 +135,11 @@ public abstract class MyLogger implements Logger{
             return 0;
         }
     }
-    static boolean strToBoolean(String loglvl)
+    static boolean strToBoolean(String str)
     {
         boolean lvl = false;
         try{
-            switch(loglvl)
+            switch(str)
             {
             case "true":
                 lvl = true;

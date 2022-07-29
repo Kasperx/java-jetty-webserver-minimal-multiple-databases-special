@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import main.java.com.mywebsite.common.logger.Logger;
-import main.java.com.mywebsite.common.logger.MyLogger;
+import main.java.com.mywebsite.common.logger.LoggerConfig;
 
 public class DatabaseSQLite extends Database
 {  
@@ -24,7 +24,7 @@ public class DatabaseSQLite extends Database
     
     public DatabaseSQLite()
     {
-        logger = MyLogger.getLogger(DatabaseSQLite.class.getName());
+        logger = LoggerConfig.getLogger(DatabaseSQLite.class.getName());
         File dbFile = new File(path);
         try
         {
