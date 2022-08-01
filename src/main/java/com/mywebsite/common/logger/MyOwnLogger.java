@@ -28,16 +28,16 @@ public class MyOwnLogger implements Logger{
         switch(showClassLvl)
         {
         case 0:
-            this.className = "";
+            className = "";
             break;
         case 1:
-            this.className = className;
+//            className = className;
             break;
         case 2:
-            this.className = className.split("\\.")[(className.split("\\.").length-1)];
+            className = className.split("\\.")[(className.split("\\.").length-1)];
             break;
         default:
-            this.className = "";
+            className = "";
             break;
         }
         return className;

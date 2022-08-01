@@ -2,6 +2,7 @@ package main.java.com.mywebsite.common.logger;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * MyLogger
@@ -21,15 +22,18 @@ import java.util.HashMap;
 public abstract class LoggerConfig implements Logger{
     
     static main.java.com.mywebsite.common.logger.Logger logger;
-    static HashMap<String,Logger> map;
-    static boolean useLog4j = false;
-    final static String dateFormat = "yyyy.MM.dd-HH:mm:ss.S";
+    static HashMap<String,Logger> MAP;
+    static boolean USE_LOG_4J = false;
+    final static String DATE_FORMAT = "yyyy.MM.dd-HH:mm:ss.S";
+    static int LOG_SHOW_CLASS_LVL = 2;
+    static boolean LOG_DEBUG = false;
+    static Map <String, String> CONFIG_PROPS = new HashMap<String, String>();
     
     static Logger initLogger(String className)
     {
-        if(map.size()>0 && map.containsKey(className))
+        if(MAP.size()>0 && MAP.containsKey(className))
         {
-            logger = map.get(className);
+            logger = MAP.get(className);
         }
         else
         {
@@ -38,12 +42,12 @@ public abstract class LoggerConfig implements Logger{
             } else {
                 logger = new MyOwnLogger(
                         className,
-                        strToBoolean(System.getProperty("log.debug", "false")),
-                        strToInt(System.getProperty("log.showClasslevel", "1")),
+                        strToBoolean(System.getProperty("log.debug")),
+                        strToInt(System.getProperty("log.showClassLevel")),
                         System.getProperty("log.dateformat")
                 );
             }
-            map.put(className, logger);
+            MAP.put(className, logger);
         }
         return logger;
     }
@@ -62,9 +66,9 @@ public abstract class LoggerConfig implements Logger{
     */
     private static void init(String name)
     {
-        if(map == null)
+        if(MAP == null)
         {
-            map = new HashMap<String,Logger>();
+            MAP = new HashMap<String,Logger>();
             //map.put(name, logger);
         }
         //////////////////////////////////////////////////////
@@ -84,47 +88,58 @@ public abstract class LoggerConfig implements Logger{
                 e.printStackTrace();
             }
         }
-        // log.debug
-        String configName = "log.debug";
-        if(System.getProperty(configName, null) == null)
-        {
-            System.setProperty(configName, "false");
-            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
-        } else {
-            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
-        }
-        configName = "log.showClassLevel";
-        // log.showClasslevel
-        if(System.getProperty(configName, null) == null)
-        {
-            System.setProperty(configName, "1");
-            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
-        } else {
-            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
-        }
-        // log.dateformat
-        configName = "log.dateformat";
-        if(System.getProperty(configName, null) == null)
-        {
-            System.setProperty(configName, dateFormat);
-            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
-        } else {
-            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
-        }
-        // log.log4j
-        configName = "log.log4j";
-        if(System.getProperty(configName, null) == null)
-        {
-            if(useLog4j) {
-                System.setProperty(configName, "true");
-                System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
-            } else {
-                System.setProperty(configName, "false");
-                System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//        Map <String, String> configProps = new HashMap<String, String>();
+        if(CONFIG_PROPS == null || CONFIG_PROPS.size() <= 0) {
+            CONFIG_PROPS.put("log.showClassLevel", String.valueOf(LOG_SHOW_CLASS_LVL));
+            CONFIG_PROPS.put("log.dateformat", DATE_FORMAT);
+            CONFIG_PROPS.put("log.debug", LOG_DEBUG ? "true" : "false");
+            CONFIG_PROPS.put("log.log4j", USE_LOG_4J ? "true" : "false");
+            for(Map.Entry<String, String> entry: CONFIG_PROPS.entrySet()) {
+                getOrSetProperty(entry.getKey(), entry.getValue());
             }
-        } else {
-            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
         }
+        
+//        // log.debug
+//        configName = "log.debug";
+//        if(System.getProperty(configName, null) == null)
+//        {
+//            System.setProperty(configName, "false");
+//            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//        } else {
+//            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//        }
+//        configName = "log.showClassLevel";
+//        // log.showClasslevel
+//        if(System.getProperty(configName, null) == null)
+//        {
+//            System.setProperty(configName, "1");
+//            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//        } else {
+//            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//        }
+//        // log.dateformat
+//        configName = "log.dateformat";
+//        if(System.getProperty(configName, null) == null)
+//        {
+//            System.setProperty(configName, dateFormat);
+//            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//        } else {
+//            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//        }
+//        // log.log4j
+//        configName = "log.log4j";
+//        if(System.getProperty(configName, null) == null)
+//        {
+//            if(useLog4j) {
+//                System.setProperty(configName, "true");
+//                System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//            } else {
+//                System.setProperty(configName, "false");
+//                System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//            }
+//        } else {
+//            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+//        }
     }
     static int strToInt(String loglvl)
     {
@@ -152,6 +167,15 @@ public abstract class LoggerConfig implements Logger{
             lvl = false;
         }
         return lvl;
+    }
+    static void getOrSetProperty(String configName, String text)
+    {
+        if(System.getProperty(configName, null) == null) {
+            System.setProperty(configName, text);
+            System.out.println("Set config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+        } else {
+            System.out.println("Found config '"+configName+"' = '"+System.getProperty(configName, null)+"'");
+        }
     }
     public abstract void warn(String text);
     public abstract void info(String text);
