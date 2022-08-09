@@ -2,6 +2,8 @@ package main.java.com.mywebsite.database;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 public interface DatabaseInterface
 {
     public void connect();
@@ -13,4 +15,9 @@ public interface DatabaseInterface
 //    public String generateActualSql(String sqlQuery, Object... parameters);
 //    private ResultSet executeGet(String sql);
 //    private void executeSet(String sql);
+    public JSONObject getDataJson();
+    /**
+     * @return json data from database
+     */
+    public JSONObject getAllDataJson();
 }

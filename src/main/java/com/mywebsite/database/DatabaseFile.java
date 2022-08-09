@@ -13,6 +13,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+
+import org.json.JSONObject;
+
 import java.util.Map.Entry;
 
 import main.java.com.mywebsite.common.logger.Logger;
@@ -255,5 +258,17 @@ public class DatabaseFile extends Database implements Serializable
 	public void connect()
 	{
 	}
+    @Override
+    public JSONObject getDataJson()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public JSONObject getAllDataJson()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }  
 

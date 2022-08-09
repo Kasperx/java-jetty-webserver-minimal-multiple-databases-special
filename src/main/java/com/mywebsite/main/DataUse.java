@@ -27,7 +27,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONObject;
 
+import com.google.gson.Gson;
+
+import main.java.com.mywebsite.DAO.Dao_Main;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 import main.java.com.mywebsite.database.Database;
@@ -35,7 +39,7 @@ import main.java.com.mywebsite.database.Database.DatabaseType;
 import main.java.com.mywebsite.database.DatabaseFile;
 import main.java.com.mywebsite.database.DatabaseSQLite;
 
-public class DataUse
+public class DataUse extends Dao_Main
 {
     static Database databasesource;
     String httpbase;
@@ -242,8 +246,29 @@ public class DataUse
             logger.error(e);
         }
     }
+//    /**
+//     * @param request
+//     * @param response
+//     */
+//    public static void clientRequest_GetData(HttpServletRequest request, HttpServletResponse response)
+//    {
+//        try
+//        {
+//            logger.info("Found request: "+request.getParameter("get"));
+//            response.setCharacterEncoding("utf-8");
+//            response.setContentType("text/html");
+//            response.setStatus(HttpServletResponse.SC_OK);
+//            ArrayList <ArrayList<String>> data = databasesource.getData();
+//            String websitedata = fillWebsiteWithData(data);
+//            logger.info(websitedata);
+//            response.getWriter().append(websitedata);
+//        }
+//        catch (Exception e)
+//        {
+//            logger.error(e);
+//        }
+//    }
     /**
-     * 
      * @param request
      * @param response
      */
@@ -253,12 +278,21 @@ public class DataUse
         {
             logger.info("Found request: "+request.getParameter("get"));
             response.setCharacterEncoding("utf-8");
-            response.setContentType("text/html");
             response.setStatus(HttpServletResponse.SC_OK);
+//            JSONObject data = databasesource.getDataJson();
             ArrayList <ArrayList<String>> data = databasesource.getData();
-            String websitedata = fillWebsiteWithData(data);
-            logger.info(websitedata);
+            String websitedata = null;
+            if(userJson) {
+                response.setContentType("application/json");
+                Gson gson = new Gson();
+                websitedata = gson.toJson(data);
+            } else {
+                response.setContentType("text/html");
+                websitedata = fillWebsiteWithData(data);
+                logger.info(websitedata);
+            }
             response.getWriter().append(websitedata);
+            
         }
         catch (Exception e)
         {
@@ -356,6 +390,42 @@ public class DataUse
             e.printStackTrace();
         }
     }
+//    /**
+//     * 
+//     * @param request
+//     * @param response
+//     */
+//    public static void clientRequest_GetAllData(HttpServletRequest request, HttpServletResponse response)
+//    {
+//        try
+//        {
+//            logger.info("Found request: "+request.getParameter("get"));
+//            logger.info("Found request: "+request.getParameter("name"));
+//            String name = request.getParameter("user");
+//            String pw = request.getParameter("pw");
+//            if(databasesource.isPermitted(name, pw))
+//            {
+//                response.setCharacterEncoding("utf-8");
+////            response.setContentType("application/json");
+//                response.setContentType("text/html");
+//                response.setStatus(HttpServletResponse.SC_OK);
+//                ArrayList <ArrayList<String>> data = databasesource.getAllData();
+//                String websitedata = fillWebsiteWithData(data, true);
+//                response.getWriter().println(websitedata);
+//            }
+//            else
+//            {
+//                response.setCharacterEncoding("utf-8");
+//                response.setContentType("application/json");
+//                response.setStatus(HttpServletResponse.SC_OK);
+//                response.getWriter().println("{ \"status\": \"wrong data\"}");
+//            }
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
     /**
      * 
      * @param request
@@ -371,12 +441,24 @@ public class DataUse
             String pw = request.getParameter("pw");
             if(databasesource.isPermitted(name, pw))
             {
-                response.setCharacterEncoding("utf-8");
-//            response.setContentType("application/json");
-                response.setContentType("text/html");
                 response.setStatus(HttpServletResponse.SC_OK);
+                response.setCharacterEncoding("utf-8");
                 ArrayList <ArrayList<String>> data = databasesource.getAllData();
-                String websitedata = fillWebsiteWithData(data, true);
+                String websitedata = null;
+                if(userJson) {
+                    response.setContentType("application/json");
+                    Gson gson = new Gson();
+                    websitedata = gson.toJson(data);
+                } else {
+                    response.setContentType("text/html");
+                    websitedata = fillWebsiteWithData(data, true);
+                    logger.info(websitedata);
+                }
+                // without json, delete
+//                response.setContentType("text/html");
+//                response.setStatus(HttpServletResponse.SC_OK);
+//                ArrayList <ArrayList<String>> data = databasesource.getAllData();
+//                String websitedata = fillWebsiteWithData(data, true);
                 response.getWriter().println(websitedata);
             }
             else
@@ -448,22 +530,24 @@ public class DataUse
 			}
 		}
 		// Add extra line for user
-		websitedata += "<tr>";
-		websitedata += "<td>";
-		websitedata += "<input placeholder='insert name'>";
-		websitedata += "</td>";
-		websitedata += "<td>";
-		websitedata += "<input placeholder='insert surname'></input>";
-		websitedata += "</td>";
-		websitedata += "</tr>";
-		websitedata += "<tr>";
-		websitedata += "<td>";
-		websitedata += "<button>Send</button>";
-		websitedata += "</td>";
-		websitedata += "<td>";
-		websitedata += "<div></div>";
-		websitedata += "</td>";
-		websitedata += "</tr>";
+		if(!admin) {
+    		websitedata += "<tr>";
+    		websitedata += "<td>";
+    		websitedata += "<input placeholder='insert name'>";
+    		websitedata += "</td>";
+    		websitedata += "<td>";
+    		websitedata += "<input placeholder='insert surname'></input>";
+    		websitedata += "</td>";
+    		websitedata += "</tr>";
+    		websitedata += "<tr>";
+    		websitedata += "<td>";
+    		websitedata += "<button>Send</button>";
+    		websitedata += "</td>";
+    		websitedata += "<td>";
+    		websitedata += "<div></div>";
+    		websitedata += "</td>";
+    		websitedata += "</tr>";
+		}
 		// Add extra line for user
 		websitedata += "</table>";
 		websitedata += htmlend;

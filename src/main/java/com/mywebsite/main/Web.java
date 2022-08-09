@@ -25,12 +25,13 @@ import org.json.JSONObject;
 
 import com.google.gson.GsonBuilder;
 
+import main.java.com.mywebsite.DAO.Dao_Main;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 import main.java.com.mywebsite.database.Database;
 import main.java.com.mywebsite.database.DatabaseSQLite;
 
-public class Web
+public class Web extends Dao_Main
 {
     Server server;
     static String httpbase = System.getProperty("user.dir");
@@ -201,7 +202,6 @@ public class Web
             else if (request_api_get_data_for_admin.equals(parameter))
             {
                 website.clientRequest_GetAllData(request, response);
-//                website.clientRequest_askUserData(request, response);
             }
         }
         @Override

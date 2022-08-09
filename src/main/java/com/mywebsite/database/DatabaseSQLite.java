@@ -17,8 +17,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.json.JSONObject;
+
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
+import tech.tablesaw.api.Table;
 
 public class DatabaseSQLite extends Database
 {  
@@ -92,6 +95,38 @@ public class DatabaseSQLite extends Database
     /**
      * 
      */
+    public JSONObject getDataJson()
+    {
+        String sql = ""
+                + "SELECT "
+                //        		+ "id, "
+                + "name, "
+                + "lastname "
+                + "FROM "
+                + "person "
+                + "where name != 'admin'";
+        JSONObject json = getDataFromDBWithHeaderJSON(sql);
+        return json;
+    }
+    /**
+     * 
+     */
+    public ArrayList<ArrayList<String>> getDataJSON()
+    {
+        String sql = ""
+                + "SELECT "
+//        		+ "id, "
+                + "name, "
+                + "lastname "
+                + "FROM "
+                + "person "
+                + "where name != 'admin'";
+        ArrayList<ArrayList<String>> data = getDataFromDBWithHeader(sql);
+        return data;
+    }
+    /**
+     * 
+     */
     public int getId(String name)
     {
         ResultSet resultSet = executeGet("SELECT id FROM person where name = '"+name+"'");
@@ -142,13 +177,19 @@ public class DatabaseSQLite extends Database
                     + "name text unique,"
                     + "lastname text"
                     + ")");
+            /*
+             *  table login with boolean.. but seems problem with jdbc -> sqlite
+             *  sometimes boolean = int, sometimes not :(
+             *  so boolean = int and works. remember for other dbs
+             */
             executeSet("create table if not exists login ("
                     + "id integer primary key autoincrement,"
                     + "p_id integer,"
                     + "p_name text,"
                     + "p_lastname text,"
                     + "p_password text unique,"
-                    + "p_admin default 'false',"
+//                    + "p_admin boolean default 'false',"
+                    + "p_admin int default 0,"
                     + "foreign key (p_id) references person(id)"
                     + ")");
             return true;
@@ -167,7 +208,8 @@ public class DatabaseSQLite extends Database
         executeSet("admin", "admin");
 //        generateActualSql("insert into person (name, lastname) values (?,?);", "admin", "admin");
 //        executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
-        executeSet("secret", true);
+//        executeSet("secret", true);
+        insertAdminData(getId("admin"), "secret", true);
 //        generateActualSql("insert into login (p_id, p_password, p_admin) values (?,?,?);", 1, "secret", "true");
         for(Entry <String[], Integer> entry: result.entrySet())
         {
@@ -225,7 +267,13 @@ public class DatabaseSQLite extends Database
         try
         {
 //            ResultSet resultSet = executeGet("SELECT p.name, login.p_password, login.p_admin FROM person p inner join login on p.id = login.p_id where login.p_admin = 'true'");
-            ResultSet resultSet = executeGet("SELECT p.id, p.name, login.p_password, login.p_admin FROM person p inner join login on p.id = login.p_id where login.p_admin = 'true'");
+//            ResultSet resultSet = executeGet("SELECT p.id, p.name, login.p_password, login.p_admin FROM person p inner join login on p.id = login.p_id where login.p_admin = 'true'");
+            /*
+             *  table login with boolean.. but seems problem with jdbc -> sqlite
+             *  sometimes boolean = int, sometimes not :(
+             *  so boolean = int and works. remember for other dbs
+             */
+            ResultSet resultSet = executeGet("SELECT p.id, p.name, login.p_password, login.p_admin FROM person p inner join login on p.id = login.p_id where login.p_admin = 1");
             if(resultSet.next())
             {
                 String tempname = resultSet.getString("name");
@@ -389,6 +437,49 @@ public class DatabaseSQLite extends Database
             logger.error(e);
         }
     }
+    /**
+     * 
+     * @param element1
+     * @param element2
+     * @param element3
+     */
+    void insertAdminData(int element1, String element2, boolean admin)
+    {
+        try
+        {
+//            executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
+            String sql = "insert into login ("
+                    + "p_id,"
+                    + "p_password,"
+                    + "p_admin"
+                    + ") values (";
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?"+")");
+            stmt.setInt(1, element1);
+            stmt.setString(2, element2);
+            // test
+//            stmt.setBoolean(3, admin);
+            stmt.setInt(
+                    3,
+                    admin?
+                        1
+                        :
+                        0
+                );
+            logger.info(stmt.toString());
+            stmt.execute();
+            close(null);
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+        }
+    }
+    /**
+     * 
+     * @param element1
+     * @param element2
+     */
     void executeSet(int element1, int element2)
     {
         try
@@ -484,7 +575,7 @@ public class DatabaseSQLite extends Database
      * @param sql
      * @return
      */
-    ArrayList <ArrayList<String>> getDataFromDBWithHeader(String sql)
+    ArrayList<ArrayList<String>> getDataFromDBWithHeader(String sql)
     {
     	ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
     	ArrayList <ArrayList<String>> header = new ArrayList<ArrayList<String>>();
@@ -527,6 +618,25 @@ public class DatabaseSQLite extends Database
     		logger.error(e);
     	}
     	return data;
+    }
+    /**
+     * 
+     * @param sql
+     * @return
+     */
+    JSONObject getDataFromDBWithHeaderJSON(String sql)
+    {
+        try
+        {
+            ResultSet resultSet = executeGet(sql);
+            ResultSetMetaData rsmd = getMetaData(sql);
+            Table data = Table.read().db(resultSet);
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+        }
+        return new JSONObject();
     }
     /**
      * 
@@ -600,4 +710,12 @@ public class DatabaseSQLite extends Database
 //            }
 //        }
 //    }
+    @Override
+    /**
+     * 
+     */
+    public JSONObject getAllDataJson()
+    {
+        return null;
+    }
 }  

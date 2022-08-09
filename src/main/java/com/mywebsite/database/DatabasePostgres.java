@@ -2,6 +2,8 @@ package main.java.com.mywebsite.database;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 public class DatabasePostgres extends Database
 {  
     public DatabasePostgres()
@@ -52,6 +54,16 @@ public class DatabasePostgres extends Database
     public boolean isPermitted(String name, String password)
     {
         return false;
+    }
+    @Override
+    public JSONObject getDataJson()
+    {
+        return null;
+    }
+    @Override
+    public JSONObject getAllDataJson()
+    {
+        return null;
     }
 }  
 
