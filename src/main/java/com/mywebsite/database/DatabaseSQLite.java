@@ -8,7 +8,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -21,7 +26,6 @@ public class DatabaseSQLite extends Database
     Connection connection = null;
     static Logger logger;
 //    boolean permitCreateDB = true;
-    
     public DatabaseSQLite()
     {
         logger = LoggerConfig.getLogger(DatabaseSQLite.class.getName());
@@ -36,13 +40,20 @@ public class DatabaseSQLite extends Database
         }
         catch(IOException e)
         {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
+    /**
+     * 
+     */
     public void connect()
     {
     	connect(false);
     }
+    /**
+     * 
+     * @param showInfo
+     */
     public void connect(boolean showInfo)
     {
         try
@@ -62,6 +73,9 @@ public class DatabaseSQLite extends Database
             logger.error(e);
         }
     }
+    /**
+     * 
+     */
     public ArrayList<ArrayList<String>> getData()
     {
         String sql = ""
@@ -75,6 +89,9 @@ public class DatabaseSQLite extends Database
         ArrayList<ArrayList<String>> data = getDataFromDBWithHeader(sql);
         return data;
     }
+    /**
+     * 
+     */
     public int getId(String name)
     {
         ResultSet resultSet = executeGet("SELECT id FROM person where name = '"+name+"'");
@@ -93,6 +110,9 @@ public class DatabaseSQLite extends Database
         }
         return -1;
     }
+    /**
+     * 
+     */
     public ArrayList <ArrayList<String>> getAllData()
     {
         String sql = "SELECT "
@@ -106,11 +126,14 @@ public class DatabaseSQLite extends Database
         ArrayList <ArrayList<String>> data = getDataFromDBWithHeader(sql);
         return data;
     }
+    /**
+     * 
+     */
     public boolean createDatabaseIfNotExists()
     {
         if(permitCreateDB) {
-            executeSet("drop table if exists person");
-            executeSet("drop table if exists login");
+//            executeSet("drop table if exists person");
+//            executeSet("drop table if exists login");
             //////////////////////////////
             executeSet("create table if not exists person ("
                     + "id integer primary key autoincrement,"
@@ -131,38 +154,70 @@ public class DatabaseSQLite extends Database
             return false;
         }
     }
+    /**
+     * 
+     */
     public void insertData()
     {
         HashMap <String[], Integer> result = getNewData();
         ///////////////////////////////////////////////////////////
-        executeSet("insert into person (name, lastname) values ('admin', 'admin')");
-        executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
+//        executeSet("insert into person (name, lastname) values ('admin', 'admin')");
+        executeSet("admin", "admin");
+//        generateActualSql("insert into person (name, lastname) values (?,?);", "admin", "admin");
+//        executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
+        executeSet("secret", "true");
+//        generateActualSql("insert into login (p_id, p_password, p_admin) values (?,?,?);", 1, "secret", "true");
         for(Entry <String[], Integer> entry: result.entrySet())
         {
         	String name = entry.getKey()[0];
         	String lastname = entry.getKey()[1];
         	int pw = entry.getValue();
-            executeSet(""
-            		+ "insert into person ("
-            		+ "name, "
-            		+ "lastname"
-            		+ ") "
-            		+ "values "
-            		+ "("
-            		+ "'"+name+"', "
-    				+ "'"+lastname+"'"
-					+ ")"
-					+ "");
-            executeSet("insert into "
-            		+ "login ("
-            		+ "p_id, "
-            		+ "p_password"
-            		+ ") values ("
-            		+ ""+getId(name)+", "
-    				+ "'"+pw+"'"
-					+ ")");
+//            executeSet(""
+//            		+ "insert into person ("
+//            		+ "name, "
+//            		+ "lastname"
+//            		+ ") "
+//            		+ "values "
+//            		+ "("
+//            		+ "'"+name+"', "
+//    				+ "'"+lastname+"'"
+//					+ ")"
+//					+ "");
+//            String sql = ""
+//            		+ "insert into person ("
+//            		+ "name, "
+//            		+ "lastname"
+//            		+ ") "
+//            		+ "values "
+//            		+ "("
+//            		+ "?, "
+//    				+ "?"
+//					+ ");";
+            executeSet(name, lastname);
+//        	generateActualSql(sql, name, lastname);
+//            executeSet("insert into "
+//            		+ "login ("
+//            		+ "p_id, "
+//            		+ "p_password"
+//            		+ ") values ("
+//            		+ ""+getId(name)+", "
+//    				+ "'"+pw+"'"
+//					+ ")");
+//            sql = "insert into "
+//            		+ "login ("
+//            		+ "p_id, "
+//            		+ "p_password"
+//            		+ ") values ("
+//            		+ "?, "
+//    				+ "?"
+//					+ ");";
+            executeSet(getId(name), pw);
+//            generateActualSql(sql, getId(name), pw);
         }
     }
+    /**
+     * 
+     */
     public boolean isPermitted(String name, String password)
     {
         try
@@ -191,6 +246,11 @@ public class DatabaseSQLite extends Database
             return false;
         }
     }
+    /**
+     * 
+     * @param sql
+     * @return
+     */
     ResultSet executeGet(String sql)
     {
         try
@@ -206,6 +266,11 @@ public class DatabaseSQLite extends Database
             return null;
         }
     }
+    /**
+     * 
+     * @param sql
+     * @return
+     */
     ResultSetMetaData getMetaData(String sql)
     {
     	try
@@ -220,6 +285,10 @@ public class DatabaseSQLite extends Database
     		return null;
     	}
     }
+    /**
+     * 
+     * @param sql
+     */
     void executeSet(String sql)
     {
         try
@@ -234,6 +303,108 @@ public class DatabaseSQLite extends Database
         	logger.error(e);
         }
     }
+    /**
+     * 
+     * @param element1
+     * @param element2
+     */
+    void executeSet(String element1, String element2)
+    {
+        try
+        {
+//            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
+            String sql = "insert into person ("
+                    + "name,"
+                    + "lastname"
+                    + ") values (";
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
+            stmt.setString(1, element1);
+            stmt.setString(2, element2);
+            logger.info(stmt.toString());
+            stmt.execute();
+            close(null);
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+        }
+    }
+    /**
+     * 
+     * @param element1
+     * @param element2
+     * @param element3
+     */
+    void executeSet(int element1, String element2, String element3)
+    {
+        try
+        {
+//            executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
+            String sql = "insert into login ("
+                    + "p_id,"
+                    + "p_password,"
+                    + "p_admin"
+                    + ") values (";
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?"+")");
+            stmt.setInt(1, element1);
+            stmt.setString(2, element2);
+            stmt.setString(3, element3);
+            logger.info(stmt.toString());
+            stmt.execute();
+            close(null);
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+        }
+    }
+    void executeSet(int element1, int element2)
+    {
+        try
+        {
+//            executeSet("insert into login (p_id, p_password) values (1, 'secret')");
+            String sql = "insert into login ("
+                    + "p_id,"
+                    + "p_password"
+                    + ") values (";
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
+            stmt.setInt(1, element1);
+            stmt.setInt(2, element2);
+            logger.info(stmt.toString());
+            stmt.execute();
+            close(null);
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+        }
+    }
+    /**
+     * 
+     * @param connection
+     * @param sql
+     * @param values
+     * @return
+     * @throws SQLException
+     */
+    public static PreparedStatement prepareStatement(Connection connection, String sql, Object... values)
+            throws SQLException
+    {
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        for (int i = 0; i < values.length; i++) {
+            preparedStatement.setObject(i + 1, values[i]);
+        }
+        logger.debug(sql + " " + Arrays.asList(values));
+        return preparedStatement;
+    }
+    /**
+     * 
+     * @param sql
+     * @return
+     */
     ArrayList <ArrayList<String>> getDataFromDBWithoutHeader(String sql)
     {
     	ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
@@ -248,7 +419,14 @@ public class DatabaseSQLite extends Database
     		logger.error(e);
     	}
     	return data;
-    }    
+    }
+    /**
+     * 
+     * @param sql
+     * @param resultSet
+     * @param rsmd
+     * @return
+     */
     ArrayList <ArrayList<String>> getDataFromDB(String sql, ResultSet resultSet, ResultSetMetaData rsmd)
     {
     	ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
@@ -271,7 +449,12 @@ public class DatabaseSQLite extends Database
         	logger.error(e);
         }
         return data;
-    }    
+    }
+    /**
+     * 
+     * @param sql
+     * @return
+     */
     ArrayList <ArrayList<String>> getDataFromDBWithHeader(String sql)
     {
     	ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
@@ -316,6 +499,10 @@ public class DatabaseSQLite extends Database
     	}
     	return data;
     }
+    /**
+     * 
+     * @param resultSet
+     */
     private void close(ResultSet resultSet)
     {
     	try
@@ -334,4 +521,54 @@ public class DatabaseSQLite extends Database
     		logger.error(e);
 		}
 	}
+//    /**
+//     * 
+//     */
+//    public String generateActualSql(String sqlQuery, Object... parameters)
+//    {
+//        String[] parts = sqlQuery.split("\\?");
+//        StringBuilder sb = new StringBuilder();
+//        // This might be wrong if some '?' are used as litteral '?'. Careful!
+//        for (int i = 0; i < parts.length; i++) {
+//            String part = parts[i];
+//            sb.append(part);
+//            if (i < parameters.length) {
+//                String temp = formatParameter(parameters[i]);
+////                sb.append(formatParameter(parameters[i]));
+//                sb.append(temp);
+//            }
+//        }
+//        logger.info(sb.toString());
+//        return sb.toString();
+//    }
+//    /**
+//     * 
+//     * @param parameter
+//     * @return
+//     */
+//    String formatParameter(Object parameter) {
+//        if (parameter == null) {
+//            return "NULL";
+//        } else {
+//            if(parameter instanceof String) {
+//                return "'"
+//                        + ((String) parameter)
+//                        .replace("'", "''")
+//                        + "'";
+//            } else if(parameter instanceof Timestamp) {
+//                return "to_timestamp('" 
+//                        + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS")
+//                        .format(parameter)
+//                        + "', 'mm/dd/yyyy hh24:mi:ss.ff3')";
+//            } else if(parameter instanceof Date) {
+//                return "to_date('"
+//                        + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
+//                        .format(parameter) + "', 'mm/dd/yyyy hh24:mi:ss')";
+//            } else if(parameter instanceof Boolean) {
+//                return ((Boolean) parameter).booleanValue() ? "1" : "0";
+//            } else {
+//                return parameter.toString();
+//            }
+//        }
+//    }
 }  

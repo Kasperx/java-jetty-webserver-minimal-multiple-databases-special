@@ -10,6 +10,7 @@ public interface DatabaseInterface
     public ArrayList <ArrayList<String>> getAllData();
     public boolean isPermitted(String name, String password);
     public int getId(String name);
+//    public String generateActualSql(String sqlQuery, Object... parameters);
 //    private ResultSet executeGet(String sql);
 //    private void executeSet(String sql);
 }
