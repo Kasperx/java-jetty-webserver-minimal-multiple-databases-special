@@ -447,6 +447,16 @@ public class DataUse
 				websitedata += "</tr>";
 			}
 		}
+		// Add extra line for user
+		websitedata += "<tr>";
+		websitedata += "<td>";
+		websitedata += "<input placeholder='insert name'>";
+		websitedata += "</td>";
+		websitedata += "<td>";
+		websitedata += "<input placeholder='insert surname'>";
+		websitedata += "</td>";
+		websitedata += "</tr>";
+		// Add extra line for user
 		websitedata += "</table>";
 		websitedata += htmlend;
 		return websitedata;

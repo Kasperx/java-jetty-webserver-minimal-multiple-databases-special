@@ -167,7 +167,7 @@ public class DatabaseSQLite extends Database
         executeSet("admin", "admin");
 //        generateActualSql("insert into person (name, lastname) values (?,?);", "admin", "admin");
 //        executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
-        executeSet("secret", "true");
+        executeSet("secret", true);
 //        generateActualSql("insert into login (p_id, p_password, p_admin) values (?,?,?);", 1, "secret", "true");
         for(Entry <String[], Integer> entry: result.entrySet())
         {
@@ -323,6 +323,33 @@ public class DatabaseSQLite extends Database
             PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
             stmt.setString(1, element1);
             stmt.setString(2, element2);
+            logger.info(stmt.toString());
+            stmt.execute();
+            close(null);
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+        }
+    }
+    /**
+     * 
+     * @param element1
+     * @param element2
+     */
+    void executeSet(String element1, boolean element2)
+    {
+        try
+        {
+//            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
+            String sql = "insert into login ("
+                    + "p_password,"
+                    + "p_admin"
+                    + ") values (";
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
+            stmt.setString(1, element1);
+            stmt.setBoolean(2, element2);
             logger.info(stmt.toString());
             stmt.execute();
             close(null);
