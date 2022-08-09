@@ -1,4 +1,4 @@
-package main.java.com.mywebsite.DAO;
+package main.java.com.mywebsite.main.DAO;
 
 public class Dao_Main
 {

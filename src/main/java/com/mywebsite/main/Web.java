@@ -25,13 +25,12 @@ import org.json.JSONObject;
 
 import com.google.gson.GsonBuilder;
 
-import main.java.com.mywebsite.DAO.Dao_Main;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 import main.java.com.mywebsite.database.Database;
 import main.java.com.mywebsite.database.DatabaseSQLite;
 
-public class Web extends Dao_Main
+public class Web
 {
     Server server;
     static String httpbase = System.getProperty("user.dir");

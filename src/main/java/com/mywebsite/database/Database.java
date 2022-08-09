@@ -14,9 +14,10 @@ import java.util.Set;
 
 import com.github.javafaker.Faker;
 
-import main.java.com.mywebsite.DAO.Dao_DBConnect;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
+import main.java.com.mywebsite.database.DAO.Dao_DBConnect;
+import main.java.com.mywebsite.database.Interfaces.DatabaseInterface;
 
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {

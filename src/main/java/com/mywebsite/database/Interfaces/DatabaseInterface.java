@@ -1,4 +1,4 @@
-package main.java.com.mywebsite.database;
+package main.java.com.mywebsite.database.Interfaces;
 
 import java.util.ArrayList;
 
