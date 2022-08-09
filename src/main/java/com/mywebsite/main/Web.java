@@ -192,7 +192,7 @@ public class Web
 //            }
             else if (request_api_call_data_from_db.equals(parameter))
             {
-                website.clientRequest_CallDataFromDb(request, response);
+                website.clientRequest_GetData(request, response);
             }
             else if (request_api_insert_data_to_db.equals(parameter))
             {

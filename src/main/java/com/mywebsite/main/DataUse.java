@@ -247,7 +247,7 @@ public class DataUse
      * @param request
      * @param response
      */
-    public static void clientRequest_CallDataFromDb(HttpServletRequest request, HttpServletResponse response)
+    public static void clientRequest_GetData(HttpServletRequest request, HttpServletResponse response)
     {
         try
         {
@@ -492,6 +492,10 @@ public class DataUse
         {
             logger.info("Found request: "+request.getParameter("get"));
             databasesource.createDatabaseIfNotExists();
+            /*
+             * Yes, works normally on its own, but for different database models program needs different object-casts
+             * because method is not content of normal code within abstract environment.
+             */
             switch (databaseType)
             {
 			case sqlite:

@@ -134,6 +134,8 @@ public class DatabaseSQLite extends Database
         if(permitCreateDB) {
 //            executeSet("drop table if exists person");
 //            executeSet("drop table if exists login");
+            executeSet("delete from person");
+            executeSet("delete from login");
             //////////////////////////////
             executeSet("create table if not exists person ("
                     + "id integer primary key autoincrement,"
