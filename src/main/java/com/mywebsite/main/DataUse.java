@@ -495,10 +495,12 @@ public class DataUse extends Dao_Main
 		if(admin)
 		{
 			websitedata = htmlhead_fullSize;
+			websitedata += "<h1 style='font-size:50px;'><marquee>Admin view</marquee></h1></p>";
 		} else {
 			websitedata = htmlhead_halfSize;
+			websitedata += "<h1 style='font-size:50px;'><marquee>User view</marquee></h1></p>";
 		}
-		websitedata += "<table class=\"table\">";
+		websitedata += "<table class=\"table table-striped\">";
 		websitedata += "<thead>";
 		for(int row=0; row<data.size(); row++)
 		{

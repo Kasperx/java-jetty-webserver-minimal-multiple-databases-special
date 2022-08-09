@@ -55,15 +55,5 @@ public class DatabasePostgres extends Database
     {
         return false;
     }
-    @Override
-    public JSONObject getDataJson()
-    {
-        return null;
-    }
-    @Override
-    public JSONObject getAllDataJson()
-    {
-        return null;
-    }
 }  
 

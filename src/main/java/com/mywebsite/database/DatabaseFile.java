@@ -258,17 +258,5 @@ public class DatabaseFile extends Database implements Serializable
 	public void connect()
 	{
 	}
-    @Override
-    public JSONObject getDataJson()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    @Override
-    public JSONObject getAllDataJson()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }  
 

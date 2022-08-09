@@ -21,7 +21,6 @@ import org.json.JSONObject;
 
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
-import tech.tablesaw.api.Table;
 
 public class DatabaseSQLite extends Database
 {  
@@ -91,22 +90,6 @@ public class DatabaseSQLite extends Database
         		+ "where name != 'admin'";
         ArrayList<ArrayList<String>> data = getDataFromDBWithHeader(sql);
         return data;
-    }
-    /**
-     * 
-     */
-    public JSONObject getDataJson()
-    {
-        String sql = ""
-                + "SELECT "
-                //        		+ "id, "
-                + "name, "
-                + "lastname "
-                + "FROM "
-                + "person "
-                + "where name != 'admin'";
-        JSONObject json = getDataFromDBWithHeaderJSON(sql);
-        return json;
     }
     /**
      * 
@@ -621,25 +604,6 @@ public class DatabaseSQLite extends Database
     }
     /**
      * 
-     * @param sql
-     * @return
-     */
-    JSONObject getDataFromDBWithHeaderJSON(String sql)
-    {
-        try
-        {
-            ResultSet resultSet = executeGet(sql);
-            ResultSetMetaData rsmd = getMetaData(sql);
-            Table data = Table.read().db(resultSet);
-        }
-        catch(SQLException e)
-        {
-            logger.error(e);
-        }
-        return new JSONObject();
-    }
-    /**
-     * 
      * @param resultSet
      */
     private void close(ResultSet resultSet)
@@ -710,12 +674,4 @@ public class DatabaseSQLite extends Database
 //            }
 //        }
 //    }
-    @Override
-    /**
-     * 
-     */
-    public JSONObject getAllDataJson()
-    {
-        return null;
-    }
 }  
