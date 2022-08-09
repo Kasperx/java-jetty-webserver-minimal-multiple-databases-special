@@ -523,7 +523,17 @@ public class DataUse extends Dao_Main
 				for(String temp: tempList)
 				{
 		            websitedata += "<td>";
-		            websitedata += temp;
+		            if(admin) {
+		                if(temp.equals(String.valueOf(1))) {
+		                    websitedata += "yes";
+    		            } else if(temp.equals(String.valueOf(0))) {
+    		                websitedata += "no";
+    		            } else {
+    		                websitedata += temp;
+    		            }
+	                } else {
+	                    websitedata += temp;
+	                }
 		            websitedata += "</td>";
 				}
 				websitedata += "</tr>";
