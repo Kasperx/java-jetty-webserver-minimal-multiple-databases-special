@@ -453,7 +453,15 @@ public class DataUse
 		websitedata += "<input placeholder='insert name'>";
 		websitedata += "</td>";
 		websitedata += "<td>";
-		websitedata += "<input placeholder='insert surname'>";
+		websitedata += "<input placeholder='insert surname'></input>";
+		websitedata += "</td>";
+		websitedata += "</tr>";
+		websitedata += "<tr>";
+		websitedata += "<td>";
+		websitedata += "<button>Send</button>";
+		websitedata += "</td>";
+		websitedata += "<td>";
+		websitedata += "<div></div>";
 		websitedata += "</td>";
 		websitedata += "</tr>";
 		// Add extra line for user
