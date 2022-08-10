@@ -5,20 +5,25 @@ import java.io.File;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import com.github.javafaker.Faker;
 
+import main.java.com.mywebsite.Data.Person;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 import main.java.com.mywebsite.database.DAO.Dao_DBConnect;
 import main.java.com.mywebsite.database.Interfaces.DatabaseInterface;
+import main.java.com.mywebsite.database.Interfaces.DatabaseInterfaceObject;
 
-public abstract class Database extends Dao_DBConnect implements DatabaseInterface
+public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseInterfaceObject
 {
-    static Logger logger = LoggerConfig.getLogger(Database.class.getName());
+    static Logger logger = LoggerConfig.getLogger(DatabaseObject.class.getName());
     protected boolean permitCreateDB = true;
     
     public static enum DatabaseType
@@ -42,20 +47,20 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     protected String path;
     boolean headerInUppercaseCharacter = true;
     HashMap<String, String> mapFromFile;
-    public static Database getInstance()
+    public static DatabaseObject getInstance()
     {
         return getInstance(DatabaseType.getValue());
     }
-    public static Database getInstance(DatabaseType source)
+    public static DatabaseObject getInstance(DatabaseType source)
     {
-        Database data = null;
+        DatabaseObject data = null;
         switch(source)
         {
             case file:
-                data = new DatabaseFile();
+                data = new DatabaseFileObject();
                 break;
             case sqlite:
-                data = new DatabaseSQLite();
+                data = new DatabaseSQLiteObject();
                 break;
 //            case mariadb:
 //                data = new DatabaseFile();
@@ -65,7 +70,7 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
 //                break;
             default:
             	logger.info("Not supported yet: source '"+source.value+"'. Using '"+DatabaseType.sqlite+"'.");
-                data = new DatabaseSQLite();
+                data = new DatabaseSQLiteObject();
                 break;
         }
         return data;
@@ -92,8 +97,8 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     }
     public abstract void connect();
     public abstract boolean createDatabaseIfNotExists();
-    public abstract ArrayList<ArrayList<String>> getData();
-    public abstract ArrayList<ArrayList<String>> getAllData();
+    public abstract ArrayList<Person> getData();
+    public abstract ArrayList<Person> getAllData();
     public abstract boolean isPermitted(String name, String password);
     public abstract int getId(String name);
     public abstract void insertData();
@@ -138,5 +143,13 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     public String getProperty (String keyname)
     {
         return mapFromFile.get(keyname);
+    }
+    public static int toInt(String text)
+    {
+        try{
+            return Integer.parseInt(text);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

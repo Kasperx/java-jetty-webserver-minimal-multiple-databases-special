@@ -85,13 +85,13 @@ function getData()
       // table.append('<th>AGE</th>');
       // table.append('<th>PW</th>');
       table.append('<tr>');
-      table.append('<th>'+data[0][0]+'</th>');
-      table.append('<th>'+data[0][1]+'</th>');
+      table.append('<th>'+data[0].header_firstName+'</th>');
+      table.append('<th>'+data[0].header_lastName+'</th>');
       table.append('</tr>');
       for(let i=1; i<data.length; i++){
         table.append('<tr>');
-        table.append('<th>'+data[i][0]+'</th>');
-        table.append('<th>'+data[i][1]+'</th>');
+        table.append('<th>'+data[i].firstName+'</th>');
+        table.append('<th>'+data[i].lastName+'</th>');
         table.append('</tr>');
       }
       // $.each(data, function(key, val)
@@ -160,6 +160,7 @@ function getAllData()
       //     table.append('<td>'+val.pw+'</td>');
       //     table.append('</tr>');
       // });
+      /*
       table.append('<tr>');
       table.append('<th>'+data[0][0]+'</th>');
       table.append('<th>'+data[0][1]+'</th>');
@@ -175,8 +176,22 @@ function getAllData()
         } else {
           table.append('<th>yes</th>');
         }
+        */
+        table.append('<tr>');
+      table.append('<th>'+data[0].header_id+'</th>');
+      table.append('<th>'+data[0].header_firstName+'</th>');
+      table.append('<th>'+data[0].header_lastName+'</th>');
+      table.append('<th>'+data[0].header_password+'</th>');
+      table.append('</tr>');
+      for(let i=1; i<data.length; i++){
+        table.append('<tr>');
+        table.append('<th>'+data[i].id+'</th>');
+        table.append('<th>'+data[i].firstName+'</th>');
+        table.append('<th>'+data[i].lastName+'</th>');
+        table.append('<th>'+data[i].password+'</th>');
         table.append('</tr>');
       }
+        table.append('</tr>');
       table.append('</table>');
       $('body').append('<p></p>');
       $('body').append(table);
