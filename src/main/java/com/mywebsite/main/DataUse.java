@@ -282,7 +282,7 @@ public class DataUse extends Dao_Main
 //            JSONObject data = databasesource.getDataJson();
             ArrayList <ArrayList<String>> data = databasesource.getData();
             String websitedata = null;
-            if(userJson) {
+            if(useJson) {
                 response.setContentType("application/json");
                 Gson gson = new Gson();
                 websitedata = gson.toJson(data);
@@ -445,7 +445,7 @@ public class DataUse extends Dao_Main
                 response.setCharacterEncoding("utf-8");
                 ArrayList <ArrayList<String>> data = databasesource.getAllData();
                 String websitedata = null;
-                if(userJson) {
+                if(useJson) {
                     response.setContentType("application/json");
                     Gson gson = new Gson();
                     websitedata = gson.toJson(data);

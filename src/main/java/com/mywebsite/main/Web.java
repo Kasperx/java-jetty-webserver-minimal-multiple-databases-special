@@ -166,15 +166,6 @@ public class Web
             {
             	logger.info("Found parameter: "+parameter);
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
             requestByClient = request.getRequestURI().toLowerCase();
             if (requestByClient.contains(request_stringToGetWebsite)
                     && parameter == null
