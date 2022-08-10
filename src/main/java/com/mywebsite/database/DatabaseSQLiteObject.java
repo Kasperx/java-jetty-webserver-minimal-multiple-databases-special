@@ -87,7 +87,8 @@ public class DatabaseSQLiteObject extends DatabaseObject
         		+ "FROM "
         		+ "person "
         		+ "where name != 'admin'";
-        ArrayList<Person> data = getDataFromDBWithHeader(sql, false);
+//        ArrayList<Person> data = getDataFromDBWithHeader(sql, false);
+        ArrayList<Person> data = getDataFromDBWithoutHeader(sql, false);
         return data;
     }
 //    /**
@@ -133,13 +134,17 @@ public class DatabaseSQLiteObject extends DatabaseObject
     public ArrayList<Person> getAllData()
     {
         String sql = "SELECT "
-                + " id,"
-                + " name,"
-                + " lastname,"
-                + " password,"
-                + " admin"
-                + " FROM person";
-        ArrayList<Person> data = getDataFromDBWithHeader(sql, true);
+                + " p.id,"
+                + " p.name,"
+                + " p.lastname,"
+                + " login.p_password as password,"
+                + " login.p_admin as admin"
+//                + " FROM person p, login l"
+                + " FROM person p"
+                + " inner join login on p.id = login.p_id;";
+        // "SELECT p.id, p.name, login.p_password, login.p_admin FROM person p inner join login on p.id = login.p_id where login.p_admin = 1"
+//        ArrayList<Person> data = getDataFromDBWithHeader(sql, true);
+        ArrayList<Person> data = getDataFromDBWithoutHeader(sql, true);
         return data;
     }
     /**
@@ -148,33 +153,31 @@ public class DatabaseSQLiteObject extends DatabaseObject
     public boolean createDatabaseIfNotExists()
     {
         if(permitCreateDB) {
-            executeSet("drop table if exists person");
-            executeSet("drop table if exists login");
-//            executeSet("delete from person");
-//            executeSet("delete from login");
+//            executeSet("drop table if exists person");
+//            executeSet("drop table if exists login");
+            executeSet("delete from person");
+            executeSet("delete from login");
             //////////////////////////////
             executeSet("create table if not exists person ("
                     + "id integer primary key autoincrement,"
                     + "name text unique,"
-                    + "lastname text,"
-                    + "password text unique,"
-                    + "admin int default 0"
+                    + "lastname text"
                     + ")");
             /*
              *  table login with boolean.. but seems problem with jdbc -> sqlite
              *  sometimes boolean = int, sometimes not :(
              *  so boolean = int and works. remember for other dbs
              */
-//            executeSet("create table if not exists login ("
-//                    + "id integer primary key autoincrement,"
-//                    + "p_id integer,"
-//                    + "p_name text,"
-//                    + "p_lastname text,"
-//                    + "p_password text unique,"
-////                    + "p_admin boolean default 'false',"
-//                    + "p_admin int default 0,"
-//                    + "foreign key (p_id) references person(id)"
-//                    + ")");
+            executeSet("create table if not exists login ("
+                    + "id integer primary key autoincrement,"
+                    + "p_id integer,"
+                    + "p_name text,"
+                    + "p_lastname text,"
+                    + "p_password text unique,"
+//                    + "p_admin boolean default 'false',"
+                    + "p_admin int default 0,"
+                    + "foreign key (p_id) references person(id)"
+                    + ")");
             return true;
         } else {
             return false;
@@ -188,11 +191,12 @@ public class DatabaseSQLiteObject extends DatabaseObject
         HashMap <String[], Integer> result = getNewData();
         ///////////////////////////////////////////////////////////
 //        executeSet("insert into person (name, lastname) values ('admin', 'admin')");
-        executeSet("admin", "admin", "secret");
+        executeSet("admin", "admin");
 //        generateActualSql("insert into person (name, lastname) values (?,?);", "admin", "admin");
 //        executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
 //        executeSet("secret", true);
-        insertAdminData(getId("admin"), "secret", true);
+//        insertAdminData(getId("admin"), "secret", true);
+        insertAdminData(getId("admin"), "secret");
 //        generateActualSql("insert into login (p_id, p_password, p_admin) values (?,?,?);", 1, "secret", "true");
         for(Entry <String[], Integer> entry: result.entrySet())
         {
@@ -220,7 +224,8 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //            		+ "?, "
 //    				+ "?"
 //					+ ");";
-            executeSet(name, lastname, String.valueOf(pw));
+            executeSet(name, lastname);
+            executeSet(getId(name), String.valueOf(pw));
 //        	generateActualSql(sql, name, lastname);
 //            executeSet("insert into "
 //            		+ "login ("
@@ -256,8 +261,8 @@ public class DatabaseSQLiteObject extends DatabaseObject
              *  sometimes boolean = int, sometimes not :(
              *  so boolean = int and works. remember for other dbs
              */
-//            ResultSet resultSet = executeGet("SELECT p.id, p.name, login.p_password, login.p_admin FROM person p inner join login on p.id = login.p_id where login.p_admin = 1");
-            ResultSet resultSet = executeGet("SELECT id, name, password, admin FROM person where admin = 1");
+            ResultSet resultSet = executeGet("SELECT p.id, p.name, login.p_password, login.p_admin FROM person p inner join login on p.id = login.p_id where login.p_admin = 1");
+//            ResultSet resultSet = executeGet("SELECT id, name, password, admin FROM person where admin = 1");
             if(resultSet.next())
             {
                 String tempname = resultSet.getString("name");
@@ -342,20 +347,22 @@ public class DatabaseSQLiteObject extends DatabaseObject
      * @param element1
      * @param element2
      */
-    void executeSet(String element1, String element2, String password)
+//    void executeSet(String name, String lastname, String password)
+    void insertAdminData(String name, String lastname, String password)
     {
         try
         {
 //            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
             String sql = "insert into person ("
                     + "name,"
-                    + "lastname,"
+                    + "lastname"
                     + "password"
                     + ") values (";
             connect();
             PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?"+")");
-            stmt.setString(1, element1);
-            stmt.setString(2, element2);
+            stmt.setString(1, name);
+            stmt.setString(2, lastname);
+            stmt.setString(3, password);
             logger.info(stmt.toString());
             stmt.execute();
             close(null);
@@ -365,24 +372,51 @@ public class DatabaseSQLiteObject extends DatabaseObject
             logger.error(e);
         }
     }
+//    /**
+//     * 
+//     * @param element1
+//     * @param element2
+//     */
+//    void executeSet(String element1, boolean element2)
+//    {
+//        try
+//        {
+////            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
+//            String sql = "insert into login ("
+//                    + "p_password,"
+//                    + "p_admin"
+//                    + ") values (";
+//            connect();
+//            PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
+//            stmt.setString(1, element1);
+//            stmt.setBoolean(2, element2);
+//            logger.info(stmt.toString());
+//            stmt.execute();
+//            close(null);
+//        }
+//        catch(SQLException e)
+//        {
+//            logger.error(e);
+//        }
+//    }
     /**
      * 
-     * @param element1
-     * @param element2
+     * @param firstName
+     * @param lastName
      */
-    void executeSet(String element1, boolean element2)
+    void executeSet(String firstName, String lastName)
     {
         try
         {
 //            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
-            String sql = "insert into login ("
-                    + "p_password,"
-                    + "p_admin"
+            String sql = "insert into person ("
+                    + "name,"
+                    + "lastname"
                     + ") values (";
             connect();
             PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
-            stmt.setString(1, element1);
-            stmt.setBoolean(2, element2);
+            stmt.setString(1, firstName);
+            stmt.setString(2, lastName);
             logger.info(stmt.toString());
             stmt.execute();
             close(null);
@@ -392,92 +426,19 @@ public class DatabaseSQLiteObject extends DatabaseObject
             logger.error(e);
         }
     }
-    /**
-     * 
-     * @param element1
-     * @param element2
-     * @param element3
-     */
-    void executeSet(int element1, String element2, String element3)
+    void executeSet(int id, String password)
     {
         try
         {
-//            executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
-            String sql = "insert into login ("
-                    + "p_id,"
-                    + "p_password,"
-                    + "p_admin"
-                    + ") values (";
-            connect();
-            PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?"+")");
-            stmt.setInt(1, element1);
-            stmt.setString(2, element2);
-            stmt.setString(3, element3);
-            logger.info(stmt.toString());
-            stmt.execute();
-            close(null);
-        }
-        catch(SQLException e)
-        {
-            logger.error(e);
-        }
-    }
-    /**
-     * 
-     * @param element1
-     * @param element2
-     * @param element3
-     */
-    void insertAdminData(int element1, String element2, boolean admin)
-    {
-        try
-        {
-//            executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
-            String sql = "insert into login ("
-                    + "p_id,"
-                    + "p_password,"
-                    + "p_admin"
-                    + ") values (";
-            connect();
-            PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?"+")");
-            stmt.setInt(1, element1);
-            stmt.setString(2, element2);
-            // test
-//            stmt.setBoolean(3, admin);
-            stmt.setInt(
-                    3,
-                    admin?
-                        1
-                        :
-                        0
-                );
-            logger.info(stmt.toString());
-            stmt.execute();
-            close(null);
-        }
-        catch(SQLException e)
-        {
-            logger.error(e);
-        }
-    }
-    /**
-     * 
-     * @param element1
-     * @param element2
-     */
-    void executeSet(int element1, int element2)
-    {
-        try
-        {
-//            executeSet("insert into login (p_id, p_password) values (1, 'secret')");
+//            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
             String sql = "insert into login ("
                     + "p_id,"
                     + "p_password"
                     + ") values (";
             connect();
             PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
-            stmt.setInt(1, element1);
-            stmt.setInt(2, element2);
+            stmt.setInt(1, id);
+            stmt.setString(2, password);
             logger.info(stmt.toString());
             stmt.execute();
             close(null);
@@ -487,6 +448,102 @@ public class DatabaseSQLiteObject extends DatabaseObject
             logger.error(e);
         }
     }
+//    /**
+//     * 
+//     * @param element1
+//     * @param element2
+//     * @param element3
+//     */
+//    void executeSet(int id, String element2, String element3)
+//    {
+//        try
+//        {
+////            executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
+//            String sql = "insert into login ("
+//                    + "p_id,"
+//                    + "p_password,"
+//                    + "p_admin"
+//                    + ") values (";
+//            connect();
+//            PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?"+")");
+//            stmt.setInt(1, id);
+//            stmt.setString(2, element2);
+//            stmt.setString(3, element3);
+//            logger.info(stmt.toString());
+//            stmt.execute();
+//            close(null);
+//        }
+//        catch(SQLException e)
+//        {
+//            logger.error(e);
+//        }
+//    }
+    /**
+     * 
+     * @param element1
+     * @param element2
+     * @param element3
+     */
+    void insertAdminData(int element1, String element2)
+    {
+        try
+        {
+//            executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
+            String sql = "insert into login ("
+                    + "p_id,"
+                    + "p_password,"
+                    + "p_admin"
+                    + ") values (";
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?"+")");
+            stmt.setInt(1, element1);
+            stmt.setString(2, element2);
+            stmt.setBoolean(3, true);
+            // test
+//            stmt.setBoolean(3, admin);
+//            stmt.setInt(
+//                    3,
+//                    admin?
+//                        1
+//                        :
+//                        0
+//                );
+            logger.info(stmt.toString());
+            stmt.execute();
+            close(null);
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+        }
+    }
+//    /**
+//     * 
+//     * @param element1
+//     * @param element2
+//     */
+//    void executeSet(int element1, int element2)
+//    {
+//        try
+//        {
+////            executeSet("insert into login (p_id, p_password) values (1, 'secret')");
+//            String sql = "insert into login ("
+//                    + "p_id,"
+//                    + "p_password"
+//                    + ") values (";
+//            connect();
+//            PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
+//            stmt.setInt(1, element1);
+//            stmt.setInt(2, element2);
+//            logger.info(stmt.toString());
+//            stmt.execute();
+//            close(null);
+//        }
+//        catch(SQLException e)
+//        {
+//            logger.error(e);
+//        }
+//    }
     /**
      * 
      * @param connection
@@ -510,14 +567,14 @@ public class DatabaseSQLiteObject extends DatabaseObject
      * @param sql
      * @return
      */
-    ArrayList<Person> getDataFromDBWithoutHeader(String sql)
+    ArrayList<Person> getDataFromDBWithoutHeader(String sql, boolean admin)
     {
     	ArrayList<Person> data = new ArrayList<Person>();
     	try
     	{
-        	ResultSet resultSet = executeGet(sql);
+//        	ResultSet resultSet = executeGet(sql);
 //        	ResultSetMetaData rsmd = resultSet.getMetaData();
-        	data = getDataFromDB(sql, resultSet, false);
+        	data = getDataFromDB(sql, admin);
     	}
     	catch(Exception e)
     	{
@@ -532,14 +589,16 @@ public class DatabaseSQLiteObject extends DatabaseObject
      * @param rsmd
      * @return
      */
-    ArrayList<Person> getDataFromDB(String sql, ResultSet resultSet, boolean admin)
+//    ArrayList<Person> getDataFromDB(String sql, ResultSet resultSet, boolean admin)
+    ArrayList<Person> getDataFromDB(String sql, boolean admin)
     {
+        ResultSet resultSet = executeGet(sql);
     	ArrayList<Person> data = new ArrayList<Person>();
         try
         {
             Person person;
             if(admin) {
-                while(resultSet.next())
+                while(resultSet != null && resultSet.next())
                 {
 //                	person = new Person(
 //                	        resultSet.getString("name"),
@@ -577,68 +636,68 @@ public class DatabaseSQLiteObject extends DatabaseObject
         }
         return data;
     }
-    /**
-     * 
-     * @param sql
-     * @return
-     */
-    ArrayList<Person> getDataFromDBWithHeader(String sql, boolean admin)
-    {
-    	ArrayList<Person> data = new ArrayList<Person>();
-    	ArrayList<Person> header = new ArrayList<Person>();
-    	ArrayList<Person> content = new ArrayList<Person>();
-    	try
-    	{
-//    		connect();
-    		ResultSet resultSet = executeGet(sql);
-//    		createDatabaseIfNotExists();
-    		// get header
+//    /**
+//     * 
+//     * @param sql
+//     * @return
+//     */
+//    ArrayList<Person> getDataFromDBWithHeader(String sql, boolean admin)
+//    {
+//    	ArrayList<Person> data = new ArrayList<Person>();
+//    	ArrayList<Person> header = new ArrayList<Person>();
+//    	ArrayList<Person> content = new ArrayList<Person>();
+//    	try
+//    	{
+////    		connect();
+//    		ResultSet resultSet = executeGet(sql);
+////    		createDatabaseIfNotExists();
+//    		// get header
+////    		ResultSetMetaData rsmd = getMetaData(sql);
+////    		ArrayList<Person> temp = new ArrayList<Person>();
+//    		Person person = new Person();
 //    		ResultSetMetaData rsmd = getMetaData(sql);
-//    		ArrayList<Person> temp = new ArrayList<Person>();
-    		Person person = new Person();
-    		ResultSetMetaData rsmd = getMetaData(sql);
-//            ArrayList <String> temp = new ArrayList<String>();
-    		if(admin) {
-    		    if(headerInUppercaseCharacter) {
-    		        person.header_id = rsmd.getColumnName(1).toUpperCase();
-    		        person.header_firstName = rsmd.getColumnName(2).toUpperCase();
-    		        person.header_lastName = rsmd.getColumnName(3).toUpperCase();
-    		        person.header_password = rsmd.getColumnName(4).toUpperCase();
-    		    } else {
-    		        person.header_id = rsmd.getColumnName(1).toLowerCase();
-    		        person.header_firstName = rsmd.getColumnName(2).toLowerCase();
-    		        person.header_lastName = rsmd.getColumnName(3).toLowerCase();
-    		        person.header_password = rsmd.getColumnName(4).toLowerCase();
-    		    }
-    		} else {
-    		    if(headerInUppercaseCharacter) {
-    		        person.header_firstName = rsmd.getColumnName(1).toUpperCase();
-    		        person.header_lastName = rsmd.getColumnName(2).toUpperCase();
-    		    } else /* if(headerInUppercaseCharacter) */{
-    		        person.header_firstName = rsmd.getColumnName(1).toLowerCase();
-    		        person.header_lastName = rsmd.getColumnName(2).toLowerCase();
-    		    }
-    		}
-    		header.add(person);
-    		// get content
-    		content = getDataFromDB(sql, resultSet, admin);
-    		close(resultSet);
-    		// migrate
-    		for(Person migrate: header)
-    		{
-    			data.add(migrate);
-    		}
-    		for(Person migrate: content)
-    		{
-    			data.add(migrate);
-    		}
-    	}
-    	catch(Exception e)
-    	{
-    		logger.error(e);
-    	}
-    	return data;
-    }
+////            ArrayList <String> temp = new ArrayList<String>();
+//    		if(admin) {
+//    		    if(headerInUppercaseCharacter) {
+//    		        person.header_id = rsmd.getColumnName(1).toUpperCase();
+//    		        person.header_firstName = rsmd.getColumnName(2).toUpperCase();
+//    		        person.header_lastName = rsmd.getColumnName(3).toUpperCase();
+//    		        person.header_password = rsmd.getColumnName(4).toUpperCase();
+//    		    } else {
+//    		        person.header_id = rsmd.getColumnName(1).toLowerCase();
+//    		        person.header_firstName = rsmd.getColumnName(2).toLowerCase();
+//    		        person.header_lastName = rsmd.getColumnName(3).toLowerCase();
+//    		        person.header_password = rsmd.getColumnName(4).toLowerCase();
+//    		    }
+//    		} else {
+//    		    if(headerInUppercaseCharacter) {
+//    		        person.header_firstName = rsmd.getColumnName(1).toUpperCase();
+//    		        person.header_lastName = rsmd.getColumnName(2).toUpperCase();
+//    		    } else /* if(headerInUppercaseCharacter) */{
+//    		        person.header_firstName = rsmd.getColumnName(1).toLowerCase();
+//    		        person.header_lastName = rsmd.getColumnName(2).toLowerCase();
+//    		    }
+//    		}
+//    		header.add(person);
+//    		// get content
+//    		content = getDataFromDB(sql, resultSet, admin);
+//    		close(resultSet);
+//    		// migrate
+//    		for(Person migrate: header)
+//    		{
+//    			data.add(migrate);
+//    		}
+//    		for(Person migrate: content)
+//    		{
+//    			data.add(migrate);
+//    		}
+//    	}
+//    	catch(Exception e)
+//    	{
+//    		logger.error(e);
+//    	}
+//    	return data;
+//    }
     /**
      * 
      * @param resultSet

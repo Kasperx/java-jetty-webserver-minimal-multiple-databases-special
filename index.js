@@ -85,8 +85,10 @@ function getData()
       // table.append('<th>AGE</th>');
       // table.append('<th>PW</th>');
       table.append('<tr>');
-      table.append('<th>'+data[0].header_firstName+'</th>');
-      table.append('<th>'+data[0].header_lastName+'</th>');
+      // table.append('<th>'+data[0].header_firstName+'</th>');
+      // table.append('<th>'+data[0].header_lastName+'</th>');
+      table.append('<th>FIRSTNAME</th>');
+      table.append('<th>LASTNAME</th>');
       table.append('</tr>');
       for(let i=1; i<data.length; i++){
         table.append('<tr>');
@@ -178,10 +180,11 @@ function getAllData()
         }
         */
         table.append('<tr>');
-      table.append('<th>'+data[0].header_id+'</th>');
-      table.append('<th>'+data[0].header_firstName+'</th>');
-      table.append('<th>'+data[0].header_lastName+'</th>');
-      table.append('<th>'+data[0].header_password+'</th>');
+      table.append('<th>ID</th>');
+      table.append('<th>FIRSTNAME</th>');
+      table.append('<th>LASTNAME</th>');
+      table.append('<th>PASSWORD</th>');
+      table.append('<th>IS_ADMIN</th>');
       table.append('</tr>');
       for(let i=1; i<data.length; i++){
         table.append('<tr>');
@@ -189,6 +192,7 @@ function getAllData()
         table.append('<th>'+data[i].firstName+'</th>');
         table.append('<th>'+data[i].lastName+'</th>');
         table.append('<th>'+data[i].password+'</th>');
+        table.append('<th>'+data[i].isAdmin+'</th>');
         table.append('</tr>');
       }
         table.append('</tr>');
