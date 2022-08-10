@@ -73,9 +73,13 @@ function getData()
       $('#h1').empty();
       $('#h1').append('<h1 style="font-size:50px;"><marquee>User view</marquee></h1></p>');
       $('#table').remove();
+      // $('#table').empty();
       let sizeOfData = data.length;
       // create table with data
-      var table = $('<table>').addClass('table').addClass('table-striped');
+      var table = $('<table>');
+      table.addClass("table");
+      // table.addClass("table-striped");
+      table.addClass("table-hover");
       table.attr('id', 'table');
       // table.append('<tr>');
       // table.append('<th>ID</th>');
@@ -85,12 +89,16 @@ function getData()
       // table.append('<th>AGE</th>');
       // table.append('<th>PW</th>');
       table.append('<tr>');
+      table.append('<th><input placeholder="input name" id="name"></th>');
+      table.append('<th><input placeholder="input sur name" id="surname"></th>');
+      table.append('</tr>');
+      table.append('<tr>');
       // table.append('<th>'+data[0].header_firstName+'</th>');
       // table.append('<th>'+data[0].header_lastName+'</th>');
       table.append('<th>FIRSTNAME</th>');
       table.append('<th>LASTNAME</th>');
       table.append('</tr>');
-      for(let i=1; i<data.length; i++){
+      for(let i=0; i<data.length; i++){
         table.append('<tr>');
         table.append('<th>'+data[i].firstName+'</th>');
         table.append('<th>'+data[i].lastName+'</th>');
@@ -186,13 +194,15 @@ function getAllData()
       table.append('<th>PASSWORD</th>');
       table.append('<th>IS_ADMIN</th>');
       table.append('</tr>');
-      for(let i=1; i<data.length; i++){
+      for(let i=0; i<data.length; i++){
         table.append('<tr>');
         table.append('<th>'+data[i].id+'</th>');
         table.append('<th>'+data[i].firstName+'</th>');
         table.append('<th>'+data[i].lastName+'</th>');
         table.append('<th>'+data[i].password+'</th>');
-        table.append('<th>'+data[i].isAdmin+'</th>');
+        table.append('<th>'+
+          (data[i].isAdmin == 1? "yes" : "no")
+          +'</th>');
         table.append('</tr>');
       }
         table.append('</tr>');
@@ -219,4 +229,17 @@ function insertData()
   }).done(function(data) {
     alert("Done");
   });
+}
+function sendDataToSystem()
+{
+  let input_name = $('#name').value();
+  let input_surname = $('#sur_name').value();
+  $.ajax({
+    url: "?get=use_json",
+    context: document.body
+  }).done(function(data) {
+      $('#table').remove();
+  });
+  table.append('<th><input placeholder="input name" id="name"></th>');
+  table.append('<th><input placeholder="input sur name" id="surname"></th>');
 }

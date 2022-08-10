@@ -10,42 +10,79 @@ public class Person
     public String firstName;
     public String lastName;
     public String password;
-    public boolean isAdmin;
+    public int isAdmin;
     public Person() {}
-    public Person(String firstName, String lastName, boolean header)
+    public String getHeader_id()
     {
-        if(header) {
-            this.header_firstName = firstName;
-            this.header_lastName = lastName;
-        } else {
-            this.firstName = firstName;
-            this.lastName = lastName;
-        }
+        return header_id;
     }
-    public Person(int id, String firstName, String lastName, String password, boolean header)
+    public void setHeader_id(String header_id)
     {
-        if(header) {
-            this.header_id = String.valueOf(id);
-            this.header_firstName = firstName;
-            this.header_lastName = lastName;
-            this.header_password = password;
-        } else {
-            this.id = id;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.password = password;
-        }
+        this.header_id = header_id;
     }
-//    public Person(String firstName, String lastName)
-//    {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//    }
-//    public Person(String firstName, String lastName, String password, boolean isAdmin)
-//    {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.password = password;
-//        this.isAdmin = isAdmin;
-//    }
+    public String getHeader_firstName()
+    {
+        return header_firstName;
+    }
+    public void setHeader_firstName(String header_firstName)
+    {
+        this.header_firstName = header_firstName;
+    }
+    public String getHeader_lastName()
+    {
+        return header_lastName;
+    }
+    public void setHeader_lastName(String header_lastName)
+    {
+        this.header_lastName = header_lastName;
+    }
+    public String getHeader_password()
+    {
+        return header_password;
+    }
+    public void setHeader_password(String header_password)
+    {
+        this.header_password = header_password;
+    }
+    public int getId()
+    {
+        return id;
+    }
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+    public String getFirstName()
+    {
+        return firstName;
+    }
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+    public String getLastName()
+    {
+        return lastName;
+    }
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
+    public String getPassword()
+    {
+        return password;
+    }
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+    public int getIsAdmin()
+    {
+        return isAdmin;
+    }
+    public void setIsAdmin(int isAdmin)
+    {
+        this.isAdmin = isAdmin;
+    }
+    
 }

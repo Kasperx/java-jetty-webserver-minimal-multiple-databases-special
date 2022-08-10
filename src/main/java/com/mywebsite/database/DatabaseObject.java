@@ -5,12 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import com.github.javafaker.Faker;
 
@@ -18,14 +15,17 @@ import main.java.com.mywebsite.Data.Person;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 import main.java.com.mywebsite.database.DAO.Dao_DBConnect;
-import main.java.com.mywebsite.database.Interfaces.DatabaseInterface;
 import main.java.com.mywebsite.database.Interfaces.DatabaseInterfaceObject;
 
 public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseInterfaceObject
 {
     static Logger logger = LoggerConfig.getLogger(DatabaseObject.class.getName());
     protected boolean permitCreateDB = true;
-    
+    /**
+     * enum for database use
+     * @author cgl
+     *
+     */
     public static enum DatabaseType
     {
         sqlite("sqlite"),
@@ -47,10 +47,19 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
     protected String path;
     boolean headerInUppercaseCharacter = true;
     HashMap<String, String> mapFromFile;
+    /**
+     * get instance
+     * @return
+     */
     public static DatabaseObject getInstance()
     {
         return getInstance(DatabaseType.getValue());
     }
+    /**
+     * get instance
+     * @param source
+     * @return
+     */
     public static DatabaseObject getInstance(DatabaseType source)
     {
         DatabaseObject data = null;
@@ -75,7 +84,10 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
         }
         return data;
     }
-    
+    /**
+     * get new random data
+     * @return
+     */
     protected HashMap <String[], Integer> getNewData()
     {
         //////////////////////////////////////////
@@ -102,14 +114,27 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
     public abstract boolean isPermitted(String name, String password);
     public abstract int getId(String name);
     public abstract void insertData();
+    /**
+     * 
+     * @return
+     */
 	public boolean isHeaderInUppercaseCharacter()
 	{
 		return headerInUppercaseCharacter;
 	}
+	/**
+	 * 
+	 * @param headerInUppercaseCharacter
+	 */
 	public void setHeaderInUppercaseCharacter(boolean headerInUppercaseCharacter)
 	{
 		this.headerInUppercaseCharacter = headerInUppercaseCharacter;
 	}
+	/**
+	 * get properties
+	 * @param filename
+	 * @return
+	 */
     public Map <String, String> getProperties(String filename)
     {
         mapFromFile = new HashMap<String, String>();
@@ -135,21 +160,44 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            logger.error(e);
             return mapFromFile;
         }
         return mapFromFile;
     }
+    /**
+     * load property
+     * @param keyname
+     * @return
+     */
     public String getProperty (String keyname)
     {
         return mapFromFile.get(keyname);
     }
+    /**
+     * convert string to int value
+     * @param text
+     * @return
+     */
     public static int toInt(String text)
     {
         try{
             return Integer.parseInt(text);
         } catch (Exception e) {
+            logger.error(e);
             return 0;
         }
+    }
+    /**
+     * 
+     * @return
+     */
+    public static boolean strToBoolean(String text)
+    {
+       if(text.equals("true")) {
+           return true;
+       } else {
+           return false;
+       }
     }
 }

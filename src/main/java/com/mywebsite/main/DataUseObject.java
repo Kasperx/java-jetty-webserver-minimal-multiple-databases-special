@@ -529,7 +529,7 @@ public class DataUseObject extends Dao_Main
 			        + "<th>"+person.firstName+"</th>"
 			        + "<th>"+person.lastName+"</th>"
 			        + "<th>"+person.password+"</th>"
-			        + "<th>"+(person.isAdmin?"yes":"no")+"</th>"
+			        + "<th>"+person.isAdmin+"</th>"
 	                + "</tr>"
 			        ;	
 				websitedata += "</thead>";

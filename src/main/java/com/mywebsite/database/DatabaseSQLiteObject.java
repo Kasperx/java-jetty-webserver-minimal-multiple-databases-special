@@ -8,12 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -26,7 +22,6 @@ public class DatabaseSQLiteObject extends DatabaseObject
     String path = System.getProperty("user.dir")+"/test.db";
     Connection connection = null;
     static Logger logger;
-//    boolean permitCreateDB = true;
     public DatabaseSQLiteObject()
     {
         logger = LoggerConfig.getLogger(DatabaseSQLiteObject.class.getName());
@@ -45,14 +40,14 @@ public class DatabaseSQLiteObject extends DatabaseObject
         }
     }
     /**
-     * 
+     * connect to database
      */
     public void connect()
     {
     	connect(false);
     }
     /**
-     * 
+     * connect to database
      * @param showInfo
      */
     public void connect(boolean showInfo)
@@ -75,7 +70,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
         }
     }
     /**
-     * 
+     * get data without sensible information
      */
     public ArrayList<Person> getData()
     {
@@ -108,7 +103,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //        return data;
 //    }
     /**
-     * 
+     * get id for name
      */
     public int getId(String name)
     {
@@ -129,7 +124,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
         return -1;
     }
     /**
-     * 
+     * get data with all information
      */
     public ArrayList<Person> getAllData()
     {
@@ -148,7 +143,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
         return data;
     }
     /**
-     * 
+     * if permitted: create Database If Not Exists
      */
     public boolean createDatabaseIfNotExists()
     {
@@ -184,7 +179,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
         }
     }
     /**
-     * 
+     * insert automatic data
      */
     public void insertData()
     {
@@ -248,7 +243,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
         }
     }
     /**
-     * 
+     * is permitted == admin ?
      */
     public boolean isPermitted(String name, String password)
     {
@@ -286,7 +281,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
         }
     }
     /**
-     * 
+     * execute sql cmd
      * @param sql
      * @return
      */
@@ -306,7 +301,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
         }
     }
     /**
-     * 
+     * get meta data
      * @param sql
      * @return
      */
@@ -325,7 +320,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
     	}
     }
     /**
-     * 
+     * execute sql cms
      * @param sql
      */
     void executeSet(String sql)
@@ -343,7 +338,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
         }
     }
     /**
-     * 
+     * insert data for admin
      * @param element1
      * @param element2
      */
@@ -400,7 +395,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //        }
 //    }
     /**
-     * 
+     * execute sql for person = name, surname
      * @param firstName
      * @param lastName
      */
@@ -426,6 +421,11 @@ public class DatabaseSQLiteObject extends DatabaseObject
             logger.error(e);
         }
     }
+    /**
+     * execute sql for login = id, password
+     * @param id
+     * @param password
+     */
     void executeSet(int id, String password)
     {
         try
@@ -479,7 +479,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //        }
 //    }
     /**
-     * 
+     * insert data for admin
      * @param element1
      * @param element2
      * @param element3
@@ -583,7 +583,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
     	return data;
     }
     /**
-     * 
+     * get data from db, choose admin or not
      * @param sql
      * @param resultSet
      * @param rsmd
@@ -605,11 +605,29 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //                	        resultSet.getString("lastname"),
 //                	        false
 //            	        );
+//                	person = new Person();
+//                	person.id = DatabaseObject.toInt(resultSet.getString("id"));
+//                	person.firstName = resultSet.getString("name");
+//                	person.lastName = resultSet.getString("lastName");
+//                	person.password = resultSet.getString("password");
+//                	person.isAdmin = resultSet.getInt("admin");
+//                	data.add(person);
                 	person = new Person();
-                	person.id = DatabaseObject.toInt(resultSet.getString("id"));
-                	person.firstName = resultSet.getString("name");
-                	person.lastName = resultSet.getString("lastName");
-                	person.password = resultSet.getString("password");
+                	person.setId(
+                	        DatabaseObject.toInt(resultSet.getString("id"))
+                	        );
+                	person.setFirstName(
+                	        resultSet.getString("name")
+                	        );
+                	person.setLastName(
+                	        resultSet.getString("lastName")
+                	        );
+                	person.setPassword(
+                	        resultSet.getString("password")
+                	        );
+                	person.setIsAdmin(
+                	        resultSet.getInt("admin")
+                	        );
                 	data.add(person);
                 }
             } else {
@@ -622,9 +640,17 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //                            resultSet.getString("password"),
 //                            false
 //                            );
+//                    person = new Person();
+//                    person.firstName = resultSet.getString("name");
+//                    person.lastName = resultSet.getString("lastName");
+//                    data.add(person);
                     person = new Person();
-                    person.firstName = resultSet.getString("name");
-                    person.lastName = resultSet.getString("lastName");
+                    person.setFirstName(
+                            resultSet.getString("name")
+                            );
+                    person.setLastName(
+                            resultSet.getString("lastName")
+                            );
                     data.add(person);
                 }
             }
@@ -699,7 +725,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //    	return data;
 //    }
     /**
-     * 
+     * close db connection
      * @param resultSet
      */
     private void close(ResultSet resultSet)
