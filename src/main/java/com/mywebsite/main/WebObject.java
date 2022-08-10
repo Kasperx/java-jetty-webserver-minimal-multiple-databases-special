@@ -139,6 +139,7 @@ public class WebObject
         private String request_api_insert_data_to_db = "insert";
         private String request_api_get_data_for_admin = "admin";
         private String request_api_use_json = "use_json";
+        private String request_api_add_user = "adduser";
         private String requestByClient = "";
         public Web_() {}
         
@@ -154,35 +155,31 @@ public class WebObject
             	logger.info("Found parameter: "+parameter);
             }
             requestByClient = request.getRequestURI().toLowerCase();
-            if (requestByClient.contains(request_stringToGetWebsite)
+            if(requestByClient.contains(request_stringToGetWebsite)
                     && parameter == null
-                    )
-            {
+                    ) {
                 website.clientRequest_Website(request, response);
             }
-            else if (request_api_weather.equals(parameter))
-            {
+            else if(request_api_weather.equals(parameter)) {
                 website.clientRequest_Weather(request, response);
             }
-//            else if (request_api_example.equals(parameter))
-//            {
+//            else if (request_api_example.equals(parameter)) {
 //                website.clientRequest_TableNames(request, response);
 //            }
-            else if (request_api_call_data_from_db.equals(parameter))
-            {
+            else if(request_api_call_data_from_db.equals(parameter)) {
                 website.clientRequest_GetData(request, response);
             }
-            else if (request_api_insert_data_to_db.equals(parameter))
-            {
+            else if(request_api_insert_data_to_db.equals(parameter)) {
                 website.clientRequest_InsertDataToDb(request, response);
             }
-            else if (request_api_get_data_for_admin.equals(parameter))
-            {
+            else if(request_api_get_data_for_admin.equals(parameter)) {
                 website.clientRequest_GetAllData(request, response);
             }
-            else if (request_api_use_json.equals(parameter))
-            {
+            else if(request_api_use_json.equals(parameter)) {
                 website.clientRequest_UseJson(request, response);
+            }
+            else if(request_api_add_user.equals(parameter)) {
+            	website.clientRequest_AddUser(request, response);
             }
         }
         @Override

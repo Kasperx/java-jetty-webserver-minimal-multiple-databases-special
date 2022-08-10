@@ -10,7 +10,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -127,19 +129,20 @@ public class DataUseObject extends Dao_Main
             // value of filenames by client come with a slash, but java doesn't find files with slash, so cut first char...
             String wantedFileFromClient = httpbase+File.separator+request.getServletPath().substring(1);
             String fileContent;
-            if (new File(wantedFileFromClient+"index.html").exists()) {
+            if(new File(wantedFileFromClient+"index.html").exists()) {
                 wantedFileFromClient += "index.html";
             }
             fileContent = readFile(wantedFileFromClient);
             PrintWriter out = response.getWriter();
-            if (wantedFileFromClient.endsWith(".html")) {
-                response.setContentType("text/html;charset=UTF-8");
+            response.setCharacterEncoding("utf-8");
+            if(wantedFileFromClient.endsWith(".html")) {
+            	response.setContentType("text/html");
             }
-            else if (wantedFileFromClient.endsWith(".css")) {
-                response.setContentType("text/css;charset=UTF-8");
+            else if(wantedFileFromClient.endsWith(".css")) {
+                response.setContentType("text/css");
             }
-            else if (wantedFileFromClient.endsWith(".js")){
-                response.setContentType("application/json;charset=UTF-8");
+            else if(wantedFileFromClient.endsWith(".js")){
+                response.setContentType("application/json");
             }
             response.addHeader("Access-Control-Allow-Origin", "*");
             response.setStatus(HttpServletResponse.SC_OK);
@@ -720,20 +723,63 @@ public class DataUseObject extends Dao_Main
              * because method is not content of normal code within abstract environment.
              */
             String websitedata = null;
+//            ArrayList<String> json = new ArrayList<String>();
+            Map<String, Boolean> json = new HashMap<String, Boolean>();
             if(useJson) {
-                websitedata = "yes";
+//                websitedata = "json:'yes'";
+//            	json.add("json:true");
+            	json.put("json", true);
             } else {
-                websitedata = "no";
+//                websitedata = "json:'no'";
+//            	json.add(false);
+//            	json.add("json:false");
+            	json.put("json", false);
             }
             Gson gson = new Gson();
-            websitedata = gson.toJson(websitedata);
+            websitedata = gson.toJson(json);
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().println(websitedata);
+            response.getWriter().println(json);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    /**
+     * 
+     * @param request
+     * @param response
+     */
+    public static void clientRequest_AddUser(HttpServletRequest request, HttpServletResponse response)
+    {
+    	try
+    	{
+    		logger.info("Found request: "+request.getParameter("get : "
+    				+request.getParameter("name")
+    				+request.getParameter("surname")
+    				));
+    		String name = request.getParameter("name");
+    		String surname = request.getParameter("surname");
+    		/*
+    		 * Yes, works normally on its own, but for different database models program needs different object-casts
+    		 * because method is not content of normal code within abstract environment.
+    		 */
+//    		String websitedata = null;
+//    		if(useJson) {
+//    			websitedata = "json:yes";
+//    		} else {
+//    			websitedata = "json:no";
+//    		}
+//    		Gson gson = new Gson();
+//    		websitedata = gson.toJson(websitedata);
+//    		response.setCharacterEncoding("utf-8");
+//    		response.setContentType("application/json");
+    		databasesource.insertData(new String[] {name, surname});
+    		response.setStatus(HttpServletResponse.SC_OK);
+//    		response.getWriter().println(websitedata);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     }
     /**
      * 

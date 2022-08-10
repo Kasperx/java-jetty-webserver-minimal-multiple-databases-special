@@ -43,4 +43,10 @@ public interface DatabaseInterfaceObject
 //    public String generateActualSql(String sqlQuery, Object... parameters);
 //    private ResultSet executeGet(String sql);
 //    private void executeSet(String sql);
+    /**
+     * 
+     * @param data
+     * @return
+     */
+    public boolean insertData(String [] data);
 }

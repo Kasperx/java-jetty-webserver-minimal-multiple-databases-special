@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import main.java.com.mywebsite.Data.Person;
 import main.java.com.mywebsite.common.logger.Logger;
@@ -128,7 +129,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
      */
     public ArrayList<Person> getAllData()
     {
-        String sql = "SELECT "
+        String sql = "SELECT"
                 + " p.id,"
                 + " p.name,"
                 + " p.lastname,"
@@ -155,7 +156,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
             //////////////////////////////
             executeSet("create table if not exists person ("
                     + "id integer primary key autoincrement,"
-                    + "name text unique,"
+                    + "name text,"
                     + "lastname text"
                     + ")");
             /*
@@ -168,7 +169,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
                     + "p_id integer,"
                     + "p_name text,"
                     + "p_lastname text,"
-                    + "p_password text unique,"
+                    + "p_password text,"
 //                    + "p_admin boolean default 'false',"
                     + "p_admin int default 0,"
                     + "foreign key (p_id) references person(id)"
@@ -399,7 +400,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
      * @param firstName
      * @param lastName
      */
-    void executeSet(String firstName, String lastName)
+    boolean executeSet(String firstName, String lastName)
     {
         try
         {
@@ -415,11 +416,38 @@ public class DatabaseSQLiteObject extends DatabaseObject
             logger.info(stmt.toString());
             stmt.execute();
             close(null);
+            return true;
         }
         catch(SQLException e)
         {
             logger.error(e);
+            return false;
         }
+    }
+    boolean insertData(String firstName, String lastName)
+    {
+    	try
+    	{
+//            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
+    		String sql = "insert into person ("
+    				+ "name,"
+    				+ "lastname"
+    				+ ") values (";
+    		connect();
+    		PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
+    		stmt.setString(1, firstName);
+    		stmt.setString(2, lastName);
+    		logger.info(stmt.toString());
+    		stmt.execute();
+    		close(null);
+    		executeSet(getId(firstName), "");
+    		return true;
+    	}
+    	catch(SQLException e)
+    	{
+    		logger.error(e);
+    		return false;
+    	}
     }
     /**
      * execute sql for login = id, password
@@ -430,6 +458,9 @@ public class DatabaseSQLiteObject extends DatabaseObject
     {
         try
         {
+        	if(password.isEmpty()) {
+        		password = String.valueOf(getRandom());
+        	}
 //            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
             String sql = "insert into login ("
                     + "p_id,"
@@ -796,4 +827,13 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //            }
 //        }
 //    }
+	@Override
+	public boolean insertData(String[] data)
+	{
+		if(insertData(data[0], data[1])) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }  

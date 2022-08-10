@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
-public class DatabasePostgresObject extends Database
+import main.java.com.mywebsite.Data.Person;
+
+public class DatabasePostgresObject extends DatabaseObject
 {  
     public DatabasePostgresObject()
     {
@@ -30,18 +32,18 @@ public class DatabasePostgresObject extends Database
             e.printStackTrace();
         }
     }
-    public ArrayList<ArrayList<String>> getData()
+    public ArrayList<Person> getData()
     {
-        ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+    	ArrayList<Person> data = new ArrayList<Person>();
         return data;
     }
     public int getId(String name)
     {
         return -1;
     }
-    public ArrayList <ArrayList<String>> getAllData()
+    public ArrayList<Person> getAllData()
     {
-        ArrayList <ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+    	ArrayList<Person> data = new ArrayList<Person>();
         return data;
     }
     public boolean createDatabaseIfNotExists()
@@ -55,5 +57,9 @@ public class DatabasePostgresObject extends Database
     {
         return false;
     }
+	@Override
+	public boolean insertData(String[] data) {
+		return false;
+	}
 }  
 

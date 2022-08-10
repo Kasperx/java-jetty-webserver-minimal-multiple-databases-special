@@ -102,7 +102,8 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
             String lastName = faker.name().lastName();
 //            String streetAddress = faker.address().streetAddress();
 //            result.put(firstName, new Random().nextInt(10000000) + 1000000);
-            result.put(new String[]{firstName, lastName}, new Random().nextInt(10000000) + 1000000);
+//            result.put(new String[]{firstName, lastName}, new Random().nextInt(10000000) + 1000000);
+            result.put(new String[]{firstName, lastName}, getRandom());
             temp++;
         }
         return result;
@@ -114,6 +115,11 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
     public abstract boolean isPermitted(String name, String password);
     public abstract int getId(String name);
     public abstract void insertData();
+    public abstract boolean insertData(String [] data);
+    public int getRandom()
+    {
+    	return new Random().nextInt(10000000) + 1000000;
+    }
     /**
      * 
      * @return
@@ -189,7 +195,7 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
         }
     }
     /**
-     * 
+     * string to boolean
      * @return
      */
     public static boolean strToBoolean(String text)

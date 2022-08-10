@@ -259,5 +259,9 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
 	public void connect()
 	{
 	}
+	@Override
+	public boolean insertData(String[] data) {
+		return false;
+	}
 }  
 
