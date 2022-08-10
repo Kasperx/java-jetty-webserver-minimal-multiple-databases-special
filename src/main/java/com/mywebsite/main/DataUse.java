@@ -632,6 +632,36 @@ public class DataUse extends Dao_Main
     }
     /**
      * 
+     * @param request
+     * @param response
+     */
+    public static void clientRequest_UseJson(HttpServletRequest request, HttpServletResponse response)
+    {
+        try
+        {
+            logger.info("Found request: "+request.getParameter("get"));
+            /*
+             * Yes, works normally on its own, but for different database models program needs different object-casts
+             * because method is not content of normal code within abstract environment.
+             */
+            String websitedata = null;
+            if(useJson) {
+                websitedata = "yes";
+            } else {
+                websitedata = "no";
+            }
+            Gson gson = new Gson();
+            websitedata = gson.toJson(websitedata);
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().println(websitedata);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 
      * @param dataRows
      * @return
      */

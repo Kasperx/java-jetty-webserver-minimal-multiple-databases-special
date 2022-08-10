@@ -1,4 +1,11 @@
 
+$.ajax({
+  url: "?get=use_json",
+  context: document.body
+}).done(function(data) {
+    $('#table').remove();
+});
+
 function login()
 {
     //Get the modal

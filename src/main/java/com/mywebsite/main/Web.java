@@ -153,6 +153,7 @@ public class Web
         private String request_api_call_data_from_db = "data";
         private String request_api_insert_data_to_db = "insert";
         private String request_api_get_data_for_admin = "admin";
+        private String request_api_use_json = "use_json";
         private String requestByClient = "";
         public Web_() {}
         
@@ -192,6 +193,10 @@ public class Web
             else if (request_api_get_data_for_admin.equals(parameter))
             {
                 website.clientRequest_GetAllData(request, response);
+            }
+            else if (request_api_use_json.equals(parameter))
+            {
+                website.clientRequest_UseJson(request, response);
             }
         }
         @Override
