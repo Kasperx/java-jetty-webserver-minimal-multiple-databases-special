@@ -10,6 +10,26 @@
     // }
   });
 
+  function insertDataTest()
+  {
+    let table = $('#table');
+    table.append('<tr id="tableinput">'
+    +'<td>'
+    +'<input placeholder="Input name">'
+    +'</td>'
+    +'<td>'
+    +'<input placeholder="Input action">'
+    +'</td>'
+    +'<td>'
+    +'<input placeholder="Input action name">'
+    +'</td>'
+    +'<td>'
+    +'<input type="button" id="btn_send" class="btn btn-success" onclick="javascript:sendDataToSystem()" value="send"></input>'
+    +'</td>'
+    );
+    table.remove('#tableinput');
+  }
+
   function login()
   {
     //Get the modal
@@ -352,13 +372,22 @@
     //   });
     // }).done(function() {
     //   alert('OK');
-      getData();
+      // getData();
     }).fail(function ( jqXHR, textStatus, errorThrown ) {
       // console.log(jqXHR);
       // console.log(textStatus);
       // console.log(errorThrown);
       alert('Failed');
     });
+    insertDataTest();
   }
 
 // });
+$(function() {
+  $('#table').on('editable-save.bs.table', function(e, field, row, oldValue){
+      console.log("1 "+ field);
+      console.log("2 "+ row[field]);
+      console.log("3 "+ row.lot);
+      console.log("4 "+ oldValue);
+  });    
+});
