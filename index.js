@@ -1,6 +1,6 @@
 
 // $(document).ready(function() {
-
+/*
   $.ajax({
     url: "?get=use_json",
     context: document.body
@@ -9,7 +9,7 @@
       $('#table').remove();
     // }
   });
-
+*/
   function insertDataTest()
   {
     let table = $('#table');
@@ -91,7 +91,7 @@
   function getData()
   {
     $.ajax({
-      url: "?get=data",
+      url: "?get=data&format=json",
       context: document.body
     }).done(function(data) {
       // Manage header
@@ -252,7 +252,7 @@
   function getWeather()
   {
     $.ajax({
-      url: "?get=weather",
+      url: "?get=weather&format=json",
       context: document.body
     }).done(function(data) {
       });
@@ -260,7 +260,7 @@
   function insertData()
   {
     $.ajax({
-      url: "?get=insert",
+      url: "?get=insert&format=json",
       context: document.body
     }).done(function(data) {
       alert("Inserted new data.");
@@ -281,7 +281,7 @@
     {}
     else {
       $.ajax({
-        url: "?get=adduser"
+        url: "?get=adduser&format=json"
         // +"&position="+input_position_value
         +"&name="+input_name_value
         +"&action="+input_action_value

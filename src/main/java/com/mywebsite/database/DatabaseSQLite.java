@@ -158,7 +158,7 @@ public class DatabaseSQLite extends Database
                     + "name text,"
                     + "action text,"
                     + "action_name text"
-                    + ")");
+                    + ");");
             /*
              *  table login with boolean.. but seems problem with jdbc -> sqlite
              *  sometimes boolean = int, sometimes not :(

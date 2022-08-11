@@ -160,6 +160,7 @@ public class DataUse extends Dao_Main
     {
         try
         {
+        	initOptions(request);
             logger.info("Found request: "+request.getParameter("get"));
             response.setCharacterEncoding("utf-8");
             response.setContentType("text/html");
@@ -201,6 +202,7 @@ public class DataUse extends Dao_Main
     public static void clientRequest_Weather(HttpServletRequest request, HttpServletResponse response)
     {
         try {
+        	initOptions(request);
             logger.info("Found request: "+request.getParameter("get"));
             String url = "https://dwd.api.bund.dev/stationOverviewExtended";
             CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -280,6 +282,7 @@ public class DataUse extends Dao_Main
     {
         try
         {
+        	initOptions(request);
             logger.info("Found request: "+request.getParameter("get"));
             response.setCharacterEncoding("utf-8");
             response.setStatus(HttpServletResponse.SC_OK);
@@ -439,10 +442,11 @@ public class DataUse extends Dao_Main
     {
         try
         {
+        	initOptions(request);
             logger.info("Found request: "+request.getParameter("get"));
             logger.info("Found request: "+request.getParameter("name"));
-            String name = request.getParameter("user");
-            String pw = request.getParameter("pw");
+        	String name = request.getParameter("user");
+        	String pw = request.getParameter("pw");
             if(databasesource.isPermitted(name, pw))
             {
                 response.setStatus(HttpServletResponse.SC_OK);
@@ -687,6 +691,7 @@ public class DataUse extends Dao_Main
     {
         try
         {
+        	initOptions(request);
             logger.info("Found request: "+request.getParameter("get"));
             databasesource.createDatabaseIfNotExists();
             /*
@@ -884,5 +889,18 @@ public class DataUse extends Dao_Main
             }
         }
         return String.valueOf(newText);
+    }
+    /**
+     * init options for server
+     * @param request
+     */
+    static void initOptions(HttpServletRequest request)
+    {
+    	String test = request.getParameter("format");
+    	if((test = request.getParameter("format")) != null && test.equals("json")) {
+    		useJson = true;
+    	} else {
+    		useJson = false;
+    	}
     }
 }
