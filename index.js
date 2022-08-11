@@ -83,8 +83,9 @@
         table_input.addClass("table-hover");
         table_input.attr('id', 'table_input');
         table_input.append('<tr>');
-        table_input.append('<td><input placeholder="input 1st name" id="name"></td>');
-        table_input.append('<td><input placeholder="input last name" id="surname"></td>');
+        table_input.append('<td style="max-width:70px;"><input placeholder="input s" id="input_name"></td>');
+        table_input.append('<td style="max-width:70px;"><input placeholder="input v" id="input_action"></td>');
+        table_input.append('<td style="max-width:70px;"><input placeholder="input o" id="input_action_name"></td>');
         // let button = $('#button');
         // button.attr('id', 'btn_send');
         // button.on('click', function(sendDataToSystem){});
@@ -121,13 +122,17 @@
         table.append('<tr>');
         // table.append('<th>'+data[0].header_firstName+'</th>');
         // table.append('<th>'+data[0].header_lastName+'</th>');
-        table.append('<th class="thead-dark">FIRSTNAME</th>');
-        table.append('<th class="thead-dark">LASTNAME</th>');
+        table.append('<th class="thead-dark">n</th>');
+        table.append('<th class="thead-dark">s</th>');
+        table.append('<th class="thead-dark">v</th>');
+        table.append('<th class="thead-dark">o</th>');
         table.append('</tr>');
         for(let i=0; i<data.length; i++){
           table.append('<tr>');
-          table.append('<td>'+data[i].firstName+'</th>');
-          table.append('<td>'+data[i].lastName+'</th>');
+          table.append('<td>'+data[i].n+'</th>');
+          table.append('<td>'+data[i].o+'</th>');
+          table.append('<td>'+data[i].s+'</th>');
+          table.append('<td>'+data[i].v+'</th>');
           table.append('</tr>');
         }
         // $.each(data, function(key, val)
@@ -258,7 +263,12 @@
       context: document.body
     }).done(function(data) {
       alert("Inserted new data.");
-    });
+    }).fail(function ( jqXHR, textStatus, errorThrown ) {
+      // console.log(jqXHR);
+      // console.log(textStatus);
+      // console.log(errorThrown);
+      alert('Failed');
+    });;
   }
 
   // document.getElementById('btn_send').addEventListener('click', function() {
@@ -268,15 +278,24 @@
 
   function sendDataToSystem()
   {
-    let input_name_value = $('#name').val();
-    let input_surname_value = $('#surname').val();
+    // let input_position_value = $('#input_position').val();
+    let input_name_value = $('#input_name').val();
+    let input_action_value = $('#input_action').val();
+    let input_action_name_value = $('#input_action_name').val();
     $.ajax({
       url: "?get=adduser"
+      // +"&position="+input_position_value
       +"&name="+input_name_value
-      +"&surname="+input_surname_value,
+      +"&action="+input_action_value
+      +"&action_name="+input_action_name_value,
       context: document.body
     }).done(function(data) {
-      alert("Inserted '"+input_name_value+" "+input_surname_value+"' to system.");
+      alert("Inserted "
+      // +input_position_value+" "
+      +input_name_value+" ",
+      +input_action_value+" ",
+      +input_action_name_value,
+      +"' to system.");
       // call new data after insert
     //   $.ajax({
     //     url: "?get=data",

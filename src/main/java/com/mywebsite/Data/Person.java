@@ -2,87 +2,77 @@ package main.java.com.mywebsite.Data;
 
 public class Person
 {
-    public String header_id;
-    public String header_firstName;
-    public String header_lastName;
-    public String header_password;
-    public int id;
-    public String firstName;
-    public String lastName;
-    public String password;
-    public int isAdmin;
-    public Person() {}
-    public String getHeader_id()
+    int n;
+    String s;
+    String v;
+    String o;
+    int header_n;
+    String header_s;
+    String header_v;
+    String header_o;
+    public int getN()
     {
-        return header_id;
+        return n;
     }
-    public void setHeader_id(String header_id)
+    public void setN(int n)
     {
-        this.header_id = header_id;
+        this.n = n;
     }
-    public String getHeader_firstName()
+    public String getS()
     {
-        return header_firstName;
+        return s;
     }
-    public void setHeader_firstName(String header_firstName)
+    public void setS(String s)
     {
-        this.header_firstName = header_firstName;
+        this.s = s;
     }
-    public String getHeader_lastName()
+    public String getV()
     {
-        return header_lastName;
+        return v;
     }
-    public void setHeader_lastName(String header_lastName)
+    public void setV(String v)
     {
-        this.header_lastName = header_lastName;
+        this.v = v;
     }
-    public String getHeader_password()
+    public String getO()
     {
-        return header_password;
+        return o;
     }
-    public void setHeader_password(String header_password)
+    public void setO(String o)
     {
-        this.header_password = header_password;
+        this.o = o;
     }
-    public int getId()
+    public int getHeader_n()
     {
-        return id;
+        return header_n;
     }
-    public void setId(int id)
+    public void setHeader_n(int header_n)
     {
-        this.id = id;
+        this.header_n = header_n;
     }
-    public String getFirstName()
+    public String getHeader_s()
     {
-        return firstName;
+        return header_s;
     }
-    public void setFirstName(String firstName)
+    public void setHeader_s(String header_s)
     {
-        this.firstName = firstName;
+        this.header_s = header_s;
     }
-    public String getLastName()
+    public String getHeader_v()
     {
-        return lastName;
+        return header_v;
     }
-    public void setLastName(String lastName)
+    public void setHeader_v(String header_v)
     {
-        this.lastName = lastName;
+        this.header_v = header_v;
     }
-    public String getPassword()
+    public String getHeader_o()
     {
-        return password;
+        return header_o;
     }
-    public void setPassword(String password)
+    public void setHeader_o(String header_o)
     {
-        this.password = password;
-    }
-    public int getIsAdmin()
-    {
-        return isAdmin;
-    }
-    public void setIsAdmin(int isAdmin)
-    {
-        this.isAdmin = isAdmin;
+        this.header_o = header_o;
     }
     
 }

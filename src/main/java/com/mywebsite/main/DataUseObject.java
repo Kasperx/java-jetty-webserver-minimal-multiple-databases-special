@@ -518,8 +518,12 @@ public class DataUseObject extends Dao_Main
 //				}
 				websitedata += ""
 			        + "<tr>"
-			        + "<th>"+person.header_firstName+"</th>"
-			        + "<th>"+person.header_lastName+"</th>"
+//			        + "<th>"+person.header_firstName+"</th>"
+//			        + "<th>"+person.header_lastName+"</th>"
+			        + "<th>"+person.getHeader_n()+"</th>"
+			        + "<th>"+person.getHeader_o()+"</th>"
+			        + "<th>"+person.getHeader_s()+"</th>"
+			        + "<th>"+person.getHeader_v()+"</th>"
 	                + "</tr>"
 			        ;	
 				websitedata += "</thead>";
@@ -529,10 +533,10 @@ public class DataUseObject extends Dao_Main
 			{
 				websitedata += ""
 			        + "<tr>"
-			        + "<th>"+person.firstName+"</th>"
-			        + "<th>"+person.lastName+"</th>"
-			        + "<th>"+person.password+"</th>"
-			        + "<th>"+person.isAdmin+"</th>"
+			        + "<th>"+person.getN()+"</th>"
+			        + "<th>"+person.getO()+"</th>"
+			        + "<th>"+person.getS()+"</th>"
+			        + "<th>"+person.getV()+"</th>"
 	                + "</tr>"
 			        ;	
 				websitedata += "</thead>";
@@ -586,8 +590,10 @@ public class DataUseObject extends Dao_Main
 //				}
 	            websitedata += ""
                     + "<tr>"
-                    + "<th>"+person.firstName+"</th>"
-                    + "<th>"+person.lastName+"</th>"
+                    + "<th>"+person.getHeader_n()+"</th>"
+                    + "<th>"+person.getHeader_o()+"</th>"
+                    + "<th>"+person.getHeader_s()+"</th>"
+                    + "<th>"+person.getHeader_v()+"</th>"
                     + "</tr>"
                     ;	
 	            websitedata += "</thead>";
@@ -597,8 +603,10 @@ public class DataUseObject extends Dao_Main
 	        {
 	            websitedata += ""
                     + "<tr>"
-                    + "<th>"+person.firstName+"</th>"
-                    + "<th>"+person.lastName+"</th>"
+                    + "<th>"+person.getN()+"</th>"
+                    + "<th>"+person.getO()+"</th>"
+                    + "<th>"+person.getS()+"</th>"
+                    + "<th>"+person.getV()+"</th>"
                     + "</tr>"
                     ;	
 	            websitedata += "</thead>";
@@ -756,10 +764,12 @@ public class DataUseObject extends Dao_Main
     	{
     		logger.info("Found request: "+request.getParameter("get : "
     				+request.getParameter("name")
-    				+request.getParameter("surname")
+    				+request.getParameter("action")
+    				+request.getParameter("action_name")
     				));
     		String name = request.getParameter("name");
-    		String surname = request.getParameter("surname");
+    		String action = request.getParameter("action");
+    		String action_name = request.getParameter("action_name");
     		/*
     		 * Yes, works normally on its own, but for different database models program needs different object-casts
     		 * because method is not content of normal code within abstract environment.
@@ -774,11 +784,13 @@ public class DataUseObject extends Dao_Main
 //    		websitedata = gson.toJson(websitedata);
 //    		response.setCharacterEncoding("utf-8");
 //    		response.setContentType("application/json");
-    		databasesource.insertData(new String[] {name, surname});
+    		databasesource.insertData(
+    		        new String[] {name, action, action_name}
+    		        );
     		response.setStatus(HttpServletResponse.SC_OK);
 //    		response.getWriter().println(websitedata);
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		logger.error("request insert with data", e);
     	}
     }
     /**

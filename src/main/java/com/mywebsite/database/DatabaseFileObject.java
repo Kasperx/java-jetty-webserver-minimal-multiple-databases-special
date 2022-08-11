@@ -108,8 +108,8 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
 //                data.add(temp);
                 db = new DatabaseFileObject();
                 db = (DatabaseFileObject)obj;
-                person.firstName = (db.name);
-                person.lastName = (db.lastname);
+//                person.firstName = (db.name);
+//                person.lastName = (db.lastname);
                 data.add(person);
             }
             return data;

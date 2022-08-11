@@ -76,13 +76,13 @@ public class DatabaseSQLiteObject extends DatabaseObject
     public ArrayList<Person> getData()
     {
         String sql = ""
-        		+ "SELECT "
-//        		+ "id, "
-        		+ "name, "
-        		+ "lastname "
-        		+ "FROM "
-        		+ "person "
-        		+ "where name != 'admin'";
+        		+ "SELECT"
+        		+ " position,"
+        		+ " name,"
+        		+ " action,"
+        		+ " action_name"
+        		+ " FROM"
+        		+ " person;";
 //        ArrayList<Person> data = getDataFromDBWithHeader(sql, false);
         ArrayList<Person> data = getDataFromDBWithoutHeader(sql, false);
         return data;
@@ -149,31 +149,33 @@ public class DatabaseSQLiteObject extends DatabaseObject
     public boolean createDatabaseIfNotExists()
     {
         if(permitCreateDB) {
-//            executeSet("drop table if exists person");
+            executeSet("drop table if exists person");
 //            executeSet("drop table if exists login");
-            executeSet("delete from person");
-            executeSet("delete from login");
+//            executeSet("delete from person");
+//            executeSet("delete from login");
             //////////////////////////////
             executeSet("create table if not exists person ("
-                    + "id integer primary key autoincrement,"
+//                    + "id integer primary key autoincrement,"
+                    + "position integer primary key autoincrement,"
                     + "name text,"
-                    + "lastname text"
+                    + "action text,"
+                    + "action_name text"
                     + ")");
             /*
              *  table login with boolean.. but seems problem with jdbc -> sqlite
              *  sometimes boolean = int, sometimes not :(
              *  so boolean = int and works. remember for other dbs
              */
-            executeSet("create table if not exists login ("
-                    + "id integer primary key autoincrement,"
-                    + "p_id integer,"
-                    + "p_name text,"
-                    + "p_lastname text,"
-                    + "p_password text,"
-//                    + "p_admin boolean default 'false',"
-                    + "p_admin int default 0,"
-                    + "foreign key (p_id) references person(id)"
-                    + ")");
+//            executeSet("create table if not exists login ("
+//                    + "id integer primary key autoincrement,"
+//                    + "p_id integer,"
+//                    + "p_name text,"
+//                    + "p_lastname text,"
+//                    + "p_password text,"
+////                    + "p_admin boolean default 'false',"
+//                    + "p_admin int default 0,"
+//                    + "foreign key (p_id) references person(id)"
+//                    + ")");
             return true;
         } else {
             return false;
@@ -187,60 +189,90 @@ public class DatabaseSQLiteObject extends DatabaseObject
         HashMap <String[], Integer> result = getNewData();
         ///////////////////////////////////////////////////////////
 //        executeSet("insert into person (name, lastname) values ('admin', 'admin')");
-        executeSet("admin", "admin");
+//        executeSet("admin", "admin");
 //        generateActualSql("insert into person (name, lastname) values (?,?);", "admin", "admin");
 //        executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
 //        executeSet("secret", true);
 //        insertAdminData(getId("admin"), "secret", true);
-        insertAdminData(getId("admin"), "secret");
+//        insertAdminData(getId("admin"), "secret");
 //        generateActualSql("insert into login (p_id, p_password, p_admin) values (?,?,?);", 1, "secret", "true");
-        for(Entry <String[], Integer> entry: result.entrySet())
-        {
-        	String name = entry.getKey()[0];
-        	String lastname = entry.getKey()[1];
-        	int pw = entry.getValue();
-//            executeSet(""
-//            		+ "insert into person ("
-//            		+ "name, "
-//            		+ "lastname"
-//            		+ ") "
-//            		+ "values "
-//            		+ "("
-//            		+ "'"+name+"', "
-//    				+ "'"+lastname+"'"
-//					+ ")"
-//					+ "");
-//            String sql = ""
-//            		+ "insert into person ("
-//            		+ "name, "
-//            		+ "lastname"
-//            		+ ") "
-//            		+ "values "
-//            		+ "("
-//            		+ "?, "
-//    				+ "?"
-//					+ ");";
-            executeSet(name, lastname);
-            executeSet(getId(name), String.valueOf(pw));
-//        	generateActualSql(sql, name, lastname);
-//            executeSet("insert into "
-//            		+ "login ("
-//            		+ "p_id, "
-//            		+ "p_password"
-//            		+ ") values ("
-//            		+ ""+getId(name)+", "
-//    				+ "'"+pw+"'"
-//					+ ")");
-//            sql = "insert into "
-//            		+ "login ("
-//            		+ "p_id, "
-//            		+ "p_password"
-//            		+ ") values ("
-//            		+ "?, "
-//    				+ "?"
-//					+ ");";
-//            executeSet(getId(name), pw);
-//            generateActualSql(sql, getId(name), pw);
+        
+//        for(Entry <String[], Integer> entry: result.entrySet())
+//        {
+//        	String name = entry.getKey()[0];
+//        	String lastname = entry.getKey()[1];
+//        	int pw = entry.getValue();
+////            executeSet(""
+////            		+ "insert into person ("
+////            		+ "name, "
+////            		+ "lastname"
+////            		+ ") "
+////            		+ "values "
+////            		+ "("
+////            		+ "'"+name+"', "
+////    				+ "'"+lastname+"'"
+////					+ ")"
+////					+ "");
+////            String sql = ""
+////            		+ "insert into person ("
+////            		+ "name, "
+////            		+ "lastname"
+////            		+ ") "
+////            		+ "values "
+////            		+ "("
+////            		+ "?, "
+////    				+ "?"
+////					+ ");";
+//            executeSet(name, lastname);
+//            executeSet(getId(name), String.valueOf(pw));
+////        	generateActualSql(sql, name, lastname);
+////            executeSet("insert into "
+////            		+ "login ("
+////            		+ "p_id, "
+////            		+ "p_password"
+////            		+ ") values ("
+////            		+ ""+getId(name)+", "
+////    				+ "'"+pw+"'"
+////					+ ")");
+////            sql = "insert into "
+////            		+ "login ("
+////            		+ "p_id, "
+////            		+ "p_password"
+////            		+ ") values ("
+////            		+ "?, "
+////    				+ "?"
+////					+ ");";
+////            executeSet(getId(name), pw);
+////            generateActualSql(sql, getId(name), pw);
+//        }
+        insert(1, "Anna", "is-eating", "a cookie");
+        insert(2, "Henry", "does", "a handstand");
+        insert(3, "Sarah", "", "a pen");
+        insert(4, "John", "tells", "");
+        insert(5, "", "", "a drama");
+    }
+    void insert(int position, String text, String action, String action_name)
+    {
+        try {
+            String sql = ""
+                    +" insert into person ("
+                    + "position,"
+                    + "name,"
+                    + "action,"
+                    + "action_name"
+                    + ") values ("
+                    + "";
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?,?"+");");
+            stmt.setInt(1, position);
+            stmt.setString(2, text);
+            stmt.setString(3, action);
+            stmt.setString(4, action_name);
+            logger.info(stmt.toString());
+            stmt.execute();
+            close(null);
+        } catch (Exception e) {
+            logger.error("insert into person", e);
         }
     }
     /**
@@ -424,23 +456,25 @@ public class DatabaseSQLiteObject extends DatabaseObject
             return false;
         }
     }
-    boolean insertData(String firstName, String lastName)
+    boolean insertData(String name, String action, String action_name)
     {
     	try
     	{
 //            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
     		String sql = "insert into person ("
     				+ "name,"
-    				+ "lastname"
+    				+ "action,"
+    				+ "action_name"
     				+ ") values (";
     		connect();
-    		PreparedStatement stmt = connection.prepareStatement(sql+"?,?"+")");
-    		stmt.setString(1, firstName);
-    		stmt.setString(2, lastName);
+    		PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?"+")");
+    		stmt.setString(1, name);
+    		stmt.setString(2, action);
+    		stmt.setString(3, action_name);
     		logger.info(stmt.toString());
     		stmt.execute();
     		close(null);
-    		executeSet(getId(firstName), "");
+//    		executeSet(getId(firstName), "");
     		return true;
     	}
     	catch(SQLException e)
@@ -644,20 +678,17 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //                	person.isAdmin = resultSet.getInt("admin");
 //                	data.add(person);
                 	person = new Person();
-                	person.setId(
-                	        DatabaseObject.toInt(resultSet.getString("id"))
+                	person.setN(
+                	        DatabaseObject.toInt(resultSet.getString("position"))
                 	        );
-                	person.setFirstName(
+                	person.setO(
                 	        resultSet.getString("name")
                 	        );
-                	person.setLastName(
-                	        resultSet.getString("lastName")
+                	person.setS(
+                	        resultSet.getString("action")
                 	        );
-                	person.setPassword(
-                	        resultSet.getString("password")
-                	        );
-                	person.setIsAdmin(
-                	        resultSet.getInt("admin")
+                	person.setV(
+                	        resultSet.getString("action_name")
                 	        );
                 	data.add(person);
                 }
@@ -676,11 +707,17 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //                    person.lastName = resultSet.getString("lastName");
 //                    data.add(person);
                     person = new Person();
-                    person.setFirstName(
+                    person.setN(
+                            DatabaseObject.toInt(resultSet.getString("position"))
+                            );
+                    person.setO(
                             resultSet.getString("name")
                             );
-                    person.setLastName(
-                            resultSet.getString("lastName")
+                    person.setS(
+                            resultSet.getString("action")
+                            );
+                    person.setV(
+                            resultSet.getString("action_name")
                             );
                     data.add(person);
                 }
@@ -830,7 +867,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
 	@Override
 	public boolean insertData(String[] data)
 	{
-		if(insertData(data[0], data[1])) {
+		if(insertData(data[0], data[1], data[2])) {
 			return true;
 		} else {
 			return false;

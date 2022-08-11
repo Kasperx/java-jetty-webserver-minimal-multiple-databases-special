@@ -198,7 +198,7 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
      * string to boolean
      * @return
      */
-    public static boolean strToBoolean(String text)
+    public static boolean toBoolean(String text)
     {
        if(text.equals("true")) {
            return true;
