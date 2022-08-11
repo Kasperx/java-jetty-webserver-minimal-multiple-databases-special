@@ -11,21 +11,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Random;
 
 import main.java.com.mywebsite.Data.Person;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 
-public class DatabaseSQLiteObject extends DatabaseObject
+public class DatabaseSQLite extends Database
 {  
     String path = System.getProperty("user.dir")+"/test.db";
     Connection connection = null;
     static Logger logger;
-    public DatabaseSQLiteObject()
+    public DatabaseSQLite()
     {
-        logger = LoggerConfig.getLogger(DatabaseSQLiteObject.class.getName());
+        logger = LoggerConfig.getLogger(DatabaseSQLite.class.getName());
         File dbFile = new File(path);
         try
         {
@@ -679,7 +677,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //                	data.add(person);
                 	person = new Person();
                 	person.setN(
-                	        DatabaseObject.toInt(resultSet.getString("position"))
+                	        Database.toInt(resultSet.getString("position"))
                 	        );
                 	person.setO(
                 	        resultSet.getString("name")
@@ -708,7 +706,7 @@ public class DatabaseSQLiteObject extends DatabaseObject
 //                    data.add(person);
                     person = new Person();
                     person.setN(
-                            DatabaseObject.toInt(resultSet.getString("position"))
+                            Database.toInt(resultSet.getString("position"))
                             );
                     person.setO(
                             resultSet.getString("name")

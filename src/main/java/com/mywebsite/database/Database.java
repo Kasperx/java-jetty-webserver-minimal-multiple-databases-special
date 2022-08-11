@@ -15,11 +15,11 @@ import main.java.com.mywebsite.Data.Person;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 import main.java.com.mywebsite.database.DAO.Dao_DBConnect;
-import main.java.com.mywebsite.database.Interfaces.DatabaseInterfaceObject;
+import main.java.com.mywebsite.database.Interfaces.DatabaseInterface;
 
-public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseInterfaceObject
+public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {
-    static Logger logger = LoggerConfig.getLogger(DatabaseObject.class.getName());
+    static Logger logger = LoggerConfig.getLogger(Database.class.getName());
     protected boolean permitCreateDB = true;
     /**
      * enum for database use
@@ -51,7 +51,7 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
      * get instance
      * @return
      */
-    public static DatabaseObject getInstance()
+    public static Database getInstance()
     {
         return getInstance(DatabaseType.getValue());
     }
@@ -60,16 +60,16 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
      * @param source
      * @return
      */
-    public static DatabaseObject getInstance(DatabaseType source)
+    public static Database getInstance(DatabaseType source)
     {
-        DatabaseObject data = null;
+        Database data = null;
         switch(source)
         {
             case file:
-                data = new DatabaseFileObject();
+                data = new DatabaseFile();
                 break;
             case sqlite:
-                data = new DatabaseSQLiteObject();
+                data = new DatabaseSQLite();
                 break;
 //            case mariadb:
 //                data = new DatabaseFile();
@@ -79,7 +79,7 @@ public abstract class DatabaseObject extends Dao_DBConnect implements DatabaseIn
 //                break;
             default:
             	logger.info("Not supported yet: source '"+source.value+"'. Using '"+DatabaseType.sqlite+"'.");
-                data = new DatabaseSQLiteObject();
+                data = new DatabaseSQLite();
                 break;
         }
         return data;

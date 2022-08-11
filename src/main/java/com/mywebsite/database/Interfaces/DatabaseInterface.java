@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import main.java.com.mywebsite.Data.Person;
 
-public interface DatabaseInterfaceObject
+public interface DatabaseInterface
 {
     /**
      * connect to database

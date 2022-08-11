@@ -2,13 +2,11 @@ package main.java.com.mywebsite.database;
 
 import java.util.ArrayList;
 
-import org.json.JSONObject;
-
 import main.java.com.mywebsite.Data.Person;
 
-public class DatabasePostgresObject extends DatabaseObject
+public class DatabasePostgres extends Database
 {  
-    public DatabasePostgresObject()
+    public DatabasePostgres()
     {
         connect();
     }

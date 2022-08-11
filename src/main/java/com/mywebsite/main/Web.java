@@ -17,13 +17,13 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 
-public class WebObject
+public class Web
 {
     Server server;
     static String httpbase = System.getProperty("user.dir");
     static int httpport = 4000;
-    static Logger logger = LoggerConfig.getLogger(WebObject.class.getName());
-    public WebObject (String httpbase, int httpport) {
+    static Logger logger = LoggerConfig.getLogger(Web.class.getName());
+    public Web (String httpbase, int httpport) {
         if(new File(httpbase).isDirectory()) {
             this.httpbase = httpbase;
         }
@@ -32,14 +32,14 @@ public class WebObject
         }
         initHttpService(this.httpbase, this.httpport);
     }
-    public WebObject () {
+    public Web () {
         initHttpService(httpbase, httpport);
     }
     private void initHttpService(String httpbase, int port)
     {
         try
         {
-        	logger.info("webfolder: "+WebObject.httpbase);
+        	logger.info("webfolder: "+Web.httpbase);
         	logger.info("port = "+httpport);
         	if(httpport < 0) {
         		return;
@@ -113,7 +113,7 @@ public class WebObject
             httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
         }
 //        new Web().initHttpService(httpbase, httpport);
-        new WebObject();
+        new Web();
     }
     private static void showHelp ()
     {
@@ -147,7 +147,7 @@ public class WebObject
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException
         {
-            DataUseObject website = new DataUseObject();
+            DataUse website = new DataUse();
             website.sethttpbase(httpbase);
             String parameter = request.getParameter("get");
             if(parameter != null)

@@ -12,9 +12,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
-
-import org.json.JSONObject;
 
 import java.util.Map.Entry;
 
@@ -22,7 +19,7 @@ import main.java.com.mywebsite.Data.Person;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 
-public class DatabaseFileObject extends DatabaseObject implements Serializable
+public class DatabaseFile extends Database implements Serializable
 {  
     int id;
     String name;
@@ -31,9 +28,9 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
     boolean admin;
     private static Logger logger;
     
-    public DatabaseFileObject()
+    public DatabaseFile()
     {
-        logger = LoggerConfig.getLogger(DatabaseFileObject.class.getName());
+        logger = LoggerConfig.getLogger(DatabaseFile.class.getName());
         path = System.getProperty("user.dir")+"/test";
 //        path = System.getProperty("user.dir")+"/test";
         File dbFile = new File(path);
@@ -50,7 +47,7 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
             e.printStackTrace();
         }
     }
-    public DatabaseFileObject(int id, String name, String lastname, String pw, boolean admin)
+    public DatabaseFile(int id, String name, String lastname, String pw, boolean admin)
     {
         path = System.getProperty("user.dir")+"/test";
         File dbFile = new File(path);
@@ -89,7 +86,7 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
         ArrayList<Person> data = new ArrayList<Person>();
         try(ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(path)))
         {
-            DatabaseFileObject db;
+            DatabaseFile db;
             Object obj;
 //            db = new DatabaseFile();
 //            db = inFile.readObject();
@@ -106,8 +103,8 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
 ////                temp.add(db.pw);
 ////                temp.add(String.valueOf(db.admin));
 //                data.add(temp);
-                db = new DatabaseFileObject();
-                db = (DatabaseFileObject)obj;
+                db = new DatabaseFile();
+                db = (DatabaseFile)obj;
 //                person.firstName = (db.name);
 //                person.lastName = (db.lastname);
                 data.add(person);
@@ -177,8 +174,8 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
         int id=0;
         HashMap <String[], Integer> result = getNewData();
         ///////////////////////////////////////////////////////////
-        ArrayList <DatabaseFileObject> data = new ArrayList<DatabaseFileObject>();
-        data.add(new DatabaseFileObject(
+        ArrayList <DatabaseFile> data = new ArrayList<DatabaseFile>();
+        data.add(new DatabaseFile(
                 id++,
                 "admin",
                 "admin",
@@ -187,7 +184,7 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
                 ));
         for(Entry <String[], Integer> entry: result.entrySet())
         {
-            data.add(new DatabaseFileObject(
+            data.add(new DatabaseFile(
                   id++,
                   entry.getKey()[0],
                   entry.getKey()[1],
@@ -208,7 +205,7 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
 //        }
         try(ObjectOutputStream write= new ObjectOutputStream (new FileOutputStream(path)))
         {
-            for(DatabaseFileObject temp: data)
+            for(DatabaseFile temp: data)
             {
                 write.writeObject((Object)temp);
             }
@@ -226,12 +223,12 @@ public class DatabaseFileObject extends DatabaseObject implements Serializable
     {
         try(ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(path)))
         {
-            DatabaseFileObject db;
+            DatabaseFile db;
             Object obj;
             if((obj = inFile.readObject()) != null)
             {
-                db = new DatabaseFileObject();
-                db = (DatabaseFileObject)obj;
+                db = new DatabaseFile();
+                db = (DatabaseFile)obj;
                 if(db.name.equals(name) && db.pw.equals(password))
                 {
                     return true;

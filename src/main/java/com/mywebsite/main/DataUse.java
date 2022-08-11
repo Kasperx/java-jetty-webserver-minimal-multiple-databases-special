@@ -36,23 +36,23 @@ import com.google.gson.Gson;
 import main.java.com.mywebsite.Data.Person;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
-import main.java.com.mywebsite.database.DatabaseObject.DatabaseType;
+import main.java.com.mywebsite.database.Database.DatabaseType;
 import main.java.com.mywebsite.main.DAO.Dao_Main;
-import main.java.com.mywebsite.database.DatabaseFileObject;
-import main.java.com.mywebsite.database.DatabaseObject;
-import main.java.com.mywebsite.database.DatabaseSQLiteObject;
+import main.java.com.mywebsite.database.DatabaseFile;
+import main.java.com.mywebsite.database.Database;
+import main.java.com.mywebsite.database.DatabaseSQLite;
 
-public class DataUseObject extends Dao_Main
+public class DataUse extends Dao_Main
 {
-    static DatabaseObject databasesource;
+    static Database databasesource;
     String httpbase;
     static String htmlhead_halfSize;
     static String htmlhead_fullSize;
     static String htmlend;
-    static DatabaseObject.DatabaseType databaseType;
-    static Logger logger = LoggerConfig.getLogger(DatabaseFileObject.class.getName());
+    static Database.DatabaseType databaseType;
+    static Logger logger = LoggerConfig.getLogger(DatabaseFile.class.getName());
     
-    public DataUseObject()
+    public DataUse()
     {
         ///////////////////////////////////////////
         // get libs from online
@@ -100,8 +100,8 @@ public class DataUseObject extends Dao_Main
         htmlend = ""
                 + "</body>"
                 ;
-        databaseType = DatabaseObject.DatabaseType.getValue();
-        databasesource = DatabaseObject.getInstance(databaseType);
+        databaseType = Database.DatabaseType.getValue();
+        databasesource = Database.getInstance(databaseType);
 //        databasesource = Database.getInstance(Database.DatabaseType.file);
 //        databasesource = Database.getInstance(Database.DatabaseType.postgres);
         databasesource.setHeaderInUppercaseCharacter(true);
@@ -696,10 +696,10 @@ public class DataUseObject extends Dao_Main
             switch (databaseType)
             {
 			case sqlite:
-				((DatabaseSQLiteObject)databasesource.getInstance()).insertData();
+				((DatabaseSQLite)databasesource.getInstance()).insertData();
 				break;
 			case file:
-				((DatabaseFileObject)databasesource.getInstance()).insertData();
+				((DatabaseFile)databasesource.getInstance()).insertData();
 				break;
 			default:
 				break;
