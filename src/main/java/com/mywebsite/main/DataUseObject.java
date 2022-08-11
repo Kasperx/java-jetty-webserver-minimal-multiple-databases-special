@@ -53,7 +53,7 @@ public class DataUseObject extends Dao_Main
     static String htmlhead_fullSize;
     static String htmlend;
     static DatabaseObject.DatabaseType databaseType;
-    static Logger logger = LoggerConfig.getLogger(Database.class.getName());
+    static Logger logger = LoggerConfig.getLogger(DatabaseFileObject.class.getName());
     
     public DataUseObject()
     {
