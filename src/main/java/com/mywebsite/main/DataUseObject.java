@@ -36,13 +36,10 @@ import com.google.gson.Gson;
 import main.java.com.mywebsite.Data.Person;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
-import main.java.com.mywebsite.database.Database;
-import main.java.com.mywebsite.database.Database.DatabaseType;
+import main.java.com.mywebsite.database.DatabaseObject.DatabaseType;
 import main.java.com.mywebsite.main.DAO.Dao_Main;
-import main.java.com.mywebsite.database.DatabaseFile;
 import main.java.com.mywebsite.database.DatabaseFileObject;
 import main.java.com.mywebsite.database.DatabaseObject;
-import main.java.com.mywebsite.database.DatabaseSQLite;
 import main.java.com.mywebsite.database.DatabaseSQLiteObject;
 
 public class DataUseObject extends Dao_Main
