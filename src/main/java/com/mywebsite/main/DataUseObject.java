@@ -767,7 +767,7 @@ public class DataUseObject extends Dao_Main
     				+request.getParameter("action")
     				+request.getParameter("action_name")
     				));
-    		String name = request.getParameter("name");
+    		String name = writeFirstCharacterUpperCase(request.getParameter("name"));
     		String action = request.getParameter("action");
     		String action_name = request.getParameter("action_name");
     		/*
@@ -866,5 +866,22 @@ public class DataUseObject extends Dao_Main
     private ArrayList <String> makeListEntriesUnique (ArrayList <String> array)
     {
         return (ArrayList) array.stream().distinct().collect(Collectors.toList());
+    }
+    /**
+     * 
+     */
+    static String writeFirstCharacterUpperCase(String text)
+    {
+        char [] newText = new char[text.length()];
+        for(int i=0; i<text.length(); i++) {
+            if(i == 0) {
+                newText[i] = text.charAt(i);
+                String temp = String.valueOf(newText).toUpperCase();
+                newText[i] = temp.toCharArray()[0];
+            } else {
+                newText[i] = text.charAt(i);
+            }
+        }
+        return String.valueOf(newText);
     }
 }
