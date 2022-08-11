@@ -784,10 +784,14 @@ public class DataUseObject extends Dao_Main
 //    		websitedata = gson.toJson(websitedata);
 //    		response.setCharacterEncoding("utf-8");
 //    		response.setContentType("application/json");
-    		databasesource.insertData(
-    		        new String[] {name, action, action_name}
-    		        );
-    		response.setStatus(HttpServletResponse.SC_OK);
+    		if(name.isEmpty() && action.isEmpty() && action_name.isEmpty()) {
+    		    ;
+    		} else {
+        		databasesource.insertData(
+        		        new String[] {name, action, action_name}
+        		        );
+        		response.setStatus(HttpServletResponse.SC_OK);
+    		}
 //    		response.getWriter().println(websitedata);
     	} catch (Exception e) {
     		logger.error("request insert with data", e);
