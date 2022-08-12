@@ -25,12 +25,12 @@ public class Web
     static Logger logger = LoggerConfig.getLogger(Web.class.getName());
     public Web (String httpbase, int httpport) {
         if(new File(httpbase).isDirectory()) {
-            this.httpbase = httpbase;
+            Web.httpbase = httpbase;
         }
         else if(new File(httpbase).isFile()) {
-            this.httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
+            Web.httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
         }
-        initHttpService(this.httpbase, this.httpport);
+        initHttpService(Web.httpbase, Web.httpport);
     }
     public Web () {
         initHttpService(httpbase, httpport);
@@ -163,31 +163,31 @@ public class Web
                 website.clientRequest_Website(request, response);
             }
             else if(request_api_weather.equals(parameter)) {
-                website.clientRequest_Weather(request, response);
+                DataUse.clientRequest_Weather(request, response);
             }
 //            else if (request_api_example.equals(parameter)) {
 //                website.clientRequest_TableNames(request, response);
 //            }
             else if(request_api_call_data_from_db.equals(parameter)) {
-                website.clientRequest_GetData(request, response);
+                DataUse.clientRequest_GetData(request, response);
             }
             else if(request_api_insert_data_to_db.equals(parameter)) {
-                website.clientRequest_InsertDataToDb(request, response);
+                DataUse.clientRequest_InsertDataToDb(request, response);
             }
             else if(request_api_get_data_for_admin.equals(parameter)) {
-                website.clientRequest_GetAllData(request, response);
+                DataUse.clientRequest_GetAllData(request, response);
             }
             else if(request_api_use_json.equals(parameter)) {
-                website.clientRequest_UseJson(request, response);
+                DataUse.clientRequest_UseJson(request, response);
             }
             else if(request_api_add_user.equals(parameter)) {
-            	website.clientRequest_AddUser(request, response);
+            	DataUse.clientRequest_AddUser(request, response);
             }
             else if(request_api_remove_user.equals(parameter)) {
-                website.clientRequest_removeUser(request, response);
+                DataUse.clientRequest_removeUser(request, response);
             }
             else if(request_api_update_user.equals(parameter)) {
-                website.clientRequest_updateUser(request, response);
+                DataUse.clientRequest_updateUser(request, response);
             }
         }
         @Override
@@ -202,10 +202,14 @@ public class Web
             	requestByClient = request.getRequestURI().toLowerCase();
             }
         }
-        void cookie(HttpServletRequest request)
-        {
-            Cookie cookie = new Cookie(request.getRemoteUser(), "");
-            CookieManager cm = new CookieManager();
-        }
+//        /**
+//         * use cookies
+//         * @param request
+//         */
+//        void cookie(HttpServletRequest request)
+//        {
+//            Cookie cookie = new Cookie(request.getRemoteUser(), "");
+//            CookieManager cm = new CookieManager();
+//        }
     }
 }

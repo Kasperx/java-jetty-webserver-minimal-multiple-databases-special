@@ -50,7 +50,7 @@ public class DataUse extends Dao_Main
     static String htmlhead_fullSize;
     static String htmlend;
     static Database.DatabaseType databaseType;
-    static Logger logger = LoggerConfig.getLogger(DatabaseFile.class.getName());
+    static Logger logger = LoggerConfig.getLogger(DataUse.class.getName());
     
     public DataUse()
     {
@@ -105,7 +105,7 @@ public class DataUse extends Dao_Main
 //        databasesource = Database.getInstance(Database.DatabaseType.file);
 //        databasesource = Database.getInstance(Database.DatabaseType.postgres);
         databasesource.setHeaderInUppercaseCharacter(true);
-        databasesource.getProperties(System.getProperty("user.dir")+File.separator+"login.txt");
+//        databasesource.getProperties(System.getProperty("user.dir")+File.separator+"login.txt");
     }
     /**
      * 
@@ -701,10 +701,10 @@ public class DataUse extends Dao_Main
             switch (databaseType)
             {
 			case sqlite:
-				((DatabaseSQLite)databasesource.getInstance()).insertData();
+				((DatabaseSQLite)Database.getInstance()).insertData();
 				break;
 			case file:
-				((DatabaseFile)databasesource.getInstance()).insertData();
+				((DatabaseFile)Database.getInstance()).insertData();
 				break;
 			default:
 				break;
@@ -750,7 +750,7 @@ public class DataUse extends Dao_Main
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().println(json);
+            response.getWriter().println(websitedata);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -765,18 +765,21 @@ public class DataUse extends Dao_Main
     	try
     	{
     		logger.info("Found request: "+request.getParameter("get : "
+    		        +request.getParameter("position")
     				+request.getParameter("name")
     				+request.getParameter("action")
     				+request.getParameter("action_name")
     				));
+    		String position = request.getParameter("position");
     		String name = writeFirstCharacterUpperCase(request.getParameter("name"));
     		String action = request.getParameter("action");
     		String action_name = request.getParameter("action_name");
-    		if(name.isEmpty() && action.isEmpty() && action_name.isEmpty()) {
+    		if(position.isEmpty() && name.isEmpty() && action.isEmpty() && action_name.isEmpty()) {
     		    ;
     		    response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     		} else {
         		databasesource.insertData(new String[] {
+        		        position,
         		        name,
         		        action,
         		        action_name
@@ -914,17 +917,22 @@ public class DataUse extends Dao_Main
      */
     static String writeFirstCharacterUpperCase(String text)
     {
-        char [] newText = new char[text.length()];
-        for(int i=0; i<text.length(); i++) {
-            if(i == 0) {
-                newText[i] = text.charAt(i);
-                String temp = String.valueOf(newText).toUpperCase();
-                newText[i] = temp.toCharArray()[0];
-            } else {
-                newText[i] = text.charAt(i);
+        if(text.isEmpty()) {
+            return text;
+        } else {
+            char [] newText = new char[text.length()];
+            for(int i=0; i<text.length(); i++) {
+                if(i == 0) {
+                    newText[i] = text.charAt(i);
+                    String temp = String.valueOf(newText).toUpperCase();
+                    newText[i] = temp.toCharArray()[0];
+                } else {
+                    newText[i] = text.charAt(i);
+                }
             }
+            text = String.valueOf(newText);
         }
-        return String.valueOf(newText);
+        return text;
     }
     /**
      * init options for server

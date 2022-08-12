@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import main.java.com.mywebsite.Data.Person;
 import main.java.com.mywebsite.common.logger.Logger;
@@ -148,13 +149,18 @@ public class DatabaseSQLite extends Database
     {
         if(permitCreateDB) {
             executeSet("drop table if exists person");
-//            executeSet("drop table if exists login");
 //            executeSet("delete from person");
-//            executeSet("delete from login");
             //////////////////////////////
+//            executeSet("create table if not exists person ("
+////                    + "id integer primary key autoincrement,"
+//                    + "position integer primary key autoincrement,"
+//                    + "name text,"
+//                    + "action text,"
+//                    + "action_name text"
+//                    + ");");
             executeSet("create table if not exists person ("
-//                    + "id integer primary key autoincrement,"
-                    + "position integer primary key autoincrement,"
+                    + "id integer primary key autoincrement,"
+                    + "position integer,"
                     + "name text,"
                     + "action text,"
                     + "action_name text"
@@ -461,21 +467,23 @@ public class DatabaseSQLite extends Database
      * @param action_name
      * @return
      */
-    boolean insertData(String name, String action, String action_name)
+    boolean insertData(String position, String name, String action, String action_name)
     {
     	try
     	{
 //            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
     		String sql = "insert into person ("
+    		        + "position,"
     				+ "name,"
     				+ "action,"
     				+ "action_name"
     				+ ") values (";
     		connect();
-    		PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?"+")");
-    		stmt.setString(1, name);
-    		stmt.setString(2, action);
-    		stmt.setString(3, action_name);
+    		PreparedStatement stmt = connection.prepareStatement(sql+"?,?,?,?"+")");
+    		stmt.setInt(1, toInt(position));
+    		stmt.setString(2, name);
+    		stmt.setString(3, action);
+    		stmt.setString(4, action_name);
     		logger.info(stmt.toString());
     		stmt.execute();
     		close(null);
@@ -940,7 +948,11 @@ public class DatabaseSQLite extends Database
 	@Override
 	public boolean insertData(String[] data)
 	{
-		if(insertData(data[0], data[1], data[2])) {
+	    // get next position number
+	    if(data != null && data.length > 0 && toInt(data[0]) == 0) {
+	        data[0] = String.valueOf(getNextPosition());
+	    }
+		if(insertData(data[0], data[1], data[2], data[3])) {
 			return true;
 		} else {
 			return false;
@@ -963,5 +975,44 @@ public class DatabaseSQLite extends Database
         } else {
             return false;
         }
+    }
+    /**
+     * get next int for position (no sql key)
+     * @return
+     */
+    public int getNextPosition()
+    {
+        connect();
+        String sql = ""
+                + "SELECT"
+                + " position"
+                + " FROM"
+                + " person"
+                + ";";
+        int findNextPos = 1;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet resultSet = stmt.executeQuery();
+            List<Integer> positions = new ArrayList<Integer>();
+            while(resultSet.next())
+            {
+                int position = resultSet.getInt("position");
+                if(positions.contains(position)) {
+                    continue;
+                } else {
+                    positions.add(position);
+                }
+            }
+//            for(int i=1; i<positions.size() && i!=findNextPos; i++) {
+//                findNextPos = positions.get(i);
+//            }
+            findNextPos = positions.size()+1;
+            close(resultSet);
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+        }
+        return findNextPos;
     }
 }  

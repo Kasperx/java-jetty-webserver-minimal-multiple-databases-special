@@ -208,13 +208,14 @@
       table.append(tabledata);
 
       // table_input.append('<td style="max-width:70px;"><input placeholder="input s" id="input_name"></td>');
-      table.append('<td></td>');
+      //table.append('<td></td>');
       // table.append('<td style="max-width:70px;"><input placeholder="Input name" id="input_name"></input></td>');
       // table.append('<td style="max-width:70px;"><input placeholder="Input activity" id="input_action"></input></td>');
       // table.append('<td style="max-width:70px;"><input placeholder="Input activity name" id="input_action_name"></input></td>');
-      table.append('<td><input placeholder="Input name" id="input_name"></input></td>');
-      table.append('<td><input placeholder="Input activity" id="input_action"></input></td>');
-      table.append('<td><input placeholder="Input activity name" id="input_action_name"></input></td>');
+      table.append('<td><input style="max-width:200px;" placeholder="Input position" id="input_position"></input></td>');
+      table.append('<td><input style="max-width:200px;" placeholder="Input name" id="input_name"></input></td>');
+      table.append('<td><input style="max-width:200px;" placeholder="Input activity" id="input_action"></input></td>');
+      table.append('<td><input style="max-width:200px;" placeholder="Input activity name" id="input_action_name"></input></td>');
       table.append(
         '<td>'
         +'<input type="button" id="btn_send" class="btn btn-success" onclick="javascript:sendDataToSystem()" value="send"></input>'
@@ -274,16 +275,17 @@
   function sendDataToSystem()
   {
     // let input_position_value = $('#input_position').val();
+    let input_name_position_value = $('#input_position').val();
     let input_name_value = $('#input_name').val();
     let input_action_value = $('#input_action').val();
     let input_action_name_value = $('#input_action_name').val();
-    if(input_name_value == "" && input_action_value == "" && input_action_name_value == "")
+    if(input_name_position_value && input_name_value == "" && input_action_value == "" && input_action_name_value == "")
     {}
     else {
       $.ajax({
         url: "?get=add_user"
         +"&format=json"
-        // +"&position="+input_position_value
+        +"&position="+input_name_position_value
         +"&name="+input_name_value
         +"&action="+input_action_value
         +"&action_name="+input_action_name_value,
@@ -291,6 +293,7 @@
       }).done(function(data) {
         alert("Inserted "
         // +input_position_value+" "
+        +input_name_position_value+" ",
         +input_name_value+" ",
         +input_action_value+" ",
         +input_action_name_value,

@@ -190,6 +190,9 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     public static int toInt(String text)
     {
         try{
+            if(text == null || text.isEmpty()) {
+                return 0;
+            }
             return Integer.parseInt(text);
         } catch (Exception e) {
             logger.error(e);
