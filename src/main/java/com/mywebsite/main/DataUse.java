@@ -772,26 +772,15 @@ public class DataUse extends Dao_Main
     		String name = writeFirstCharacterUpperCase(request.getParameter("name"));
     		String action = request.getParameter("action");
     		String action_name = request.getParameter("action_name");
-    		/*
-    		 * Yes, works normally on its own, but for different database models program needs different object-casts
-    		 * because method is not content of normal code within abstract environment.
-    		 */
-//    		String websitedata = null;
-//    		if(useJson) {
-//    			websitedata = "json:yes";
-//    		} else {
-//    			websitedata = "json:no";
-//    		}
-//    		Gson gson = new Gson();
-//    		websitedata = gson.toJson(websitedata);
-//    		response.setCharacterEncoding("utf-8");
-//    		response.setContentType("application/json");
     		if(name.isEmpty() && action.isEmpty() && action_name.isEmpty()) {
     		    ;
+    		    response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     		} else {
-        		databasesource.insertData(
-        		        new String[] {name, action, action_name}
-        		        );
+        		databasesource.insertData(new String[] {
+        		        name,
+        		        action,
+        		        action_name
+        		        });
         		response.setStatus(HttpServletResponse.SC_OK);
     		}
 //    		response.getWriter().println(websitedata);
@@ -799,25 +788,81 @@ public class DataUse extends Dao_Main
     		logger.error("request insert with data", e);
     	}
     }
-    /**
-     * 
-     * @param dataRows
-     * @return
-     */
-    private List <List<String>> vectorToArrayList2D (Vector dataRows)
+    public static void clientRequest_updateUser(HttpServletRequest request, HttpServletResponse response)
     {
-        List <List<String>> array = new ArrayList<List<String>>();
-        for (int i=0; i<dataRows.size(); i++)
+        try
         {
-             Vector data_cols = (Vector)dataRows.elementAt(i);
-             ArrayList <String> temp = new ArrayList<String>();
-             for(int col=0; col<data_cols.size(); col++) {
-                 temp.add(data_cols.elementAt(col).toString());
-             }
-             array.add(temp);
+            logger.info("Found request: "+request.getParameter("get : "
+                    +request.getParameter("name")
+                    +request.getParameter("action")
+                    +request.getParameter("action_name")
+                    ));
+            String name = writeFirstCharacterUpperCase(request.getParameter("name"));
+            String action = request.getParameter("action");
+            String action_name = request.getParameter("action_name");
+            if(name.isEmpty() && action.isEmpty() && action_name.isEmpty()) {
+                ;
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            } else {
+                databasesource.updateData(new String[] {
+                        name,
+                        action,
+                        action_name
+                });
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+//    		response.getWriter().println(websitedata);
+        } catch (Exception e) {
+            logger.error("request insert with data", e);
         }
-        return array;
     }
+    public static void clientRequest_removeUser(HttpServletRequest request, HttpServletResponse response)
+    {
+        try
+        {
+            logger.info("Found request: "+request.getParameter("get : "
+                    +request.getParameter("name")
+                    +request.getParameter("action")
+                    +request.getParameter("action_name")
+                    ));
+            String name = writeFirstCharacterUpperCase(request.getParameter("name"));
+            String action = request.getParameter("action");
+            String action_name = request.getParameter("action_name");
+            if(name.isEmpty() && action.isEmpty() && action_name.isEmpty()) {
+                ;
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            } else {
+                databasesource.removeData(new String[] {
+                        name,
+                        action,
+                        action_name
+                });
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+//    		response.getWriter().println(websitedata);
+        } catch (Exception e) {
+            logger.error("request insert with data", e);
+        }
+    }
+//    /**
+//     * 
+//     * @param dataRows
+//     * @return
+//     */
+//    private List <List<String>> vectorToArrayList2D (Vector dataRows)
+//    {
+//        List <List<String>> array = new ArrayList<List<String>>();
+//        for (int i=0; i<dataRows.size(); i++)
+//        {
+//             Vector data_cols = (Vector)dataRows.elementAt(i);
+//             ArrayList <String> temp = new ArrayList<String>();
+//             for(int col=0; col<data_cols.size(); col++) {
+//                 temp.add(data_cols.elementAt(col).toString());
+//             }
+//             array.add(temp);
+//        }
+//        return array;
+//    }
     /**
      * 
      * @param fileName
@@ -829,13 +874,13 @@ public class DataUse extends Dao_Main
         if(filecontent == null) {
             return null;
         }
-        String ckasl= "";
-        for (String temp: filecontent) {
-            ckasl += temp + "\n";
+        String text= "";
+        for(String temp: filecontent) {
+            text += temp + "\n";
         }
         filecontent.clear(); 
         logger.info("Reading file: "+fileName);
-        return ckasl;
+        return text;
     }
     /**
      * 
@@ -863,15 +908,6 @@ public class DataUse extends Dao_Main
             e.printStackTrace();
             return null;
         }
-    }
-    /**
-     * 
-     * @param array
-     * @return
-     */
-    private ArrayList <String> makeListEntriesUnique (ArrayList <String> array)
-    {
-        return (ArrayList) array.stream().distinct().collect(Collectors.toList());
     }
     /**
      * 

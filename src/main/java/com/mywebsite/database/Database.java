@@ -116,6 +116,8 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     public abstract int getId(String name);
     public abstract void insertData();
     public abstract boolean insertData(String [] data);
+    public abstract boolean removeData(String [] data);
+    public abstract boolean updateData(String [] data);
     public int getRandom()
     {
     	return new Random().nextInt(10000000) + 1000000;

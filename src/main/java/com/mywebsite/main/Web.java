@@ -139,7 +139,9 @@ public class Web
         private String request_api_insert_data_to_db = "insert";
         private String request_api_get_data_for_admin = "admin";
         private String request_api_use_json = "use_json";
-        private String request_api_add_user = "adduser";
+        private String request_api_add_user = "add_user";
+        private String request_api_remove_user = "remove_user";
+        private String request_api_update_user = "update_user";
         private String requestByClient = "";
         public Web_() {}
         
@@ -180,6 +182,12 @@ public class Web
             }
             else if(request_api_add_user.equals(parameter)) {
             	website.clientRequest_AddUser(request, response);
+            }
+            else if(request_api_remove_user.equals(parameter)) {
+                website.clientRequest_removeUser(request, response);
+            }
+            else if(request_api_update_user.equals(parameter)) {
+                website.clientRequest_updateUser(request, response);
             }
         }
         @Override

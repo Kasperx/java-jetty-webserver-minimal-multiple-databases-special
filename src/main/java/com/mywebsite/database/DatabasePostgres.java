@@ -59,5 +59,17 @@ public class DatabasePostgres extends Database
 	public boolean insertData(String[] data) {
 		return false;
 	}
+    @Override
+    public boolean removeData(String[] data)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public boolean updateData(String[] data)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }  
 

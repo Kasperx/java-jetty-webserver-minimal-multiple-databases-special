@@ -44,9 +44,21 @@ public interface DatabaseInterface
 //    private ResultSet executeGet(String sql);
 //    private void executeSet(String sql);
     /**
-     * 
+     * add entry to db
      * @param data
      * @return
      */
     public boolean insertData(String [] data);
+    /**
+     * delete entry in db
+     * @param data
+     * @return
+     */
+    public boolean removeData(String [] data);
+    /**
+     * update entry in db
+     * @param data
+     * @return
+     */
+    public boolean updateData(String [] data);
 }

@@ -281,7 +281,8 @@
     {}
     else {
       $.ajax({
-        url: "?get=adduser&format=json"
+        url: "?get=add_user"
+        +"&format=json"
         // +"&position="+input_position_value
         +"&name="+input_name_value
         +"&action="+input_action_value
@@ -306,7 +307,7 @@
         getData();
       }).fail(function ( jqXHR, textStatus, errorThrown ) {
         // console.log(jqXHR);
-        // console.log(textStatus);
+        console.log(textStatus);
         // console.log(errorThrown);
         alert('Failed');
       });

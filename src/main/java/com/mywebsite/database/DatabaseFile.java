@@ -260,5 +260,17 @@ public class DatabaseFile extends Database implements Serializable
 	public boolean insertData(String[] data) {
 		return false;
 	}
+    @Override
+    public boolean removeData(String[] data)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    @Override
+    public boolean updateData(String[] data)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }  
 

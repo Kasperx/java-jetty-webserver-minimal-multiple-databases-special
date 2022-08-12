@@ -454,6 +454,13 @@ public class DatabaseSQLite extends Database
             return false;
         }
     }
+    /**
+     * insert data to db
+     * @param name
+     * @param action
+     * @param action_name
+     * @return
+     */
     boolean insertData(String name, String action, String action_name)
     {
     	try
@@ -480,6 +487,74 @@ public class DatabaseSQLite extends Database
     		logger.error(e);
     		return false;
     	}
+    }
+    /**
+     * remove data from db
+     * @param name
+     * @param action
+     * @param action_name
+     * @return
+     */
+    boolean removeData(String name, String action, String action_name)
+    {
+        try
+        {
+//            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
+            String sql = "delete from person where "
+                    + "name = ?,"
+                    + "action = ?,"
+                    + "action_name = ?;";
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, action);
+            stmt.setString(3, action_name);
+            logger.info(stmt.toString());
+            stmt.execute();
+            close(null);
+//    		executeSet(getId(firstName), "");
+            return true;
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+            return false;
+        }
+    }
+    /**
+     * 
+     * @param name
+     * @param action
+     * @param action_name
+     * @return
+     */
+    boolean updateData(String name, String action, String action_name)
+    {
+        try
+        {
+//            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
+            String sql = "update person (name, action, action_name) "
+                    + "values ("
+                    + "name = ?,"
+                    + "action = ?,"
+                    + "action_name = ?"
+                    + ");";
+            connect();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, action);
+            stmt.setString(3, action_name);
+            logger.info(stmt.toString());
+            stmt.execute();
+            close(null);
+//    		executeSet(getId(firstName), "");
+            return true;
+        }
+        catch(SQLException e)
+        {
+            logger.error(e);
+            return false;
+        }
     }
     /**
      * execute sql for login = id, password
@@ -871,4 +946,22 @@ public class DatabaseSQLite extends Database
 			return false;
 		}
 	}
+    @Override
+    public boolean removeData(String[] data)
+    {
+        if(removeData(data[0], data[1], data[2])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    @Override
+    public boolean updateData(String[] data)
+    {
+        if(updateData(data[0], data[1], data[2])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }  
