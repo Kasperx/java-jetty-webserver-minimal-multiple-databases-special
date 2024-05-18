@@ -519,12 +519,11 @@ public class DataUse extends Dao_Main
 //				}
 				websitedata += ""
 			        + "<tr>"
-//			        + "<th>"+person.header_firstName+"</th>"
-//			        + "<th>"+person.header_lastName+"</th>"
-			        + "<th>"+person.getHeader_n()+"</th>"
-			        + "<th>"+person.getHeader_o()+"</th>"
-			        + "<th>"+person.getHeader_s()+"</th>"
-			        + "<th>"+person.getHeader_v()+"</th>"
+			        + "<th>"+person.getHeader_position()+"</th>"
+			        + "<th>"+person.getHeader_vorname()+"</th>"
+                    + "<th>"+person.getHeader_nachname()+"</th>"
+			        + "<th>"+person.getHeader_activity()+"</th>"
+			        + "<th>"+person.getHeader_activity_name()+"</th>"
 	                + "</tr>"
 			        ;	
 				websitedata += "</thead>";
@@ -534,10 +533,11 @@ public class DataUse extends Dao_Main
 			{
 				websitedata += ""
 			        + "<tr>"
-			        + "<th>"+person.getN()+"</th>"
-			        + "<th>"+person.getO()+"</th>"
-			        + "<th>"+person.getS()+"</th>"
-			        + "<th>"+person.getV()+"</th>"
+			        + "<th>"+person.getPosition()+"</th>"
+                    + "<th>"+person.getVorname()+"</th>"
+                    + "<th>"+person.getNachname()+"</th>"
+                    + "<th>"+person.getActivity()+"</th>"
+                    + "<th>"+person.getActivity_name()+"</th>"
 	                + "</tr>"
 			        ;	
 				websitedata += "</thead>";
@@ -591,10 +591,11 @@ public class DataUse extends Dao_Main
 //				}
 	            websitedata += ""
                     + "<tr>"
-                    + "<th>"+person.getHeader_n()+"</th>"
-                    + "<th>"+person.getHeader_o()+"</th>"
-                    + "<th>"+person.getHeader_s()+"</th>"
-                    + "<th>"+person.getHeader_v()+"</th>"
+                    + "<th>"+person.getHeader_position()+"</th>"
+                    + "<th>"+person.getHeader_vorname()+"</th>"
+                    + "<th>"+person.getHeader_nachname()+"</th>"
+                    + "<th>"+person.getHeader_activity()+"</th>"
+                    + "<th>"+person.getHeader_activity_name()+"</th>"
                     + "</tr>"
                     ;	
 	            websitedata += "</thead>";
@@ -604,10 +605,11 @@ public class DataUse extends Dao_Main
 	        {
 	            websitedata += ""
                     + "<tr>"
-                    + "<th>"+person.getN()+"</th>"
-                    + "<th>"+person.getO()+"</th>"
-                    + "<th>"+person.getS()+"</th>"
-                    + "<th>"+person.getV()+"</th>"
+                    + "<th>"+person.getPosition()+"</th>"
+                    + "<th>"+person.getVorname()+"</th>"
+                    + "<th>"+person.getNachname()+"</th>"
+                    + "<th>"+person.getActivity()+"</th>"
+                    + "<th>"+person.getActivity_name()+"</th>"
                     + "</tr>"
                     ;	
 	            websitedata += "</thead>";

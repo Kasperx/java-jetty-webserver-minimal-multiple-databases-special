@@ -1,15 +1,14 @@
-package main.java.com.mywebsite.main;
+package main.java.com.mywebsite;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieManager;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import main.java.com.mywebsite.main.DataUse;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -17,29 +16,29 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import main.java.com.mywebsite.common.logger.Logger;
 import main.java.com.mywebsite.common.logger.LoggerConfig;
 
-public class Web
+public class Main
 {
     Server server;
     static String httpbase = System.getProperty("user.dir");
     static int httpport = 4000;
-    static Logger logger = LoggerConfig.getLogger(Web.class.getName());
-    public Web (String httpbase, int httpport) {
+    static Logger logger = LoggerConfig.getLogger(Main.class.getName());
+    public Main(String httpbase, int httpport) {
         if(new File(httpbase).isDirectory()) {
-            Web.httpbase = httpbase;
+            Main.httpbase = httpbase;
         }
         else if(new File(httpbase).isFile()) {
-            Web.httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
+            Main.httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
         }
-        initHttpService(Web.httpbase, Web.httpport);
+        initHttpService(Main.httpbase, Main.httpport);
     }
-    public Web () {
+    public Main() {
         initHttpService(httpbase, httpport);
     }
     private void initHttpService(String httpbase, int port)
     {
         try
         {
-        	logger.info("webfolder: "+Web.httpbase);
+        	logger.info("webfolder: "+ Main.httpbase);
         	logger.info("port = "+httpport);
         	if(httpport < 0) {
         		return;
@@ -112,8 +111,8 @@ public class Web
         if(new File(httpbase).isFile()) {
             httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
         }
-//        new Web().initHttpService(httpbase, httpport);
-        new Web();
+//        new Main().initHttpService(httpbase, httpport);
+        new Main();
     }
     private static void showHelp ()
     {
