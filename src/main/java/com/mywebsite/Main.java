@@ -1,45 +1,44 @@
-package main.java.com.mywebsite.main;
+package main.java.com.mywebsite;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieManager;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import main.java.com.mywebsite.database.DAO.Dao_DBConnect;
+import main.java.com.mywebsite.main.DataUse;
+import org.apache.logging.log4j.LogManager;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import main.java.com.mywebsite.common.logger.Logger;
-import main.java.com.mywebsite.common.logger.LoggerConfig;
-
-public class Web
+public class Main extends Dao_DBConnect
 {
     Server server;
     static String httpbase = System.getProperty("user.dir");
-    static int httpport = 4000;
-    static Logger logger = LoggerConfig.getLogger(Web.class.getName());
-    public Web (String httpbase, int httpport) {
+    static int httpport = 5000;
+
+    public Main(String httpbase, int httpport) {
+        logger = LogManager.getLogger(Main.class.getName());
         if(new File(httpbase).isDirectory()) {
-            Web.httpbase = httpbase;
+            Main.httpbase = httpbase;
         }
         else if(new File(httpbase).isFile()) {
-            Web.httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
+            Main.httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
         }
-        initHttpService(Web.httpbase, Web.httpport);
+        initHttpService(Main.httpbase, Main.httpport);
     }
-    public Web () {
+    public Main() {
         initHttpService(httpbase, httpport);
     }
     private void initHttpService(String httpbase, int port)
     {
         try
         {
-        	logger.info("webfolder: "+Web.httpbase);
+        	logger.info("webfolder: "+ Main.httpbase);
         	logger.info("port = "+httpport);
         	if(httpport < 0) {
         		return;
@@ -98,28 +97,18 @@ public class Web
 				    logger.error(e);
 				}
             }
-            if(args[i].equalsIgnoreCase("--httpbase"))
-            {
-                httpbase = args[i + 1];
-//                if(new File(args[i + 1]).isDirectory()) {
-//                    httpbase = args[i + 1];
-//                }
-//                else if(new File(args[i + 1]).isFile()) {
-//                    httpbase = args[i + 1].substring(0, args[i + 1].lastIndexOf("/"));
-//                }
-            }
         }
         if(new File(httpbase).isFile()) {
             httpbase = httpbase.substring(0, httpbase.lastIndexOf("/"));
         }
-//        new Web().initHttpService(httpbase, httpport);
-        new Web();
+//        new Main().initHttpService(httpbase, httpport);
+        new Main();
     }
     private static void showHelp ()
     {
             logger.info("");
             logger.info("### This program is a webserver with a custom backend that connects to the custom webfolder (by parameter) ###");
-            logger.info(" It will show you available database tables to select, shows nearly all content and can export a file (-> new iafisspy)");
+            logger.info(" It will show you available database tables to select & shows nearly all content");
             logger.info("Syntax: [-help | -h | -? | ?] <--httpport{1025-65536}> <--httpbase{}>");
             logger.info("\t Options");
             logger.info("\t\t -h/-help/-?/?                  show this help and exit");
@@ -165,9 +154,6 @@ public class Web
             else if(request_api_weather.equals(parameter)) {
                 DataUse.clientRequest_Weather(request, response);
             }
-//            else if (request_api_example.equals(parameter)) {
-//                website.clientRequest_TableNames(request, response);
-//            }
             else if(request_api_call_data_from_db.equals(parameter)) {
                 DataUse.clientRequest_GetData(request, response);
             }
