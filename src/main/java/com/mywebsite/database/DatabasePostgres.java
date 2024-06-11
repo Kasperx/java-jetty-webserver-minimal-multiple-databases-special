@@ -3,37 +3,23 @@ package main.java.com.mywebsite.database;
 import java.util.ArrayList;
 
 import main.java.com.mywebsite.Data.Person;
+import org.apache.logging.log4j.LogManager;
 
 public class DatabasePostgres extends Database
-{  
+{
     public DatabasePostgres()
     {
-        connect();
+        logger = LogManager.getLogger(this.getClass().getName());
     }
     public void connect()
     {
-        try
-        {
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
     }
     public void close()
     {
-        try
-        {
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
     }
     public ArrayList<Person> getData()
     {
-    	ArrayList<Person> data = new ArrayList<Person>();
-        return data;
+    	return new ArrayList<Person>();
     }
     public int getId(String name)
     {
@@ -41,8 +27,7 @@ public class DatabasePostgres extends Database
     }
     public ArrayList<Person> getAllData()
     {
-    	ArrayList<Person> data = new ArrayList<Person>();
-        return data;
+    	return new ArrayList<Person>();
     }
     public boolean createDatabaseIfNotExists()
     {
@@ -62,13 +47,11 @@ public class DatabasePostgres extends Database
     @Override
     public boolean removeData(String[] data)
     {
-        // TODO Auto-generated method stub
         return false;
     }
     @Override
     public boolean updateData(String[] data)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 }  

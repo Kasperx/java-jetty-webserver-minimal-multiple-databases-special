@@ -15,17 +15,15 @@ import java.util.List;
 
 import com.github.javafaker.Faker;
 import main.java.com.mywebsite.Data.Person;
-import main.java.com.mywebsite.common.logger.Logger;
-import main.java.com.mywebsite.common.logger.LoggerConfig;
+import org.apache.logging.log4j.LogManager;
 
 public class DatabaseSQLite extends Database
 {  
     String path = System.getProperty("user.dir")+"/test.db";
     Connection connection = null;
-    static Logger logger;
     public DatabaseSQLite()
     {
-        logger = LoggerConfig.getLogger(DatabaseSQLite.class.getName());
+        logger = LogManager.getLogger(this.getClass().getName());
         File dbFile = new File(path);
         try
         {
@@ -373,7 +371,6 @@ public class DatabaseSQLite extends Database
     		logger.info(stmt.toString());
     		stmt.execute();
     		close(null);
-//    		executeSet(getId(firstName), "");
     		return true;
     	}
     	catch(SQLException e)
@@ -393,7 +390,6 @@ public class DatabaseSQLite extends Database
     {
         try
         {
-//            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
             String sql = "delete from person where "
                     + "name = ?,"
                     + "action = ?,"
@@ -426,7 +422,6 @@ public class DatabaseSQLite extends Database
     {
         try
         {
-//            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
             String sql = "update person (name, action, action_name) "
                     + "values ("
                     + "name = ?,"
@@ -441,7 +436,6 @@ public class DatabaseSQLite extends Database
             logger.info(stmt.toString());
             stmt.execute();
             close(null);
-//    		executeSet(getId(firstName), "");
             return true;
         }
         catch(SQLException e)
@@ -462,7 +456,6 @@ public class DatabaseSQLite extends Database
         	if(password.isEmpty()) {
         		password = String.valueOf(getRandom());
         	}
-//            executeSet("insert into person (name, lastname) values ('admin', 'admin')");
             String sql = "insert into login ("
                     + "p_id,"
                     + "p_password"
@@ -484,13 +477,11 @@ public class DatabaseSQLite extends Database
      * insert data for admin
      * @param element1
      * @param element2
-     * @param element3
      */
     void insertAdminData(int element1, String element2)
     {
         try
         {
-//            executeSet("insert into login (p_id, p_password, p_admin) values (1, 'secret', 'true')");
             String sql = "insert into login ("
                     + "p_id,"
                     + "p_password,"
@@ -604,68 +595,6 @@ public class DatabaseSQLite extends Database
         }
         return data;
     }
-//    /**
-//     * 
-//     * @param sql
-//     * @return
-//     */
-//    ArrayList<Person> getDataFromDBWithHeader(String sql, boolean admin)
-//    {
-//    	ArrayList<Person> data = new ArrayList<Person>();
-//    	ArrayList<Person> header = new ArrayList<Person>();
-//    	ArrayList<Person> content = new ArrayList<Person>();
-//    	try
-//    	{
-////    		connect();
-//    		ResultSet resultSet = executeGet(sql);
-////    		createDatabaseIfNotExists();
-//    		// get header
-////    		ResultSetMetaData rsmd = getMetaData(sql);
-////    		ArrayList<Person> temp = new ArrayList<Person>();
-//    		Person person = new Person();
-//    		ResultSetMetaData rsmd = getMetaData(sql);
-////            ArrayList <String> temp = new ArrayList<String>();
-//    		if(admin) {
-//    		    if(headerInUppercaseCharacter) {
-//    		        person.header_id = rsmd.getColumnName(1).toUpperCase();
-//    		        person.header_firstName = rsmd.getColumnName(2).toUpperCase();
-//    		        person.header_lastName = rsmd.getColumnName(3).toUpperCase();
-//    		        person.header_password = rsmd.getColumnName(4).toUpperCase();
-//    		    } else {
-//    		        person.header_id = rsmd.getColumnName(1).toLowerCase();
-//    		        person.header_firstName = rsmd.getColumnName(2).toLowerCase();
-//    		        person.header_lastName = rsmd.getColumnName(3).toLowerCase();
-//    		        person.header_password = rsmd.getColumnName(4).toLowerCase();
-//    		    }
-//    		} else {
-//    		    if(headerInUppercaseCharacter) {
-//    		        person.header_firstName = rsmd.getColumnName(1).toUpperCase();
-//    		        person.header_lastName = rsmd.getColumnName(2).toUpperCase();
-//    		    } else /* if(headerInUppercaseCharacter) */{
-//    		        person.header_firstName = rsmd.getColumnName(1).toLowerCase();
-//    		        person.header_lastName = rsmd.getColumnName(2).toLowerCase();
-//    		    }
-//    		}
-//    		header.add(person);
-//    		// get content
-//    		content = getDataFromDB(sql, resultSet, admin);
-//    		close(resultSet);
-//    		// migrate
-//    		for(Person migrate: header)
-//    		{
-//    			data.add(migrate);
-//    		}
-//    		for(Person migrate: content)
-//    		{
-//    			data.add(migrate);
-//    		}
-//    	}
-//    	catch(Exception e)
-//    	{
-//    		logger.error(e);
-//    	}
-//    	return data;
-//    }
     /**
      * close db connection
      * @param resultSet
@@ -688,56 +617,6 @@ public class DatabaseSQLite extends Database
     		logger.error(e);
 		}
 	}
-//    /**
-//     * 
-//     */
-//    public String generateActualSql(String sqlQuery, Object... parameters)
-//    {
-//        String[] parts = sqlQuery.split("\\?");
-//        StringBuilder sb = new StringBuilder();
-//        // This might be wrong if some '?' are used as litteral '?'. Careful!
-//        for (int i = 0; i < parts.length; i++) {
-//            String part = parts[i];
-//            sb.append(part);
-//            if (i < parameters.length) {
-//                String temp = formatParameter(parameters[i]);
-////                sb.append(formatParameter(parameters[i]));
-//                sb.append(temp);
-//            }
-//        }
-//        logger.info(sb.toString());
-//        return sb.toString();
-//    }
-//    /**
-//     * 
-//     * @param parameter
-//     * @return
-//     */
-//    String formatParameter(Object parameter) {
-//        if (parameter == null) {
-//            return "NULL";
-//        } else {
-//            if(parameter instanceof String) {
-//                return "'"
-//                        + ((String) parameter)
-//                        .replace("'", "''")
-//                        + "'";
-//            } else if(parameter instanceof Timestamp) {
-//                return "to_timestamp('" 
-//                        + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS")
-//                        .format(parameter)
-//                        + "', 'mm/dd/yyyy hh24:mi:ss.ff3')";
-//            } else if(parameter instanceof Date) {
-//                return "to_date('"
-//                        + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
-//                        .format(parameter) + "', 'mm/dd/yyyy hh24:mi:ss')";
-//            } else if(parameter instanceof Boolean) {
-//                return ((Boolean) parameter).booleanValue() ? "1" : "0";
-//            } else {
-//                return parameter.toString();
-//            }
-//        }
-//    }
 	@Override
 	public boolean insertData(String[] data)
 	{
@@ -796,9 +675,6 @@ public class DatabaseSQLite extends Database
                     positions.add(position);
                 }
             }
-//            for(int i=1; i<positions.size() && i!=findNextPos; i++) {
-//                findNextPos = positions.get(i);
-//            }
             findNextPos = positions.size()+1;
             close(resultSet);
         }

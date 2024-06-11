@@ -11,16 +11,25 @@ import java.util.Random;
 
 import com.github.javafaker.Faker;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.java.com.mywebsite.Data.Person;
-import main.java.com.mywebsite.common.logger.Logger;
-import main.java.com.mywebsite.common.logger.LoggerConfig;
 import main.java.com.mywebsite.database.DAO.Dao_DBConnect;
 import main.java.com.mywebsite.database.Interfaces.DatabaseInterface;
+import org.apache.logging.log4j.LogManager;
 
+@NoArgsConstructor
+@Getter
+@Setter
 public abstract class Database extends Dao_DBConnect implements DatabaseInterface
 {
-    static Logger logger = LoggerConfig.getLogger(Database.class.getName());
     protected boolean permitCreateDB = true;
+
+    static {
+        logger = LogManager.getLogger(Database.class.getName());
+    }
+
     /**
      * enum for database use
      * @author cgl
@@ -29,9 +38,7 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     public static enum DatabaseType
     {
         sqlite("sqlite"),
-        file("file"),
-        mariadb("mariadb"),
-        postgres("postgres");
+        file("file");
         String value = null;
         DatabaseType(String value)
         {
@@ -71,12 +78,6 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
             case sqlite:
                 data = new DatabaseSQLite();
                 break;
-//            case mariadb:
-//                data = new DatabaseFile();
-//                break;
-//            case postgres:
-//                data = new DatabasePostgres();
-//                break;
             default:
             	logger.info("Not supported yet: source '"+source.value+"'. Using '"+DatabaseType.sqlite+"'.");
                 data = new DatabaseSQLite();
@@ -122,22 +123,6 @@ public abstract class Database extends Dao_DBConnect implements DatabaseInterfac
     {
     	return new Random().nextInt(10000000) + 1000000;
     }
-    /**
-     * 
-     * @return
-     */
-	public boolean isHeaderInUppercaseCharacter()
-	{
-		return headerInUppercaseCharacter;
-	}
-	/**
-	 * 
-	 * @param headerInUppercaseCharacter
-	 */
-	public void setHeaderInUppercaseCharacter(boolean headerInUppercaseCharacter)
-	{
-		this.headerInUppercaseCharacter = headerInUppercaseCharacter;
-	}
 	/**
 	 * get properties
 	 * @param filename
